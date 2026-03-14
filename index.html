@@ -1010,12 +1010,130 @@ function onSignIn(ok) {
     if (status) { status.textContent = '✓ Connected'; status.style.color = 'var(--dev)'; }
     document.getElementById('signInBtn').style.display = 'none';
     cfg.sheets.forEach(s => ensureHeaders(s));
-    syncAllPending();
+    // First push any local pending entries, then pull everything from sheets
+    syncAllPending().then(() => initialFetchFromSheets());
     if (cfg.autoSync) startPolling();
     const histPullBtn = document.getElementById('histPullBtn');
     if (histPullBtn) histPullBtn.style.display = '';
   }
   renderSwitcher(); updateLogBar(); updateConnStatus();
+}
+
+// ─── INITIAL FETCH — pulls ALL existing rows from connected sheets ──────────
+async function initialFetchFromSheets() {
+  if (!signedIn) return;
+  const sheetsToFetch = cfg.sheets.filter(s => s.sheetId);
+  if (!sheetsToFetch.length) return;
+
+  toast('Fetching data from Google Sheets...', 'info');
+  let totalImported = 0;
+  let totalSkipped = 0;
+  let errors = [];
+
+  for (const sh of sheetsToFetch) {
+    try {
+      const res = await gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: sh.sheetId,
+        range: (sh.tab || 'Sheet1') + '!A2:K'
+      });
+      const rows = (res.result.values || []).filter(r => r && r[1]);
+
+      for (const row of rows) {
+        const rawId = (row[8] || '').toString().trim();
+        const title = (row[1] || '').trim();
+        const date  = (row[0] || '').trim();
+        if (!title || !date) continue;
+
+        // Check if this row already exists locally
+        let alreadyExists = false;
+
+        if (rawId && !isNaN(rawId)) {
+          // Row has a numeric app ID — check by ID
+          alreadyExists = entries.some(e => String(e.id) === rawId && e.sheetId === sh.id);
+        }
+
+        if (!alreadyExists) {
+          // Also check by title+date+sheet combo (catches duplicates without ID match)
+          alreadyExists = entries.some(e =>
+            e.sheetId === sh.id &&
+            e.date === date &&
+            e.title.toLowerCase() === title.toLowerCase()
+          );
+        }
+
+        if (alreadyExists) {
+          totalSkipped++;
+          continue;
+        }
+
+        // Import this row
+        const newEntry = rowToEntry(row, sh);
+        if (!newEntry.id) {
+          newEntry.id = Date.now() + Math.floor(Math.random() * 9999);
+          // Write the generated ID back to the sheet so future syncs can match
+          try {
+            const allRows = await gapi.client.sheets.spreadsheets.values.get({
+              spreadsheetId: sh.sheetId, range: (sh.tab || 'Sheet1') + '!A:B'
+            });
+            const sheetRows = allRows.result.values || [];
+            const rowIdx = sheetRows.findIndex((r, i) => i > 0 && r[0] === newEntry.date && r[1] === newEntry.title);
+            if (rowIdx > 0) {
+              await gapi.client.sheets.spreadsheets.values.update({
+                spreadsheetId: sh.sheetId,
+                range: (sh.tab || 'Sheet1') + '!I' + (rowIdx + 1),
+                valueInputOption: 'RAW',
+                resource: { values: [[String(newEntry.id)]] }
+              });
+            }
+          } catch (writeErr) {
+            console.warn('[Footprint] Could not write ID back to sheet row:', writeErr);
+          }
+        }
+
+        entries.unshift(newEntry);
+        totalImported++;
+      }
+    } catch (e) {
+      console.error('[Footprint] Fetch error for sheet "' + sh.name + '":', e);
+      const code = e?.result?.error?.code;
+      if (code === 404) {
+        errors.push('"' + sh.name + '" — Sheet ID not found');
+      } else if (code === 403) {
+        errors.push('"' + sh.name + '" — No permission (share sheet with your Google account)');
+      } else {
+        errors.push('"' + sh.name + '" — ' + (e?.result?.error?.message || 'Unknown error'));
+      }
+    }
+  }
+
+  // Save and render
+  if (totalImported > 0) {
+    save();
+    // If imported entries don't match the current month filter, auto-clear it
+    const currentMonthFilter = document.getElementById('fMonth').value;
+    if (currentMonthFilter) {
+      const importedInCurrentMonth = entries.filter(e => e.month === currentMonthFilter).length;
+      if (importedInCurrentMonth === 0) {
+        // Entries exist but not in the filtered month — clear filter to show them
+        document.getElementById('fMonth').value = '';
+      }
+    }
+  }
+  updateLogBar();
+  renderHistory();
+  lastPollTime = Date.now();
+  updateLastSyncLabel();
+
+  // Show result
+  if (errors.length) {
+    toast('Sheet errors: ' + errors.join('; '), 'err');
+  } else if (totalImported > 0) {
+    toast('Imported ' + totalImported + ' entries from Google Sheets', 'ok');
+  } else if (totalSkipped > 0) {
+    toast('All ' + totalSkipped + ' sheet entries already synced', 'ok');
+  } else {
+    toast('Connected — no entries found in sheets yet', 'ok');
+  }
 }
 
 async function ensureHeaders(sh) {
@@ -1483,7 +1601,11 @@ function addNewSheet() {
   document.getElementById('nsName').value = '';
   document.getElementById('nsSheetId').value = '';
   renderSheetList(); renderSwitcher(); renderDropdowns(); updateLogBar();
-  if (signedIn) ensureHeaders(sheet);
+  if (signedIn) {
+    ensureHeaders(sheet);
+    // Auto-fetch existing data from this newly connected sheet
+    setTimeout(() => initialFetchFromSheets(), 500);
+  }
   toast('"'+name+'" connected!', 'ok');
 }
 
@@ -1526,19 +1648,33 @@ function renderHistory() {
   const fc  = document.getElementById('fCat').value;
   const fi  = document.getElementById('fImpH').value;
   let list = [...entries];
+  const totalBeforeFilter = list.length;
   if (fm)  list = list.filter(e=>e.month===fm);
   if (fsh) list = list.filter(e=>e.sheetId===fsh);
   if (fc)  list = list.filter(e=>(e.cats||[]).includes(fc));
   if (fi)  list = list.filter(e=>e.impact===fi);
 
-  document.getElementById('histCount').textContent = list.length+' entries';
+  document.getElementById('histCount').textContent = list.length+' entries' + (totalBeforeFilter !== list.length ? ' (of '+totalBeforeFilter+' total)' : '');
   document.getElementById('syncBtn').style.display = (list.some(e=>!e.synced) && cfg.sheets.length) ? '' : 'none';
   const histPullBtn = document.getElementById('histPullBtn');
   if (histPullBtn) histPullBtn.style.display = signedIn && cfg.sheets.length ? '' : 'none';
 
   const el = document.getElementById('histList');
   if (!list.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">&#128211;</div><h3>No entries found</h3><p>Try changing filters or log some tasks.</p></div>';
+    // Check if entries exist but are being filtered out
+    const hasAnyEntries = totalBeforeFilter > 0;
+    if (hasAnyEntries) {
+      el.innerHTML = '<div class="empty"><div class="empty-icon">&#128269;</div><h3>No entries match current filters</h3>' +
+        '<p>You have '+totalBeforeFilter+' total entries. Try changing the month or clearing filters.</p>' +
+        '<button class="btn btn-outline" style="margin-top:12px" onclick="clearHistoryFilters()">Clear All Filters</button></div>';
+    } else {
+      const sheetHint = cfg.sheets.length && signedIn
+        ? '<button class="btn btn-sync-now" style="margin-top:12px" onclick="initialFetchFromSheets()">&#8595; Fetch from Google Sheets</button>'
+        : cfg.sheets.length
+          ? '<p style="margin-top:8px;font-size:12px">Sign in to Google to pull entries from your sheets.</p>'
+          : '<p style="margin-top:8px;font-size:12px">Connect a Google Sheet in &#9881; Manage to get started.</p>';
+      el.innerHTML = '<div class="empty"><div class="empty-icon">&#128211;</div><h3>No entries found</h3><p>Log a task or fetch from your Google Sheet.</p>'+sheetHint+'</div>';
+    }
     return;
   }
 
@@ -1591,6 +1727,14 @@ function renderHistory() {
       }).join('') +
     '</div>';
   }).join('');
+}
+
+function clearHistoryFilters() {
+  document.getElementById('fMonth').value = '';
+  document.getElementById('fSheetH').value = '';
+  document.getElementById('fCat').value = '';
+  document.getElementById('fImpH').value = '';
+  renderHistory();
 }
 
 // ─── REPORT ───────────────────────────────────────────────────
