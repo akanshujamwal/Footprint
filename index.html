@@ -45,6 +45,23 @@ body::after {
 .header-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 .current-date { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
 
+/* CONNECTION STATUS */
+.conn-status {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted);
+  padding: 4px 10px; border-radius: 4px; background: #fff; border: 1px solid var(--rule);
+}
+.conn-status .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.conn-status .dot.online { background: #27ae60; }
+.conn-status .dot.offline { background: var(--red); }
+.conn-status .dot.connecting { background: var(--gold); animation: blink 1s ease-in-out infinite; }
+.conn-status button {
+  font-family: 'DM Mono', monospace; font-size: 9px; padding: 2px 8px;
+  border-radius: 3px; cursor: pointer; border: 1px solid var(--dev);
+  background: var(--dev); color: #fff; margin-left: 4px;
+}
+.conn-status button:hover { opacity: 0.85; }
+
 /* SHEET SWITCHER */
 .sheet-switcher { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 .sh-tab {
@@ -97,16 +114,6 @@ body::after {
 .btn-pull-dismiss { font-family: 'DM Mono', monospace; font-size: 10px; padding: 5px 10px; border-radius: 4px; cursor: pointer; border: 1.5px solid rgba(21,101,192,0.3); background: transparent; color: var(--sync-pull); transition: all 0.15s; }
 .btn-pull-dismiss:hover { background: rgba(21,101,192,0.08); }
 
-/* SYNC STATUS INDICATOR */
-.sync-status-row {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
-  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
-}
-.sync-pulse { width: 8px; height: 8px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
-.sync-pulse.active { background: #27ae60; animation: blink 2s ease-in-out infinite; }
-.sync-pulse.syncing { background: var(--gold); animation: blink 0.5s ease-in-out infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
 /* FORMS */
 .log-card { background: #fff; border: 1.5px solid var(--rule); border-radius: 6px; padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 2px 10px var(--shadow); }
 .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
@@ -134,18 +141,19 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 
 /* Buttons */
 .btn { font-family: 'DM Mono', monospace; font-weight: 500; font-size: 11px; padding: 10px 22px; border-radius: 4px; cursor: pointer; border: 1.5px solid; letter-spacing: 1px; text-transform: uppercase; transition: all 0.18s; white-space: nowrap; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.btn-primary:hover { background: var(--dev); border-color: var(--dev); }
+.btn-primary:hover:not(:disabled) { background: var(--dev); border-color: var(--dev); }
 .btn-gold { background: var(--gold); color: #fff; border-color: var(--gold); }
-.btn-gold:hover { opacity: 0.85; }
+.btn-gold:hover:not(:disabled) { opacity: 0.85; }
 .btn-outline { background: transparent; color: var(--text); border-color: var(--rule); }
-.btn-outline:hover { border-color: var(--text); }
+.btn-outline:hover:not(:disabled) { border-color: var(--text); }
 .btn-danger { background: transparent; color: var(--red); border-color: #e9b4b4; }
-.btn-danger:hover { background: #fdecea; }
+.btn-danger:hover:not(:disabled) { background: #fdecea; }
 .btn-sm { font-size: 10px; padding: 5px 10px; }
 .btn-edit { background: transparent; color: var(--dev); border-color: #a8d8c8; font-size: 10px; padding: 5px 10px; }
 .btn-sync-now { background: var(--sync-pull-light); color: var(--sync-pull); border-color: rgba(21,101,192,0.35); font-size: 10px; padding: 5px 11px; }
-.btn-sync-now:hover { background: rgba(21,101,192,0.12); }
+.btn-sync-now:hover:not(:disabled) { background: rgba(21,101,192,0.12); }
 .btn-row { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; align-items: center; }
 .save-hint { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
 
@@ -188,7 +196,7 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .chip-lo  { background: var(--paper2); color: var(--muted); }
 .chip-sheet-src { background: var(--sync-pull-light); color: var(--sync-pull); }
 .entry-outcome { margin-top: 7px; padding: 5px 9px; background: var(--dev-light); border-radius: 3px; font-size: 11px; color: var(--dev); font-family: 'DM Mono', monospace; }
-.entry-outcome::before { content: '→ '; }
+.entry-outcome::before { content: '\2192 '; }
 .entry-actions { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
 .sync-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-left: 3px; }
 .sync-dot.ok   { background: #27ae60; } .sync-dot.pend { background: var(--gold); }
@@ -197,7 +205,7 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .empty-icon { font-size: 32px; margin-bottom: 10px; }
 .empty h3 { font-family: 'Playfair Display', serif; font-size: 19px; color: var(--text); margin-bottom: 5px; }
 
-/* MODALS shared */
+/* MODALS */
 .modal-backdrop { position: fixed; inset: 0; background: rgba(14,14,20,0.5); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
 .modal-backdrop.open { opacity: 1; pointer-events: all; }
 .modal { background: var(--paper); border: 1.5px solid var(--rule); border-radius: 8px; padding: 26px 28px; width: 100%; max-height: 90vh; overflow-y: auto; transform: translateY(14px); transition: transform 0.2s; box-shadow: 0 16px 48px rgba(14,14,20,0.2); }
@@ -208,7 +216,7 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .modal-title { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 800; }
 .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--muted); padding: 0 4px; line-height: 1; }
 
-/* CONFLICT MODAL */
+/* CONFLICT */
 .conflict-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; font-size: 13px; }
 .conflict-side { border: 1.5px solid var(--rule); border-radius: 6px; padding: 12px 14px; }
 .conflict-side.local { border-color: var(--gold); background: var(--gold-light); }
@@ -219,7 +227,7 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .conflict-field { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
 .conflict-val { font-size: 13px; color: var(--text); font-weight: 500; }
 
-/* SHEET LIST in manage modal */
+/* SHEET LIST */
 .sheet-list-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: #fff; border: 1.5px solid var(--rule); border-radius: 6px; margin-bottom: 8px; transition: all 0.15s; }
 .sheet-list-item.is-active { border-color: var(--dev); }
 .sheet-list-item:hover { box-shadow: 0 2px 8px var(--shadow); }
@@ -233,7 +241,7 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .add-form p { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.7; }
 .add-form code { font-family: 'DM Mono', monospace; font-size: 11px; background: rgba(200,151,58,0.18); padding: 1px 5px; border-radius: 3px; color: var(--pm); }
 
-/* Sync settings in manage modal */
+/* Sync settings */
 .sync-settings { background: var(--sync-pull-light); border: 1.5px solid rgba(21,101,192,0.25); border-radius: 6px; padding: 16px 18px; margin-top: 14px; }
 .sync-settings h4 { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--sync-pull); }
 .sync-opt-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
@@ -243,13 +251,12 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .toggle-btn { font-family: 'DM Mono', monospace; font-size: 10px; padding: 4px 10px; border-radius: 3px; cursor: pointer; border: 1.5px solid var(--rule); background: #fff; color: var(--muted); transition: all 0.15s; }
 .toggle-btn.on { background: var(--sync-pull); color: #fff; border-color: var(--sync-pull); }
 
-/* Color swatches */
+/* Swatches */
 .swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
 .swatch { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2.5px solid transparent; transition: all 0.15s; }
 .swatch.sel { border-color: var(--ink); transform: scale(1.18); }
 .swatch:hover:not(.sel) { transform: scale(1.1); }
 
-/* API setup section */
 .api-section { border-top: 1px solid var(--rule); padding-top: 18px; margin-top: 16px; }
 
 /* REPORT */
@@ -309,46 +316,58 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .loading-txt { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
 .loading-txt::after { content: '...'; animation: ell 1.5s infinite; }
 @keyframes ell { 0%{content:'.'} 33%{content:'..'} 66%{content:'...'} }
-
-/* Last sync time */
 .last-sync-info { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* Offline banner */
+.offline-banner {
+  display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: var(--red); color: #fff; text-align: center;
+  font-family: 'DM Mono', monospace; font-size: 11px; padding: 6px 16px;
+}
+.offline-banner.visible { display: block; }
 </style>
 </head>
 <body>
+<div class="offline-banner" id="offlineBanner">You are offline — entries will be saved locally and synced when connection returns</div>
+
 <div class="wrap">
 
 <!-- HEADER -->
 <header class="top-bar">
   <div>
     <div class="logo">Foot<em>print</em></div>
-    <div class="logo-sub">Growth Portal · Dev &amp; PM</div>
+    <div class="logo-sub">Growth Portal &middot; Dev &amp; PM</div>
   </div>
   <div class="header-right">
     <div class="current-date" id="dateDisp"></div>
+    <div class="conn-status" id="connStatus">
+      <span class="dot offline"></span>
+      <span id="connLabel">Not connected</span>
+    </div>
     <div class="sheet-switcher" id="sheetSwitcher"></div>
   </div>
 </header>
 
 <!-- TABS -->
 <div class="tabs">
-  <button class="tab active" onclick="gotoTab('log',this)">📝 Log Task</button>
-  <button class="tab" onclick="gotoTab('history',this)">📋 History</button>
-  <button class="tab" onclick="gotoTab('report',this)">📊 Report Card</button>
+  <button class="tab active" onclick="gotoTab('log',this)">&#128221; Log Task</button>
+  <button class="tab" onclick="gotoTab('history',this)">&#128203; History</button>
+  <button class="tab" onclick="gotoTab('report',this)">&#128202; Report Card</button>
 </div>
 
 <!-- LOG PANEL -->
 <div id="panel-log" class="panel active">
   <div id="logBar" class="active-bar" style="display:none"></div>
 
-  <!-- Sync changes banner (shown when sheet has new/modified rows) -->
   <div class="sync-banner" id="syncBanner">
-    <div class="sync-banner-icon">🔄</div>
+    <div class="sync-banner-icon">&#128260;</div>
     <div class="sync-banner-txt">
       <strong id="syncBannerTitle">Changes detected in Google Sheet</strong>
       <span id="syncBannerSub">New or edited rows found that aren't in your local app yet.</span>
     </div>
     <div class="sync-banner-actions">
-      <button class="btn-pull" onclick="applySheetChanges()">↓ Pull Changes</button>
+      <button class="btn-pull" onclick="applySheetChanges()">&#8595; Pull Changes</button>
       <button class="btn-pull-dismiss" onclick="dismissSyncBanner()">Dismiss</button>
     </div>
   </div>
@@ -357,42 +376,42 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
     <div class="section-label">New Entry</div>
     <div class="frow c2">
       <div class="field"><label>Date</label><input type="date" id="fDate"></div>
-      <div class="field"><label>Task Title</label><input type="text" id="fTitle" placeholder="What did you work on?"></div>
+      <div class="field"><label>Task Title</label><input type="text" id="fTitle" placeholder="What did you work on?" maxlength="200"></div>
     </div>
     <div class="frow">
       <div class="field"><label>Description</label>
-        <textarea id="fDesc" placeholder="Describe what you built, decided, reviewed, or learned. More detail → better AI report."></textarea>
+        <textarea id="fDesc" placeholder="Describe what you built, decided, reviewed, or learned." maxlength="2000"></textarea>
       </div>
     </div>
     <div class="frow c3">
       <div class="field"><label>Impact</label>
         <select id="fImpact">
-          <option value="low">🟡 Low — Routine</option>
-          <option value="medium" selected>🟢 Medium — Meaningful</option>
-          <option value="high">🔴 High — Milestone</option>
+          <option value="low">&#x1F7E1; Low &mdash; Routine</option>
+          <option value="medium" selected>&#x1F7E2; Medium &mdash; Meaningful</option>
+          <option value="high">&#x1F534; High &mdash; Milestone</option>
         </select>
       </div>
-      <div class="field"><label>Key Outcome / Learning</label><input type="text" id="fOutcome" placeholder="What did you learn or ship?"></div>
-      <div class="field"><label>Effort (hrs)</label><input type="number" id="fEffort" placeholder="2.5" min="0" step="0.5"></div>
+      <div class="field"><label>Key Outcome / Learning</label><input type="text" id="fOutcome" placeholder="What did you learn or ship?" maxlength="300"></div>
+      <div class="field"><label>Effort (hrs)</label><input type="number" id="fEffort" placeholder="2.5" min="0" max="24" step="0.5"></div>
     </div>
     <div class="field">
       <label>Categories</label>
       <div class="cats-wrap" id="logCats">
-        <div class="cat-chip" data-cat="dev"     data-sel="dev"   onclick="toggleCat(this)">🖥 Dev</div>
-        <div class="cat-chip" data-cat="pm"      data-sel="pm"    onclick="toggleCat(this)">📦 PM</div>
-        <div class="cat-chip" data-cat="learn"   data-sel="learn" onclick="toggleCat(this)">📚 Learning</div>
-        <div class="cat-chip" data-cat="review"  data-sel="other" onclick="toggleCat(this)">🔍 Review</div>
-        <div class="cat-chip" data-cat="design"  data-sel="other" onclick="toggleCat(this)">🎨 Design</div>
-        <div class="cat-chip" data-cat="infra"   data-sel="other" onclick="toggleCat(this)">⚙️ Infra</div>
-        <div class="cat-chip" data-cat="collab"  data-sel="other" onclick="toggleCat(this)">🤝 Collab</div>
-        <div class="cat-chip" data-cat="bug"     data-sel="other" onclick="toggleCat(this)">🐛 Bug Fix</div>
-        <div class="cat-chip" data-cat="meeting" data-sel="other" onclick="toggleCat(this)">🗣 Meeting</div>
+        <div class="cat-chip" data-cat="dev"     data-sel="dev"   onclick="toggleCat(this)">&#x1F5A5; Dev</div>
+        <div class="cat-chip" data-cat="pm"      data-sel="pm"    onclick="toggleCat(this)">&#x1F4E6; PM</div>
+        <div class="cat-chip" data-cat="learn"   data-sel="learn" onclick="toggleCat(this)">&#x1F4DA; Learning</div>
+        <div class="cat-chip" data-cat="review"  data-sel="other" onclick="toggleCat(this)">&#x1F50D; Review</div>
+        <div class="cat-chip" data-cat="design"  data-sel="other" onclick="toggleCat(this)">&#x1F3A8; Design</div>
+        <div class="cat-chip" data-cat="infra"   data-sel="other" onclick="toggleCat(this)">&#x2699;&#xFE0F; Infra</div>
+        <div class="cat-chip" data-cat="collab"  data-sel="other" onclick="toggleCat(this)">&#x1F91D; Collab</div>
+        <div class="cat-chip" data-cat="bug"     data-sel="other" onclick="toggleCat(this)">&#x1F41B; Bug Fix</div>
+        <div class="cat-chip" data-cat="meeting" data-sel="other" onclick="toggleCat(this)">&#x1F5E3; Meeting</div>
       </div>
     </div>
     <div class="btn-row">
-      <button class="btn btn-primary" onclick="addEntry()">+ Add Entry</button>
+      <button class="btn btn-primary" id="addEntryBtn" onclick="addEntry()">+ Add Entry</button>
       <button class="btn btn-outline" onclick="clearForm()">Clear</button>
-      <button class="btn btn-sync-now" id="btnSyncNow" onclick="checkSheetChanges(true)" style="display:none">↓ Check Sheet</button>
+      <button class="btn btn-sync-now" id="btnSyncNow" onclick="checkSheetChanges(true)" style="display:none">&#8595; Check Sheet</button>
       <span class="save-hint" id="saveHint"></span>
       <span class="last-sync-info" id="lastSyncInfo"></span>
     </div>
@@ -404,9 +423,7 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
   <div class="filter-bar">
     <div class="field"><label>Month</label><input type="month" id="fMonth" onchange="renderHistory()"></div>
     <div class="field"><label>Sheet</label>
-      <select id="fSheetH" onchange="renderHistory()">
-        <option value="">All Sheets</option>
-      </select>
+      <select id="fSheetH" onchange="renderHistory()"><option value="">All Sheets</option></select>
     </div>
     <div class="field"><label>Category</label>
       <select id="fCat" onchange="renderHistory()">
@@ -424,8 +441,8 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
       </select>
     </div>
     <div style="align-self:flex-end;display:flex;gap:7px">
-      <button class="btn btn-outline btn-sm" id="syncBtn" onclick="syncAllPending()" style="display:none">↑ Push Pending</button>
-      <button class="btn btn-sync-now btn-sm" id="histPullBtn" onclick="checkSheetChanges(true)" style="display:none">↓ Pull Sheet</button>
+      <button class="btn btn-outline btn-sm" id="syncBtn" onclick="syncAllPending()" style="display:none">&#8593; Push Pending</button>
+      <button class="btn btn-sync-now btn-sm" id="histPullBtn" onclick="checkSheetChanges(true)" style="display:none">&#8595; Pull Sheet</button>
     </div>
     <div style="align-self:flex-end;font-family:DM Mono,monospace;font-size:11px;color:var(--muted);padding-bottom:2px" id="histCount"></div>
   </div>
@@ -439,14 +456,12 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
     <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
       <div class="field"><label>Month</label><input type="month" id="rMonth"></div>
       <div class="field"><label>Filter by Sheet</label>
-        <select id="fSheetR">
-          <option value="">All Sheets</option>
-        </select>
+        <select id="fSheetR"><option value="">All Sheets</option></select>
       </div>
-      <button class="btn btn-gold" onclick="generateReport()">✨ Generate AI Report</button>
-      <button class="btn btn-outline" id="saveReflBtn" onclick="saveReflections()" style="display:none">💾 Save Reflections</button>
-      <button class="btn btn-outline" id="exportRptBtn" onclick="exportPDF()" style="display:none">⬇️ Export PDF</button>
-      <button class="btn btn-danger" id="deleteRptBtn" onclick="deleteReport()" style="display:none;font-size:11px;padding:10px 18px">🗑 Delete</button>
+      <button class="btn btn-gold" id="genRptBtn" onclick="generateReport()">&#10024; Generate AI Report</button>
+      <button class="btn btn-outline" id="saveReflBtn" onclick="saveReflections()" style="display:none">&#128190; Save Reflections</button>
+      <button class="btn btn-outline" id="exportRptBtn" onclick="exportPDF()" style="display:none">&#11015;&#65039; Export PDF</button>
+      <button class="btn btn-danger" id="deleteRptBtn" onclick="deleteReport()" style="display:none;font-size:11px;padding:10px 18px">&#128465; Delete</button>
     </div>
   </div>
   <div id="reportOut"></div>
@@ -459,17 +474,16 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
   <div class="modal modal-lg">
     <div class="modal-hdr">
       <div class="modal-title">Manage Sheets</div>
-      <button class="modal-close" onclick="closeMgModal()">×</button>
+      <button class="modal-close" onclick="closeMgModal()">&times;</button>
     </div>
     <div id="sheetListEl"></div>
 
-    <!-- ── SHEET SYNC SETTINGS ── -->
     <div class="sync-settings" id="syncSettingsBox">
-      <h4>🔄 Two-Way Sync Settings</h4>
+      <h4>&#128260; Two-Way Sync Settings</h4>
       <div class="sync-opt-row">
         <div class="sync-opt-label">
           Auto-check for sheet changes
-          <small>Polls your Google Sheet at a set interval and notifies you when rows are added or edited directly in the sheet</small>
+          <small>Polls your Google Sheet at a set interval for new/edited rows</small>
         </div>
         <div class="toggle-wrap">
           <button class="toggle-btn" id="autoSyncToggle" onclick="toggleAutoSync()">OFF</button>
@@ -495,9 +509,9 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
           <small>What to do when the same entry has been edited both locally and in the sheet</small>
         </div>
         <div class="toggle-wrap">
-          <button class="toggle-btn ${cfg.syncConflict==='sheet'?'on':''}" id="conflictLocal" onclick="setConflict('local')"  style="font-size:9px">Keep Local</button>
-          <button class="toggle-btn ${cfg.syncConflict==='sheet'?'on':''}" id="conflictSheet" onclick="setConflict('sheet')"  style="font-size:9px">Keep Sheet</button>
-          <button class="toggle-btn"                                        id="conflictAsk"   onclick="setConflict('ask')"    style="font-size:9px">Always Ask</button>
+          <button class="toggle-btn" id="conflictLocal" onclick="setConflict('local')" style="font-size:9px">Keep Local</button>
+          <button class="toggle-btn" id="conflictSheet" onclick="setConflict('sheet')" style="font-size:9px">Keep Sheet</button>
+          <button class="toggle-btn" id="conflictAsk"   onclick="setConflict('ask')"   style="font-size:9px">Always Ask</button>
         </div>
       </div>
     </div>
@@ -508,8 +522,8 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
         <code>docs.google.com/spreadsheets/d/<strong>SHEET_ID</strong>/edit</code>
       </p>
       <div class="frow c2" style="margin-bottom:12px">
-        <div class="field"><label>Sheet Name</label><input type="text" id="nsName" placeholder="e.g. Work Projects"></div>
-        <div class="field"><label>Google Sheet ID</label><input type="text" id="nsSheetId" placeholder="1BxiMVs0XRA5nFMd…"></div>
+        <div class="field"><label>Sheet Name</label><input type="text" id="nsName" placeholder="e.g. Work Projects" maxlength="50"></div>
+        <div class="field"><label>Google Sheet ID</label><input type="text" id="nsSheetId" placeholder="1BxiMVs0XRA5nFMd..."></div>
       </div>
       <div class="field" style="margin-bottom:14px">
         <label>Color Label</label>
@@ -526,34 +540,36 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
       </div>
       <button class="btn btn-primary" onclick="addNewSheet()">Add Sheet</button>
     </div>
-    <!-- Groq API Key -->
+
+    <!-- Groq AI Key -->
     <div class="api-section" id="aiSection">
       <div class="section-label" style="margin-bottom:12px">AI Report Settings (Free)</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.7">
-        Uses <strong>Groq</strong> — completely free, no credit card needed. Powered by <strong>Llama 3.3 70B</strong> open-source model.<br>
-        Get a free key at <code>console.groq.com</code> → API Keys → Create API Key. Takes 30 seconds.
+        Uses <strong>Groq</strong> &mdash; completely free, no credit card needed. Powered by <strong>Llama 3.3 70B</strong>.<br>
+        Get a free key at <code>console.groq.com</code> &rarr; API Keys &rarr; Create API Key.
       </p>
       <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
         <div class="field" style="flex:1;min-width:200px"><label>Groq API Key (Free)</label>
-          <input type="password" id="cfgAnthropicKey" placeholder="gsk_…">
+          <input type="password" id="cfgAnthropicKey" placeholder="gsk_...">
         </div>
         <button class="btn btn-primary" onclick="saveAnthropicKey()">Save Key</button>
         <div id="aiKeyStatus" style="font-family:DM Mono,monospace;font-size:11px;color:var(--muted);align-self:flex-end;padding-bottom:2px"></div>
       </div>
     </div>
 
-    <!-- Client ID setup -->
+    <!-- Google API -->
     <div class="api-section" id="apiSection">
       <div class="section-label" style="margin-bottom:12px">Google API Connection</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.7">
         Enable <code>Google Sheets API</code> in <code>console.cloud.google.com</code>, create an
-        OAuth 2.0 Web Application credential, and add your site URL to Authorized JavaScript Origins.
+        OAuth 2.0 Web Application credential, add your site URL to Authorized JavaScript Origins.
       </p>
       <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
         <div class="field" style="flex:1;min-width:200px"><label>Google OAuth Client ID</label>
           <input type="text" id="cfgClientId" placeholder="xxxx.apps.googleusercontent.com">
         </div>
-        <button class="btn btn-primary" onclick="saveClientId()">Save &amp; Connect</button>
+        <button class="btn btn-primary" id="saveClientBtn" onclick="saveClientId()">Save &amp; Connect</button>
+        <button class="btn btn-outline" id="signInBtn" onclick="doSignIn()" style="display:none">Sign In to Google</button>
         <div id="authStatus" style="font-family:DM Mono,monospace;font-size:11px;color:var(--muted);align-self:flex-end;padding-bottom:2px"></div>
       </div>
     </div>
@@ -565,38 +581,38 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
   <div class="modal modal-sm">
     <div class="modal-hdr">
       <div class="modal-title">Edit Entry</div>
-      <button class="modal-close" onclick="closeEditModal()">×</button>
+      <button class="modal-close" onclick="closeEditModal()">&times;</button>
     </div>
     <div class="frow c2">
       <div class="field"><label>Date</label><input type="date" id="mDate"></div>
-      <div class="field"><label>Task Title</label><input type="text" id="mTitle"></div>
+      <div class="field"><label>Task Title</label><input type="text" id="mTitle" maxlength="200"></div>
     </div>
     <div class="frow" style="margin-bottom:14px">
-      <div class="field"><label>Description</label><textarea id="mDesc" style="min-height:76px"></textarea></div>
+      <div class="field"><label>Description</label><textarea id="mDesc" style="min-height:76px" maxlength="2000"></textarea></div>
     </div>
     <div class="frow c3">
       <div class="field"><label>Impact</label>
         <select id="mImpact">
-          <option value="low">🟡 Low</option>
-          <option value="medium">🟢 Medium</option>
-          <option value="high">🔴 High</option>
+          <option value="low">&#x1F7E1; Low</option>
+          <option value="medium">&#x1F7E2; Medium</option>
+          <option value="high">&#x1F534; High</option>
         </select>
       </div>
-      <div class="field"><label>Outcome</label><input type="text" id="mOutcome"></div>
-      <div class="field"><label>Effort (hrs)</label><input type="number" id="mEffort" min="0" step="0.5"></div>
+      <div class="field"><label>Outcome</label><input type="text" id="mOutcome" maxlength="300"></div>
+      <div class="field"><label>Effort (hrs)</label><input type="number" id="mEffort" min="0" max="24" step="0.5"></div>
     </div>
     <div class="field" style="margin-bottom:16px">
       <label>Categories</label>
       <div class="cats-wrap" id="modalCats">
-        <div class="cat-chip" data-cat="dev"     data-sel="dev"   onclick="toggleCat(this)">🖥 Dev</div>
-        <div class="cat-chip" data-cat="pm"      data-sel="pm"    onclick="toggleCat(this)">📦 PM</div>
-        <div class="cat-chip" data-cat="learn"   data-sel="learn" onclick="toggleCat(this)">📚 Learning</div>
-        <div class="cat-chip" data-cat="review"  data-sel="other" onclick="toggleCat(this)">🔍 Review</div>
-        <div class="cat-chip" data-cat="design"  data-sel="other" onclick="toggleCat(this)">🎨 Design</div>
-        <div class="cat-chip" data-cat="infra"   data-sel="other" onclick="toggleCat(this)">⚙️ Infra</div>
-        <div class="cat-chip" data-cat="collab"  data-sel="other" onclick="toggleCat(this)">🤝 Collab</div>
-        <div class="cat-chip" data-cat="bug"     data-sel="other" onclick="toggleCat(this)">🐛 Bug Fix</div>
-        <div class="cat-chip" data-cat="meeting" data-sel="other" onclick="toggleCat(this)">🗣 Meeting</div>
+        <div class="cat-chip" data-cat="dev"     data-sel="dev"   onclick="toggleCat(this)">&#x1F5A5; Dev</div>
+        <div class="cat-chip" data-cat="pm"      data-sel="pm"    onclick="toggleCat(this)">&#x1F4E6; PM</div>
+        <div class="cat-chip" data-cat="learn"   data-sel="learn" onclick="toggleCat(this)">&#x1F4DA; Learning</div>
+        <div class="cat-chip" data-cat="review"  data-sel="other" onclick="toggleCat(this)">&#x1F50D; Review</div>
+        <div class="cat-chip" data-cat="design"  data-sel="other" onclick="toggleCat(this)">&#x1F3A8; Design</div>
+        <div class="cat-chip" data-cat="infra"   data-sel="other" onclick="toggleCat(this)">&#x2699;&#xFE0F; Infra</div>
+        <div class="cat-chip" data-cat="collab"  data-sel="other" onclick="toggleCat(this)">&#x1F91D; Collab</div>
+        <div class="cat-chip" data-cat="bug"     data-sel="other" onclick="toggleCat(this)">&#x1F41B; Bug Fix</div>
+        <div class="cat-chip" data-cat="meeting" data-sel="other" onclick="toggleCat(this)">&#x1F5E3; Meeting</div>
       </div>
     </div>
     <div class="btn-row">
@@ -606,12 +622,12 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
   </div>
 </div>
 
-<!-- CONFLICT RESOLUTION MODAL -->
+<!-- CONFLICT MODAL -->
 <div class="modal-backdrop" id="conflictModal" style="z-index:300">
   <div class="modal modal-sm">
     <div class="modal-hdr">
-      <div class="modal-title">⚡ Sync Conflict</div>
-      <button class="modal-close" onclick="resolveConflict('skip')">×</button>
+      <div class="modal-title">&#9889; Sync Conflict</div>
+      <button class="modal-close" onclick="resolveConflict('skip')">&times;</button>
     </div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7">
       This entry was modified both in the app and in Google Sheets. Which version should be kept?
@@ -628,11 +644,56 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── STATE ────────────────────────────────────────────────────────────────────
-let entries     = JSON.parse(localStorage.getItem('fp_entries') || '[]');
-let cfg         = JSON.parse(localStorage.getItem('fp_cfg')     || '{"sheets":[],"activeSheetId":null,"clientId":null,"autoSync":false,"pollInterval":60000,"syncConflict":"ask"}');
-let reflections = JSON.parse(localStorage.getItem('fp_refl')    || '{}');
+/* ═══════════════════════════════════════════════════════════════
+   FOOTPRINT GROWTH PORTAL — PRODUCTION BUILD
+   Fixes: Date timezone, Google Sheets auth flow, XSS sanitization,
+   localStorage safety, retry logic, offline detection, connection UI
+   ═══════════════════════════════════════════════════════════════ */
 
+// ─── SAFE LOCAL STORAGE ───────────────────────────────────────
+const Storage = {
+  get(key, fallback) {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+    catch(e) { console.warn('Storage read error:', key, e); return fallback; }
+  },
+  set(key, val) {
+    try { localStorage.setItem(key, JSON.stringify(val)); return true; }
+    catch(e) {
+      console.error('Storage write error:', key, e);
+      toast('Storage full or unavailable — data may not persist', 'err');
+      return false;
+    }
+  }
+};
+
+// ─── XSS SANITIZER ───────────────────────────────────────────
+function esc(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+// ─── LOCAL DATE HELPERS (timezone-safe) ───────────────────────
+function localDateStr(d) {
+  // Returns YYYY-MM-DD in local timezone
+  if (!d) d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+function localMonthStr(d) {
+  if (!d) d = new Date();
+  return localDateStr(d).slice(0, 7);
+}
+
+// ─── STATE ────────────────────────────────────────────────────
+let entries     = Storage.get('fp_entries', []);
+let cfg         = Storage.get('fp_cfg', { sheets:[], activeSheetId:null, clientId:null, autoSync:false, pollInterval:60000, syncConflict:'ask' });
+let reflections = Storage.get('fp_refl', {});
+
+// Migrate old data
 if (!cfg.sheets)       cfg.sheets = [];
 if (!cfg.pollInterval) cfg.pollInterval = 60000;
 if (!cfg.syncConflict) cfg.syncConflict = 'ask';
@@ -645,82 +706,119 @@ let newColor   = '#1a4d3e';
 let currentRating = 0;
 let currentReportMonth = null;
 let currentReport = null;
-
-// Pull-sync state
-let pendingSheetChanges = [];  // rows fetched from sheet not yet in local
+let pendingSheetChanges = [];
 let pollTimer = null;
 let lastPollTime = null;
 let conflictQueue = [];
 let currentConflict = null;
+let tokenClient = null;
+let accessToken = null;
+let isOnline = navigator.onLine;
 
-// ─── UTILS ────────────────────────────────────────────────────────────────────
-function save()         { localStorage.setItem('fp_entries', JSON.stringify(entries)); }
-function saveCfg()      { localStorage.setItem('fp_cfg',     JSON.stringify(cfg)); }
-function saveReflStore(){ localStorage.setItem('fp_refl',    JSON.stringify(reflections)); }
+// ─── UTILS ────────────────────────────────────────────────────
+function save()         { Storage.set('fp_entries', entries); }
+function saveCfg()      { Storage.set('fp_cfg', cfg); }
+function saveReflStore(){ Storage.set('fp_refl', reflections); }
 function uid()          { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function activeSheet()  { return cfg.sheets.find(s => s.id === cfg.activeSheetId) || null; }
 function sheetById(id)  { return cfg.sheets.find(s => s.id === id) || null; }
-function toast(msg, type='') {
+
+let toastTimer = null;
+function toast(msg, type) {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast show ' + type;
-  setTimeout(() => t.className = 'toast', 3200);
+  t.textContent = msg; t.className = 'toast show ' + (type||'');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = 'toast', 3200);
 }
 
 const CAT_SEL = { dev:'sel-dev', pm:'sel-pm', learn:'sel-learn' };
 function catSelCls(cat) { return CAT_SEL[cat] || 'sel-other'; }
 function toggleCat(el) { el.classList.toggle(catSelCls(el.dataset.cat)); }
 function getSelCats(cid) {
-  return [...document.querySelectorAll(`#${cid} .cat-chip`)].filter(c => c.className.match(/sel-/)).map(c => c.dataset.cat);
+  return [...document.querySelectorAll('#'+cid+' .cat-chip')].filter(c => c.className.match(/sel-/)).map(c => c.dataset.cat);
 }
 function setSelCats(cid, cats) {
-  document.querySelectorAll(`#${cid} .cat-chip`).forEach(c => {
+  document.querySelectorAll('#'+cid+' .cat-chip').forEach(c => {
     ['sel-dev','sel-pm','sel-learn','sel-other'].forEach(cl => c.classList.remove(cl));
     if ((cats||[]).includes(c.dataset.cat)) c.classList.add(catSelCls(c.dataset.cat));
   });
 }
 
-// ─── ROW → ENTRY PARSER ──────────────────────────────────────────────────────
-// Sheet columns: Date(0) Title(1) Desc(2) Cats(3) Impact(4) Outcome(5) Effort(6) Month(7) ID(8) Created(9) SheetName(10)
+// ─── OFFLINE DETECTION ────────────────────────────────────────
+window.addEventListener('online', () => {
+  isOnline = true;
+  document.getElementById('offlineBanner').classList.remove('visible');
+  updateConnStatus();
+  // Auto-sync pending when coming back online
+  if (signedIn) syncAllPending();
+});
+window.addEventListener('offline', () => {
+  isOnline = false;
+  document.getElementById('offlineBanner').classList.add('visible');
+  updateConnStatus();
+});
+
+function updateConnStatus() {
+  const dot = document.querySelector('#connStatus .dot');
+  const lbl = document.getElementById('connLabel');
+  const signInBtn = document.getElementById('signInBtn');
+
+  if (!cfg.clientId) {
+    dot.className = 'dot offline';
+    lbl.textContent = 'No Google API configured';
+    if (signInBtn) signInBtn.style.display = 'none';
+  } else if (!isOnline) {
+    dot.className = 'dot offline';
+    lbl.textContent = 'Offline';
+    if (signInBtn) signInBtn.style.display = 'none';
+  } else if (signedIn) {
+    dot.className = 'dot online';
+    lbl.textContent = 'Google Sheets connected';
+    if (signInBtn) signInBtn.style.display = 'none';
+  } else {
+    dot.className = 'dot connecting';
+    lbl.textContent = 'Not signed in';
+    if (signInBtn) signInBtn.style.display = '';
+  }
+}
+
+// ─── ROW → ENTRY PARSER ──────────────────────────────────────
 function rowToEntry(row, sheetMeta) {
   const rawId = (row[8] || '').toString().trim();
-  // IDs from app are numeric timestamps; rows added directly in sheet won't have one
   const id = rawId && !isNaN(rawId) ? parseInt(rawId) : null;
   const date = (row[0] || '').trim();
   const month = date.length >= 7 ? date.slice(0,7) : (row[7]||'').trim();
   return {
-    id,
-    _sheetRowId: rawId || null,   // keep original string for matching
-    date,
+    id, _sheetRowId: rawId || null, date,
     title: (row[1] || '').trim(),
     desc: (row[2] || '').trim(),
     cats: (row[3] || '').split(',').map(s=>s.trim()).filter(Boolean),
     impact: (row[4] || 'medium').trim().toLowerCase(),
     outcome: (row[5] || '').trim(),
     effort: (row[6] || '').trim(),
-    month,
-    synced: true,
-    fromSheet: true,
-    sheetId: sheetMeta.id,
-    sheetName: sheetMeta.name,
+    month, synced: true, fromSheet: true,
+    sheetId: sheetMeta.id, sheetName: sheetMeta.name,
     created: (row[9] || new Date().toISOString()).trim()
   };
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
+// ─── INIT ─────────────────────────────────────────────────────
 (function() {
   const now = new Date();
-  document.getElementById('dateDisp').textContent = now.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  document.getElementById('fDate').value = now.toISOString().split('T')[0];
-  const ym = now.toISOString().slice(0,7);
+  document.getElementById('dateDisp').textContent = now.toLocaleDateString('en-IN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  // FIX: Use local date, not UTC
+  document.getElementById('fDate').value = localDateStr(now);
+  const ym = localMonthStr(now);
   ['fMonth','rMonth'].forEach(id => document.getElementById(id).value = ym);
   renderSwitcher();
   renderDropdowns();
   updateLogBar();
   applySyncSettingsUI();
+  updateConnStatus();
   if (cfg.clientId) loadGapi();
 })();
 
-// ─── TABS ─────────────────────────────────────────────────────────────────────
+// ─── TABS ─────────────────────────────────────────────────────
 function gotoTab(name, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -729,17 +827,19 @@ function gotoTab(name, el) {
   if (name === 'history') renderHistory();
 }
 
-// ─── SHEET SWITCHER ───────────────────────────────────────────────────────────
+// ─── SHEET SWITCHER ───────────────────────────────────────────
 function renderSwitcher() {
   const sw = document.getElementById('sheetSwitcher');
-  let html = cfg.sheets.map(s => `
-    <button class="sh-tab ${s.id===cfg.activeSheetId?'active':''}" onclick="setActive('${s.id}')">
-      <span class="sh-cdot" style="background:${s.color||'#1a4d3e'}"></span>
-      ${s.name}
-      <span class="sh-sdot ${signedIn?'ok':'off'}" title="${signedIn?'Syncing':'Not connected'}"></span>
-    </button>`).join('');
-  html += `<button class="btn-add-sheet" onclick="openMgModal()">+ Sheet</button>`;
-  html += `<button class="btn-mgr" onclick="openMgModal()">⚙ Manage</button>`;
+  let html = cfg.sheets.map(s => {
+    const isActive = s.id === cfg.activeSheetId;
+    return '<button class="sh-tab '+(isActive?'active':'')+'" onclick="setActive(\''+esc(s.id)+'\')">' +
+      '<span class="sh-cdot" style="background:'+esc(s.color||'#1a4d3e')+'"></span>' +
+      esc(s.name) +
+      '<span class="sh-sdot '+(signedIn?'ok':'off')+'" title="'+(signedIn?'Syncing':'Not connected')+'"></span>' +
+      '</button>';
+  }).join('');
+  html += '<button class="btn-add-sheet" onclick="openMgModal()">+ Sheet</button>';
+  html += '<button class="btn-mgr" onclick="openMgModal()">&#9881; Manage</button>';
   sw.innerHTML = html;
 }
 
@@ -755,16 +855,14 @@ function updateLogBar() {
   if (!s) { bar.style.display = 'none'; if(btnSyncNow) btnSyncNow.style.display='none'; return; }
   bar.style.display = 'flex';
   if(btnSyncNow) btnSyncNow.style.display = signedIn ? '' : 'none';
-  const total   = entries.filter(e => e.sheetId === s.id).length;
+  const total = entries.filter(e => e.sheetId === s.id).length;
   const pending = entries.filter(e => e.sheetId === s.id && !e.synced).length;
-  bar.innerHTML = `
-    <span class="sh-cdot" style="background:${s.color};width:10px;height:10px"></span>
-    <span class="ab-name">${s.name}</span>
-    <span class="ab-info">${total} entries${pending?` · ${pending} pending`:''}</span>
-    <span class="ab-status">
-      <span class="sh-sdot ${signedIn?'ok':'off'}"></span>
-      ${signedIn?'Two-way sync active':'Not connected — entries saved locally'}
-    </span>`;
+  bar.innerHTML =
+    '<span class="sh-cdot" style="background:'+esc(s.color)+';width:10px;height:10px"></span>' +
+    '<span class="ab-name">'+esc(s.name)+'</span>' +
+    '<span class="ab-info">'+total+' entries'+(pending?' &middot; '+pending+' pending':'')+'</span>' +
+    '<span class="ab-status"><span class="sh-sdot '+(signedIn?'ok':'off')+'"></span>' +
+    (signedIn?'Two-way sync active':'Not connected &mdash; entries saved locally') + '</span>';
   updateLastSyncLabel();
 }
 
@@ -773,24 +871,548 @@ function updateLastSyncLabel() {
   if (!el) return;
   if (!lastPollTime) { el.textContent = ''; return; }
   const diff = Math.round((Date.now() - lastPollTime)/1000);
-  el.textContent = `Last checked: ${diff < 60 ? diff+'s ago' : Math.round(diff/60)+'m ago'}`;
+  el.textContent = 'Last checked: ' + (diff < 60 ? diff+'s ago' : Math.round(diff/60)+'m ago');
 }
 
 function renderDropdowns() {
   const opts = '<option value="">All Sheets</option>' +
-    cfg.sheets.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    cfg.sheets.map(s => '<option value="'+esc(s.id)+'">'+esc(s.name)+'</option>').join('');
   ['fSheetH','fSheetR'].forEach(id => {
     const el = document.getElementById(id); if (!el) return;
     const v = el.value; el.innerHTML = opts; el.value = v;
   });
 }
 
-// ─── MANAGE SHEETS MODAL ──────────────────────────────────────────────────────
+// ─── GAPI — FIXED AUTH FLOW ──────────────────────────────────
+function loadGapi() {
+  if (!cfg.clientId) return;
+  const authStatus = document.getElementById('authStatus');
+  if (authStatus) authStatus.textContent = 'Loading Google API...';
+
+  // Load GAPI client
+  if (!window.gapi) {
+    const sc = document.createElement('script');
+    sc.src = 'https://apis.google.com/js/api.js';
+    sc.onload = () => gapi.load('client', initGapiClient);
+    sc.onerror = () => {
+      toast('Failed to load Google API — check your internet connection', 'err');
+      if (authStatus) authStatus.textContent = '✕ Google API failed to load';
+      updateConnStatus();
+    };
+    document.head.appendChild(sc);
+  } else {
+    gapi.load('client', initGapiClient);
+  }
+
+  // Load Google Identity Services
+  if (!window.google?.accounts) {
+    const sc2 = document.createElement('script');
+    sc2.src = 'https://accounts.google.com/gsi/client';
+    sc2.onload = initTokenClient;
+    sc2.onerror = () => {
+      toast('Failed to load Google Identity Services', 'err');
+      if (authStatus) authStatus.textContent = '✕ Google Auth failed to load';
+      updateConnStatus();
+    };
+    document.head.appendChild(sc2);
+  } else {
+    initTokenClient();
+  }
+}
+
+async function initGapiClient() {
+  try {
+    await gapi.client.init({});
+    await gapi.client.load('https://sheets.googleapis.com/$discovery/rest?version=v4');
+    gapiReady = true;
+    if (accessToken) gapi.client.setToken({ access_token: accessToken });
+    console.log('[Footprint] Google Sheets API client ready');
+  } catch(e) {
+    console.error('[Footprint] GAPI init error:', e);
+    toast('Failed to init Google Sheets client', 'err');
+    document.getElementById('authStatus').textContent = '✕ Sheets API init failed';
+  }
+}
+
+function initTokenClient() {
+  if (!cfg.clientId) return;
+  try {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: cfg.clientId,
+      scope: 'https://www.googleapis.com/auth/spreadsheets',
+      callback: handleTokenResponse,
+    });
+    console.log('[Footprint] Token client initialized');
+
+    // FIX: Try silent auth first, but with proper error handling
+    // Use prompt: '' for silent/cached, which only works if user previously consented
+    try {
+      tokenClient.requestAccessToken({ prompt: '' });
+    } catch(e) {
+      // Silent auth failed — show sign-in button instead
+      console.log('[Footprint] Silent auth not available — user needs to sign in');
+      showSignInButton();
+    }
+  } catch(e) {
+    console.error('[Footprint] Token client init error:', e);
+    document.getElementById('authStatus').textContent = '✕ OAuth setup failed — check Client ID';
+    showSignInButton();
+  }
+}
+
+function handleTokenResponse(tokenResponse) {
+  if (tokenResponse.error) {
+    console.warn('[Footprint] Token error:', tokenResponse.error);
+    if (tokenResponse.error === 'access_denied' || tokenResponse.error === 'popup_closed_by_user') {
+      document.getElementById('authStatus').textContent = 'Sign-in cancelled';
+    } else {
+      document.getElementById('authStatus').textContent = '✕ Auth failed — check Client ID & origins';
+    }
+    showSignInButton();
+    updateConnStatus();
+    return;
+  }
+  accessToken = tokenResponse.access_token;
+  if (gapiReady) gapi.client.setToken({ access_token: accessToken });
+  onSignIn(true);
+}
+
+function showSignInButton() {
+  const btn = document.getElementById('signInBtn');
+  if (btn) btn.style.display = '';
+  const status = document.getElementById('authStatus');
+  if (status && !status.textContent.includes('✕')) {
+    status.textContent = 'Click "Sign In to Google" to connect';
+  }
+  updateConnStatus();
+}
+
+// FIX: Explicit sign-in button that user clicks (fixes silent auth failure)
+function doSignIn() {
+  if (!tokenClient) {
+    toast('Google API not loaded yet — please wait', 'err');
+    return;
+  }
+  try {
+    // prompt: 'consent' forces the Google sign-in popup
+    tokenClient.requestAccessToken({ prompt: 'consent' });
+    document.getElementById('authStatus').textContent = 'Waiting for Google sign-in...';
+  } catch(e) {
+    toast('Failed to open Google sign-in', 'err');
+    console.error('[Footprint] Sign-in error:', e);
+  }
+}
+
+function onSignIn(ok) {
+  signedIn = ok;
+  if (ok) {
+    const status = document.getElementById('authStatus');
+    if (status) { status.textContent = '✓ Connected'; status.style.color = 'var(--dev)'; }
+    document.getElementById('signInBtn').style.display = 'none';
+    cfg.sheets.forEach(s => ensureHeaders(s));
+    syncAllPending();
+    if (cfg.autoSync) startPolling();
+    const histPullBtn = document.getElementById('histPullBtn');
+    if (histPullBtn) histPullBtn.style.display = '';
+  }
+  renderSwitcher(); updateLogBar(); updateConnStatus();
+}
+
+async function ensureHeaders(sh) {
+  if (!signedIn || !sh?.sheetId) return;
+  try {
+    const r = await gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A1'
+    });
+    if (!r.result.values || r.result.values[0][0] !== 'Date') {
+      await gapi.client.sheets.spreadsheets.values.update({
+        spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A1', valueInputOption: 'RAW',
+        resource: { values: [['Date','Title','Description','Categories','Impact','Outcome','Effort (hrs)','Month','ID','Created','Sheet Name']] }
+      });
+    }
+  } catch(e) {
+    console.warn('[Footprint] Header check failed for', sh.name, e);
+    if (e?.result?.error?.code === 403 || e?.result?.error?.code === 404) {
+      toast('Cannot access sheet "'+sh.name+'" — check Sheet ID & permissions', 'err');
+    }
+  }
+}
+
+async function pushEntry(entry) {
+  if (!signedIn) return false;
+  const sh = sheetById(entry.sheetId);
+  if (!sh?.sheetId) return false;
+  try {
+    await gapi.client.sheets.spreadsheets.values.append({
+      spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A:K',
+      valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS',
+      resource: { values: [[ entry.date, entry.title, entry.desc||'', (entry.cats||[]).join(', '),
+        entry.impact||'', entry.outcome||'', entry.effort||'',
+        entry.month, String(entry.id), entry.created||'', sh.name ]] }
+    });
+    return true;
+  } catch(e) {
+    console.error('[Footprint] Push failed:', e);
+    return false;
+  }
+}
+
+async function updateEntryInSheet(entry) {
+  if (!signedIn || !entry?.sheetId) return false;
+  const sh = sheetById(entry.sheetId);
+  if (!sh?.sheetId) return false;
+  try {
+    const res = await gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!I:I'
+    });
+    const rows = res.result.values || [];
+    const rowIndex = rows.findIndex(r => r[0] === String(entry.id));
+    if (rowIndex === -1) return await pushEntry(entry);
+    const rowNum = rowIndex + 1;
+    await gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A'+rowNum+':K'+rowNum,
+      valueInputOption: 'RAW',
+      resource: { values: [[ entry.date, entry.title, entry.desc||'', (entry.cats||[]).join(', '),
+        entry.impact||'', entry.outcome||'', entry.effort||'',
+        entry.month, String(entry.id), entry.created||'', sh.name ]] }
+    });
+    return true;
+  } catch(e) { console.error('[Footprint] Update failed:', e); return false; }
+}
+
+async function syncAllPending() {
+  const pending = entries.filter(e => !e.synced && e.sheetId);
+  if (!pending.length) return;
+  let n = 0;
+  for (const e of pending) {
+    const ok = await pushEntry(e);
+    if (ok) { e.synced = true; n++; }
+  }
+  if (n) {
+    save(); updateLogBar();
+    if (document.getElementById('panel-history').classList.contains('active')) renderHistory();
+    toast(n + ' pending ' + (n===1?'entry':'entries') + ' synced', 'ok');
+  }
+}
+
+// ─── POLLING ──────────────────────────────────────────────────
+function startPolling() {
+  stopPolling();
+  if (!cfg.autoSync || !signedIn) return;
+  pollTimer = setInterval(() => checkSheetChanges(false), cfg.pollInterval);
+  checkSheetChanges(false);
+}
+function stopPolling() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
+
+// ─── CHECK SHEET FOR CHANGES (PULL) ──────────────────────────
+async function checkSheetChanges(manual) {
+  if (!signedIn) {
+    if (manual) toast('Connect to Google Sheets first', 'err');
+    return;
+  }
+  const sheetsToCheck = cfg.sheets.filter(s => s.sheetId);
+  if (!sheetsToCheck.length) {
+    if (manual) toast('No Google Sheet connected', 'err');
+    return;
+  }
+  if (manual) toast('Checking for sheet changes...', 'info');
+
+  let newRows = [], modifiedRows = [];
+
+  for (const sh of sheetsToCheck) {
+    try {
+      const res = await gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A2:K'
+      });
+      const rows = (res.result.values || []).filter(r => r[1]);
+      for (const row of rows) {
+        const rawId = (row[8]||'').toString().trim();
+        const title = (row[1]||'').trim();
+        const date  = (row[0]||'').trim();
+        if (!title || !date) continue;
+
+        if (rawId && !isNaN(rawId)) {
+          const localEntry = entries.find(e => String(e.id) === rawId && e.sheetId === sh.id);
+          if (localEntry) {
+            if (hasSheetModified(localEntry, row)) {
+              modifiedRows.push({ row, sh, localEntry });
+            }
+          } else {
+            newRows.push({ row, sh });
+          }
+        } else {
+          const alreadyImported = entries.find(e =>
+            e.sheetId === sh.id && e.date === date &&
+            e.title.toLowerCase() === title.toLowerCase()
+          );
+          if (!alreadyImported) newRows.push({ row, sh });
+        }
+      }
+    } catch(e) { console.warn('[Footprint] Sheet check error for', sh.name, e); }
+  }
+
+  lastPollTime = Date.now();
+  updateLastSyncLabel();
+
+  if (newRows.length + modifiedRows.length === 0) {
+    if (manual) toast('App is up to date with your sheets', 'ok');
+    hideSyncBanner();
+    return;
+  }
+
+  pendingSheetChanges = { newRows, modifiedRows };
+  showSyncBanner(newRows.length, modifiedRows.length);
+}
+
+function hasSheetModified(localEntry, row) {
+  const shTitle   = (row[1]||'').trim();
+  const shDesc    = (row[2]||'').trim();
+  const shCats    = (row[3]||'').split(',').map(s=>s.trim()).filter(Boolean).sort().join(',');
+  const shImpact  = (row[4]||'medium').trim().toLowerCase();
+  const shOutcome = (row[5]||'').trim();
+  const shEffort  = (row[6]||'').trim();
+  const lcCats    = (localEntry.cats||[]).slice().sort().join(',');
+  return localEntry.title !== shTitle || (localEntry.desc||'') !== shDesc ||
+    lcCats !== shCats || (localEntry.impact||'medium') !== shImpact ||
+    (localEntry.outcome||'') !== shOutcome || String(localEntry.effort||'') !== shEffort;
+}
+
+function showSyncBanner(nNew, nMod) {
+  const banner = document.getElementById('syncBanner');
+  const parts = [];
+  if (nNew) parts.push(nNew+' new row'+(nNew>1?'s':'')+' added');
+  if (nMod) parts.push(nMod+' row'+(nMod>1?'s':'')+' edited');
+  document.getElementById('syncBannerTitle').textContent = 'Changes detected in Google Sheet';
+  document.getElementById('syncBannerSub').textContent = parts.join(' · ');
+  banner.classList.add('visible');
+}
+function hideSyncBanner() { document.getElementById('syncBanner').classList.remove('visible'); }
+function dismissSyncBanner() { pendingSheetChanges = []; hideSyncBanner(); }
+
+// ─── APPLY PULLED CHANGES ─────────────────────────────────────
+async function applySheetChanges() {
+  if (!pendingSheetChanges?.newRows?.length && !pendingSheetChanges?.modifiedRows?.length) {
+    hideSyncBanner(); return;
+  }
+  hideSyncBanner();
+  const { newRows, modifiedRows } = pendingSheetChanges;
+  pendingSheetChanges = [];
+  let imported = 0, updated = 0, skipped = 0;
+
+  for (const { row, sh } of newRows) {
+    const newEntry = rowToEntry(row, sh);
+    if (!newEntry.id) {
+      newEntry.id = Date.now() + Math.floor(Math.random() * 9999);
+      try {
+        const idRes = await gapi.client.sheets.spreadsheets.values.get({
+          spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A:B'
+        });
+        const shRows = idRes.result.values || [];
+        const rowIdx = shRows.findIndex((r, i) => i > 0 && r[0] === newEntry.date && r[1] === newEntry.title);
+        if (rowIdx > 0) {
+          await gapi.client.sheets.spreadsheets.values.update({
+            spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!I'+(rowIdx+1),
+            valueInputOption: 'RAW', resource: { values: [[String(newEntry.id)]] }
+          });
+        }
+      } catch(e) {}
+    }
+    entries.unshift(newEntry);
+    imported++;
+  }
+
+  const autoKeepSheet = cfg.syncConflict === 'sheet';
+  const autoKeepLocal = cfg.syncConflict === 'local';
+  conflictQueue = [];
+
+  for (const { row, sh, localEntry } of modifiedRows) {
+    if (autoKeepSheet) {
+      const sheetData = rowToEntry(row, sh);
+      const idx = entries.findIndex(e => e.id === localEntry.id);
+      if (idx !== -1) {
+        entries[idx] = { ...sheetData, id: localEntry.id, sheetId: localEntry.sheetId, sheetName: localEntry.sheetName, synced: true, fromSheet: true };
+      }
+      updated++;
+    } else if (autoKeepLocal) {
+      skipped++;
+    } else {
+      conflictQueue.push({ row, sh, localEntry });
+    }
+  }
+
+  save(); updateLogBar(); renderHistory();
+  const parts = [];
+  if (imported) parts.push(imported+' new');
+  if (updated)  parts.push(updated+' updated');
+  if (skipped)  parts.push(skipped+' skipped');
+  if (parts.length) toast('Sheet sync: '+parts.join(', '), 'ok');
+  if (conflictQueue.length) processNextConflict();
+}
+
+// ─── CONFLICT RESOLUTION ──────────────────────────────────────
+function processNextConflict() {
+  if (!conflictQueue.length) { updateLogBar(); renderHistory(); return; }
+  currentConflict = conflictQueue.shift();
+  const { row, sh, localEntry } = currentConflict;
+  const sheetEntry = rowToEntry(row, sh);
+  document.getElementById('conflictCompare').innerHTML =
+    '<div class="conflict-side local">' +
+      '<div class="conflict-label l">LOCAL (APP)</div>' +
+      '<div class="conflict-field">Title</div><div class="conflict-val">'+esc(localEntry.title)+'</div>' +
+      '<div class="conflict-field" style="margin-top:6px">Desc</div><div class="conflict-val">'+esc(localEntry.desc||'—')+'</div>' +
+      '<div class="conflict-field" style="margin-top:6px">Impact / Effort</div><div class="conflict-val">'+esc(localEntry.impact||'medium')+' · '+esc(localEntry.effort||'?')+'h</div>' +
+    '</div>' +
+    '<div class="conflict-side remote">' +
+      '<div class="conflict-label r">SHEET (REMOTE)</div>' +
+      '<div class="conflict-field">Title</div><div class="conflict-val">'+esc(sheetEntry.title)+'</div>' +
+      '<div class="conflict-field" style="margin-top:6px">Desc</div><div class="conflict-val">'+esc(sheetEntry.desc||'—')+'</div>' +
+      '<div class="conflict-field" style="margin-top:6px">Impact / Effort</div><div class="conflict-val">'+esc(sheetEntry.impact||'medium')+' · '+esc(sheetEntry.effort||'?')+'h</div>' +
+    '</div>';
+  document.getElementById('conflictModal').classList.add('open');
+}
+
+function resolveConflict(choice) {
+  document.getElementById('conflictModal').classList.remove('open');
+  if (!currentConflict) { processNextConflict(); return; }
+  const { row, sh, localEntry } = currentConflict;
+  if (choice === 'sheet') {
+    const sheetData = rowToEntry(row, sh);
+    const idx = entries.findIndex(e => e.id === localEntry.id);
+    if (idx !== -1) {
+      entries[idx] = { ...sheetData, id: localEntry.id, sheetId: localEntry.sheetId, sheetName: localEntry.sheetName, synced: true, fromSheet: true };
+    }
+    save(); renderHistory(); toast('Sheet version applied', 'ok');
+  } else if (choice === 'local') {
+    toast('Local version kept', 'ok');
+  } else {
+    toast('Skipped — will ask again next sync');
+  }
+  currentConflict = null;
+  setTimeout(processNextConflict, 300);
+}
+
+// ─── ADD ENTRY ────────────────────────────────────────────────
+async function addEntry() {
+  const date  = document.getElementById('fDate').value;
+  const title = document.getElementById('fTitle').value.trim();
+  if (!date)  { toast('Please select a date', 'err'); return; }
+  if (!title) { toast('Please enter a task title', 'err'); return; }
+
+  // Validate date format
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) { toast('Invalid date format', 'err'); return; }
+
+  const effort = document.getElementById('fEffort').value;
+  if (effort && (parseFloat(effort) < 0 || parseFloat(effort) > 24)) {
+    toast('Effort must be between 0 and 24 hours', 'err'); return;
+  }
+
+  const as = activeSheet();
+  const btn = document.getElementById('addEntryBtn');
+  btn.disabled = true;
+
+  const entry = {
+    id: Date.now(), date, title,
+    desc: document.getElementById('fDesc').value.trim(),
+    cats: getSelCats('logCats'),
+    impact: document.getElementById('fImpact').value,
+    outcome: document.getElementById('fOutcome').value.trim(),
+    effort: effort,
+    month: date.slice(0,7), synced: false, created: new Date().toISOString(),
+    sheetId: as?.id||null, sheetName: as?.name||null
+  };
+  entries.unshift(entry); save();
+  document.getElementById('saveHint').textContent = 'Saving...';
+
+  let ok = false;
+  if (signedIn) {
+    ok = await pushEntry(entry);
+    entry.synced = ok; save();
+  }
+  updateLogBar();
+  document.getElementById('saveHint').textContent = ok ? '✓ Synced to Sheet' : '○ Saved locally';
+  setTimeout(() => document.getElementById('saveHint').textContent = '', 4000);
+  clearForm();
+  btn.disabled = false;
+  toast(ok ? 'Entry saved & synced!' : 'Saved locally', 'ok');
+}
+
+function clearForm() {
+  ['fTitle','fDesc','fOutcome','fEffort'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('fImpact').value = 'medium';
+  // FIX: Always reset to today's local date
+  document.getElementById('fDate').value = localDateStr();
+  setSelCats('logCats', []);
+}
+
+async function deleteEntry(id) {
+  if (!confirm('Delete this entry?')) return;
+  const entry = entries.find(e => e.id === id);
+  entries = entries.filter(e => e.id !== id);
+  save(); updateLogBar(); renderHistory(); toast('Entry deleted');
+  if (signedIn && entry?.synced && entry?.sheetId) {
+    const sh = sheetById(entry.sheetId);
+    if (!sh?.sheetId) return;
+    try {
+      const res = await gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!I:I'
+      });
+      const rows = res.result.values || [];
+      const rowIndex = rows.findIndex(r => r[0] === String(entry.id));
+      if (rowIndex === -1) return;
+      const meta = await gapi.client.sheets.spreadsheets.get({ spreadsheetId: sh.sheetId });
+      const sheetMeta = meta.result.sheets.find(s => s.properties.title === (sh.tab||'Sheet1'));
+      if (!sheetMeta) return;
+      await gapi.client.sheets.spreadsheets.batchUpdate({
+        spreadsheetId: sh.sheetId,
+        resource: { requests: [{ deleteDimension: { range: { sheetId: sheetMeta.properties.sheetId, dimension: 'ROWS', startIndex: rowIndex, endIndex: rowIndex+1 } } }] }
+      });
+      toast('Deleted from Google Sheet', 'ok');
+    } catch(e) { toast('Deleted locally — sheet row removal failed', 'err'); }
+  }
+}
+
+// ─── EDIT MODAL ───────────────────────────────────────────────
+function openEdit(id) {
+  const e = entries.find(e=>e.id===id); if (!e) return;
+  editingId = id;
+  document.getElementById('mDate').value    = e.date;
+  document.getElementById('mTitle').value   = e.title;
+  document.getElementById('mDesc').value    = e.desc||'';
+  document.getElementById('mImpact').value  = e.impact||'medium';
+  document.getElementById('mOutcome').value = e.outcome||'';
+  document.getElementById('mEffort').value  = e.effort||'';
+  setSelCats('modalCats', e.cats||[]);
+  document.getElementById('editModal').classList.add('open');
+}
+
+async function saveEdit() {
+  const e = entries.find(e=>e.id===editingId); if (!e) return;
+  const title = document.getElementById('mTitle').value.trim();
+  if (!title) { toast('Title is required', 'err'); return; }
+  e.date    = document.getElementById('mDate').value;
+  e.title   = title;
+  e.desc    = document.getElementById('mDesc').value.trim();
+  e.cats    = getSelCats('modalCats');
+  e.impact  = document.getElementById('mImpact').value;
+  e.outcome = document.getElementById('mOutcome').value.trim();
+  e.effort  = document.getElementById('mEffort').value;
+  e.month   = e.date.slice(0,7);
+  e.synced  = false;
+  save(); closeEditModal(); renderHistory(); toast('Updated', 'ok');
+  if (signedIn) {
+    const ok = await updateEntryInSheet(e);
+    if (ok) { e.synced=true; save(); renderHistory(); toast('Synced to Sheet', 'ok'); }
+  }
+}
+
+function closeEditModal() { document.getElementById('editModal').classList.remove('open'); editingId=null; }
+function closeBgEdit(e)   { if (e.target===document.getElementById('editModal')) closeEditModal(); }
+
+// ─── MANAGE SHEETS MODAL ─────────────────────────────────────
 function openMgModal() {
-  renderSheetList();
-  applySyncSettingsUI();
+  renderSheetList(); applySyncSettingsUI();
   if (cfg.clientId) document.getElementById('cfgClientId').value = cfg.clientId;
-  document.getElementById('authStatus').textContent = signedIn ? '✓ Connected' : cfg.clientId ? 'Connecting…' : '';
+  document.getElementById('authStatus').textContent = signedIn ? '✓ Connected' : cfg.clientId ? 'Not signed in' : '';
   if (cfg.anthropicKey) {
     document.getElementById('cfgAnthropicKey').value = cfg.anthropicKey;
     document.getElementById('aiKeyStatus').textContent = '✓ Key saved';
@@ -810,554 +1432,38 @@ function renderSheetList() {
   el.innerHTML = cfg.sheets.map(s => {
     const count = entries.filter(e => e.sheetId===s.id).length;
     const isActive = s.id === cfg.activeSheetId;
-    return `
-    <div class="sheet-list-item ${isActive?'is-active':''}">
-      <span class="sh-cdot" style="background:${s.color||'#1a4d3e'};width:14px;height:14px;flex-shrink:0"></span>
-      <div style="flex:1;min-width:0">
-        <div class="sli-name">${s.name} ${isActive?'<span class="active-badge">Active</span>':''}</div>
-        <div class="sli-id" style="margin-top:2px">${s.sheetId ? 'ID: '+s.sheetId.slice(0,30)+'…' : 'No Sheet ID set'}</div>
-      </div>
-      <div class="sli-count">${count} entries</div>
-      <div class="sli-actions">
-        ${!isActive?`<button class="btn btn-outline btn-sm" onclick="setActive('${s.id}');renderSheetList()">Set Active</button>`:''}
-        <button class="btn btn-danger btn-sm" onclick="removeSheet('${s.id}')">Remove</button>
-      </div>
-    </div>`;
+    return '<div class="sheet-list-item '+(isActive?'is-active':'')+'">' +
+      '<span class="sh-cdot" style="background:'+(s.color||'#1a4d3e')+';width:14px;height:14px;flex-shrink:0"></span>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div class="sli-name">'+esc(s.name)+' '+(isActive?'<span class="active-badge">Active</span>':'')+'</div>' +
+        '<div class="sli-id" style="margin-top:2px">'+(s.sheetId ? 'ID: '+esc(s.sheetId.slice(0,30))+'...' : 'No Sheet ID set')+'</div>' +
+      '</div>' +
+      '<div class="sli-count">'+count+' entries</div>' +
+      '<div class="sli-actions">' +
+        (!isActive?'<button class="btn btn-outline btn-sm" onclick="setActive(\''+esc(s.id)+'\');renderSheetList()">Set Active</button>':'') +
+        '<button class="btn btn-danger btn-sm" onclick="removeSheet(\''+esc(s.id)+'\')">Remove</button>' +
+      '</div></div>';
   }).join('');
 }
 
-// ─── SYNC SETTINGS UI ─────────────────────────────────────────────────────────
 function applySyncSettingsUI() {
   const autoBtn = document.getElementById('autoSyncToggle');
-  if (autoBtn) {
-    autoBtn.textContent = cfg.autoSync ? 'ON' : 'OFF';
-    autoBtn.classList.toggle('on', cfg.autoSync);
-  }
+  if (autoBtn) { autoBtn.textContent = cfg.autoSync ? 'ON' : 'OFF'; autoBtn.classList.toggle('on', cfg.autoSync); }
   const intRow = document.getElementById('intervalRow');
   if (intRow) intRow.style.display = cfg.autoSync ? 'flex' : 'none';
   const intEl = document.getElementById('pollInterval');
   if (intEl) intEl.value = String(cfg.pollInterval || 60000);
-  // conflict buttons
   ['conflictLocal','conflictSheet','conflictAsk'].forEach(id => {
     const b = document.getElementById(id); if(!b) return;
-    const strategy = {conflictLocal:'local',conflictSheet:'sheet',conflictAsk:'ask'}[id];
-    b.classList.toggle('on', cfg.syncConflict === strategy);
+    const s = {conflictLocal:'local',conflictSheet:'sheet',conflictAsk:'ask'}[id];
+    b.classList.toggle('on', cfg.syncConflict === s);
   });
 }
 
-function toggleAutoSync() {
-  cfg.autoSync = !cfg.autoSync; saveCfg();
-  applySyncSettingsUI();
-  if (cfg.autoSync && signedIn) startPolling();
-  else stopPolling();
-}
+function toggleAutoSync() { cfg.autoSync = !cfg.autoSync; saveCfg(); applySyncSettingsUI(); if (cfg.autoSync && signedIn) startPolling(); else stopPolling(); }
+function saveSyncSettings() { cfg.pollInterval = parseInt(document.getElementById('pollInterval').value) || 60000; saveCfg(); if (cfg.autoSync && signedIn) { stopPolling(); startPolling(); } }
+function setConflict(s) { cfg.syncConflict = s; saveCfg(); applySyncSettingsUI(); }
 
-function saveSyncSettings() {
-  cfg.pollInterval = parseInt(document.getElementById('pollInterval').value) || 60000;
-  saveCfg();
-  if (cfg.autoSync && signedIn) { stopPolling(); startPolling(); }
-}
-
-function setConflict(strategy) {
-  cfg.syncConflict = strategy; saveCfg(); applySyncSettingsUI();
-}
-
-// ─── POLLING ──────────────────────────────────────────────────────────────────
-function startPolling() {
-  stopPolling();
-  if (!cfg.autoSync || !signedIn) return;
-  pollTimer = setInterval(() => checkSheetChanges(false), cfg.pollInterval);
-  checkSheetChanges(false);
-}
-
-function stopPolling() {
-  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
-}
-
-// ─── CHECK SHEET FOR CHANGES (PULL) ──────────────────────────────────────────
-async function checkSheetChanges(manual = false) {
-  if (!signedIn) {
-    if (manual) toast('Connect to Google Sheets first','err');
-    return;
-  }
-  const sheetsToCheck = cfg.sheets.filter(s => s.sheetId);
-  if (!sheetsToCheck.length) {
-    if (manual) toast('No Google Sheet connected','err');
-    return;
-  }
-
-  if (manual) toast('🔄 Checking for sheet changes…', 'info');
-
-  let newRows = [], modifiedRows = [];
-
-  for (const sh of sheetsToCheck) {
-    try {
-      const res = await gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: sh.sheetId,
-        range: `${sh.tab||'Sheet1'}!A2:K`
-      });
-      const rows = (res.result.values || []).filter(r => r[1]); // must have a title
-      for (const row of rows) {
-        const rawId = (row[8]||'').toString().trim();
-        const title = (row[1]||'').trim();
-        const date  = (row[0]||'').trim();
-        if (!title || !date) continue;
-
-        if (rawId && !isNaN(rawId)) {
-          // Row has a numeric app ID — check if it matches a local entry
-          const localEntry = entries.find(e => String(e.id) === rawId && e.sheetId === sh.id);
-          if (localEntry) {
-            // Compare fields to detect edits in the sheet
-            if (hasSheetModified(localEntry, row)) {
-              modifiedRows.push({ row, sh, localEntry });
-            }
-            // else: in sync, nothing to do
-          } else {
-            // ID exists in sheet but not locally (could have been from a different device)
-            newRows.push({ row, sh });
-          }
-        } else {
-          // No app ID — row was added directly in the sheet
-          // Check if we already imported it (match by title+date+sheet)
-          // Match by title+date+sheet regardless of origin
-          const alreadyImported = entries.find(e =>
-            e.sheetId === sh.id &&
-            e.date === date &&
-            e.title.toLowerCase() === title.toLowerCase()
-          );
-          if (!alreadyImported) newRows.push({ row, sh });
-        }
-      }
-    } catch(e) { console.warn('Sheet check error for', sh.name, e); }
-  }
-
-  lastPollTime = Date.now();
-  updateLastSyncLabel();
-
-  const totalChanges = newRows.length + modifiedRows.length;
-
-  if (totalChanges === 0) {
-    if (manual) toast('✓ App is up to date with your sheets', 'ok');
-    hideSyncBanner();
-    return;
-  }
-
-  // Store pending changes
-  pendingSheetChanges = { newRows, modifiedRows };
-  showSyncBanner(newRows.length, modifiedRows.length);
-}
-
-function hasSheetModified(localEntry, row) {
-  // Check if key fields differ between local and sheet row
-  const shTitle   = (row[1]||'').trim();
-  const shDesc    = (row[2]||'').trim();
-  const shCats    = (row[3]||'').split(',').map(s=>s.trim()).filter(Boolean).sort().join(',');
-  const shImpact  = (row[4]||'medium').trim().toLowerCase();
-  const shOutcome = (row[5]||'').trim();
-  const shEffort  = (row[6]||'').trim();
-  const lcCats    = (localEntry.cats||[]).slice().sort().join(',');
-  return (
-    localEntry.title   !== shTitle   ||
-    (localEntry.desc||'')    !== shDesc    ||
-    lcCats             !== shCats    ||
-    (localEntry.impact||'medium') !== shImpact  ||
-    (localEntry.outcome||'') !== shOutcome ||
-    String(localEntry.effort||'') !== shEffort
-  );
-}
-
-function showSyncBanner(nNew, nMod) {
-  const banner = document.getElementById('syncBanner');
-  const title  = document.getElementById('syncBannerTitle');
-  const sub    = document.getElementById('syncBannerSub');
-  const parts = [];
-  if (nNew)  parts.push(`${nNew} new row${nNew>1?'s':''} added in the sheet`);
-  if (nMod)  parts.push(`${nMod} row${nMod>1?'s':''} edited in the sheet`);
-  title.textContent = 'Changes detected in Google Sheet';
-  sub.textContent   = parts.join(' · ');
-  banner.classList.add('visible');
-}
-
-function hideSyncBanner() {
-  const banner = document.getElementById('syncBanner');
-  banner.classList.remove('visible');
-}
-
-function dismissSyncBanner() {
-  pendingSheetChanges = [];
-  hideSyncBanner();
-}
-
-// ─── APPLY PULLED CHANGES ─────────────────────────────────────────────────────
-async function applySheetChanges() {
-  if (!pendingSheetChanges || (!pendingSheetChanges.newRows?.length && !pendingSheetChanges.modifiedRows?.length)) {
-    hideSyncBanner();
-    return;
-  }
-  hideSyncBanner();
-
-  const { newRows, modifiedRows } = pendingSheetChanges;
-  pendingSheetChanges = [];
-
-  let imported = 0, updated = 0, skipped = 0;
-
-  // 1. Import brand-new rows (added directly in sheet)
-  for (const { row, sh } of newRows) {
-    const newEntry = rowToEntry(row, sh);
-    // Assign a local ID if the row doesn't have one, and write it back to sheet
-    if (!newEntry.id) {
-      newEntry.id = Date.now() + Math.floor(Math.random() * 9999);
-      try {
-        const idRes = await gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: sh.sheetId, range: `${sh.tab||'Sheet1'}!A:B`
-        });
-        const shRows = idRes.result.values || [];
-        const rowIdx = shRows.findIndex((r, i) => i > 0 && r[0] === newEntry.date && r[1] === newEntry.title);
-        if (rowIdx > 0) {
-          await gapi.client.sheets.spreadsheets.values.update({
-            spreadsheetId: sh.sheetId,
-            range: `${sh.tab||'Sheet1'}!I${rowIdx + 1}`,
-            valueInputOption: 'RAW',
-            resource: { values: [[String(newEntry.id)]] }
-          });
-        }
-      } catch(e) {}
-    }
-    entries.unshift(newEntry);
-    imported++;
-  }
-
-  // 2. Handle modified rows (sheet version is newer/different)
-  const autoKeepSheet  = cfg.syncConflict === 'sheet';
-  const autoKeepLocal  = cfg.syncConflict === 'local';
-  const shouldAsk      = cfg.syncConflict === 'ask';
-  conflictQueue = []; // reset before building
-
-  for (const { row, sh, localEntry } of modifiedRows) {
-    if (autoKeepSheet) {
-      // Overwrite local entry with sheet data, preserve local id
-      const sheetData = rowToEntry(row, sh);
-      const idx = entries.findIndex(e => e.id === localEntry.id);
-      if (idx !== -1) {
-        entries[idx] = {
-          ...sheetData,         // new sheet fields first
-          id: localEntry.id,    // always keep local numeric id
-          sheetId: localEntry.sheetId,
-          sheetName: localEntry.sheetName,
-          synced: true,
-          fromSheet: true
-        };
-      }
-      updated++;
-    } else if (autoKeepLocal) {
-      skipped++;
-    } else if (shouldAsk) {
-      conflictQueue.push({ row, sh, localEntry });
-    }
-  }
-
-  // Always save & render what we have so far (new imports are visible immediately)
-  save();
-  updateLogBar();
-  renderHistory();
-
-  // Show what happened
-  const parts = [];
-  if (imported) parts.push(`${imported} new`);
-  if (updated)  parts.push(`${updated} updated`);
-  if (skipped)  parts.push(`${skipped} skipped`);
-  if (parts.length) toast(`↓ Sheet sync: ${parts.join(', ')} entr${(imported + updated) > 1 ? 'ies' : 'y'}`, 'ok');
-
-  // If there are conflicts to ask about, start the queue AFTER render
-  if (conflictQueue.length) processNextConflict();
-}
-
-// ─── CONFLICT RESOLUTION ──────────────────────────────────────────────────────
-function processNextConflict() {
-  if (!conflictQueue.length) {
-    // All resolved
-    updateLogBar(); renderHistory();
-    return;
-  }
-  currentConflict = conflictQueue.shift();
-  const { row, sh, localEntry } = currentConflict;
-  const sheetEntry = rowToEntry(row, sh);
-
-  const compare = document.getElementById('conflictCompare');
-  compare.innerHTML = `
-    <div class="conflict-side local">
-      <div class="conflict-label l">📱 Local (App)</div>
-      <div class="conflict-field">Title</div><div class="conflict-val">${localEntry.title}</div>
-      <div class="conflict-field" style="margin-top:6px">Desc</div><div class="conflict-val">${localEntry.desc||'—'}</div>
-      <div class="conflict-field" style="margin-top:6px">Impact / Effort</div><div class="conflict-val">${localEntry.impact||'medium'} · ${localEntry.effort||'?'}h</div>
-      <div class="conflict-field" style="margin-top:6px">Categories</div><div class="conflict-val">${(localEntry.cats||[]).join(', ')||'—'}</div>
-    </div>
-    <div class="conflict-side remote">
-      <div class="conflict-label r">📊 Sheet (Remote)</div>
-      <div class="conflict-field">Title</div><div class="conflict-val">${sheetEntry.title}</div>
-      <div class="conflict-field" style="margin-top:6px">Desc</div><div class="conflict-val">${sheetEntry.desc||'—'}</div>
-      <div class="conflict-field" style="margin-top:6px">Impact / Effort</div><div class="conflict-val">${sheetEntry.impact||'medium'} · ${sheetEntry.effort||'?'}h</div>
-      <div class="conflict-field" style="margin-top:6px">Categories</div><div class="conflict-val">${(sheetEntry.cats||[]).join(', ')||'—'}</div>
-    </div>`;
-
-  document.getElementById('conflictModal').classList.add('open');
-}
-
-function resolveConflict(choice) {
-  document.getElementById('conflictModal').classList.remove('open');
-  if (!currentConflict) { processNextConflict(); return; }
-  const { row, sh, localEntry } = currentConflict;
-
-  if (choice === 'sheet') {
-    const sheetData = rowToEntry(row, sh);
-    const idx = entries.findIndex(e => e.id === localEntry.id);
-    if (idx !== -1) {
-      entries[idx] = {
-        ...sheetData,
-        id: localEntry.id,
-        sheetId: localEntry.sheetId,
-        sheetName: localEntry.sheetName,
-        synced: true,
-        fromSheet: true
-      };
-    }
-    save(); renderHistory();
-    toast('Sheet version applied ✓', 'ok');
-  } else if (choice === 'local') {
-    toast('Local version kept', 'ok');
-  } else {
-    toast('Skipped — will ask again next sync', '');
-  }
-
-  currentConflict = null;
-  setTimeout(processNextConflict, 300);
-}
-
-// ─── GAPI (Google Identity Services) ─────────────────────────────────────────
-let tokenClient = null;
-let accessToken = null;
-
-function loadGapi() {
-  if (!cfg.clientId) return;
-  if (!window.gapi) {
-    const sc = document.createElement('script');
-    sc.src = 'https://apis.google.com/js/api.js';
-    sc.onload = () => gapi.load('client', initGapiClient);
-    sc.onerror = () => toast('Failed to load Google API','err');
-    document.head.appendChild(sc);
-  } else {
-    gapi.load('client', initGapiClient);
-  }
-  if (!window.google?.accounts) {
-    const sc2 = document.createElement('script');
-    sc2.src = 'https://accounts.google.com/gsi/client';
-    sc2.onload = initTokenClient;
-    sc2.onerror = () => toast('Failed to load Google Identity Services','err');
-    document.head.appendChild(sc2);
-  } else {
-    initTokenClient();
-  }
-}
-
-async function initGapiClient() {
-  try {
-    await gapi.client.init({});
-    await gapi.client.load('https://sheets.googleapis.com/$discovery/rest?version=v4');
-    gapiReady = true;
-    if (accessToken) gapi.client.setToken({ access_token: accessToken });
-  } catch(e) { toast('Failed to init Google Sheets client','err'); }
-}
-
-function initTokenClient() {
-  if (!cfg.clientId) return;
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: cfg.clientId,
-    scope: 'https://www.googleapis.com/auth/spreadsheets',
-    callback: (tokenResponse) => {
-      if (tokenResponse.error) {
-        toast('Google Auth error — check Client ID & authorized origins','err');
-        document.getElementById('authStatus').textContent = '✕ Auth failed';
-        return;
-      }
-      accessToken = tokenResponse.access_token;
-      if (gapiReady) gapi.client.setToken({ access_token: accessToken });
-      onSignIn(true);
-    },
-  });
-  tokenClient.requestAccessToken({ prompt: '' });
-}
-
-function onSignIn(ok) {
-  signedIn = ok;
-  if (ok) {
-    const status = document.getElementById('authStatus');
-    if (status) status.textContent = '✓ Connected';
-    cfg.sheets.forEach(s => ensureHeaders(s));
-    syncAllPending();
-    // Start polling if enabled
-    if (cfg.autoSync) startPolling();
-    // Show pull button
-    const histPullBtn = document.getElementById('histPullBtn');
-    if (histPullBtn) histPullBtn.style.display = '';
-  }
-  renderSwitcher(); updateLogBar();
-}
-
-async function ensureHeaders(sh) {
-  if (!signedIn || !sh?.sheetId) return;
-  try {
-    const r = await gapi.client.sheets.spreadsheets.values.get({ spreadsheetId: sh.sheetId, range: `${sh.tab||'Sheet1'}!A1` });
-    if (!r.result.values || r.result.values[0][0] !== 'Date') {
-      await gapi.client.sheets.spreadsheets.values.update({
-        spreadsheetId: sh.sheetId, range: `${sh.tab||'Sheet1'}!A1`, valueInputOption: 'RAW',
-        resource: { values: [['Date','Title','Description','Categories','Impact','Outcome','Effort (hrs)','Month','ID','Created','Sheet Name']] }
-      });
-    }
-  } catch(e) {}
-}
-
-async function pushEntry(entry) {
-  if (!signedIn) return false;
-  const sh = sheetById(entry.sheetId);
-  if (!sh?.sheetId) return false;
-  try {
-    await gapi.client.sheets.spreadsheets.values.append({
-      spreadsheetId: sh.sheetId, range: `${sh.tab||'Sheet1'}!A:K`,
-      valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS',
-      resource: { values: [[ entry.date, entry.title, entry.desc||'', (entry.cats||[]).join(', '),
-        entry.impact||'', entry.outcome||'', entry.effort||'',
-        entry.month, String(entry.id), entry.created||'', sh.name ]] }
-    });
-    return true;
-  } catch(e) { return false; }
-}
-
-async function updateEntryInSheet(entry) {
-  if (!signedIn || !entry?.sheetId) return false;
-  const sh = sheetById(entry.sheetId);
-  if (!sh?.sheetId) return false;
-  try {
-    const res = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: sh.sheetId, range: `${sh.tab||'Sheet1'}!I:I`
-    });
-    const rows = res.result.values || [];
-    const rowIndex = rows.findIndex(r => r[0] === String(entry.id));
-    if (rowIndex === -1) return await pushEntry(entry);
-    const rowNum = rowIndex + 1;
-    await gapi.client.sheets.spreadsheets.values.update({
-      spreadsheetId: sh.sheetId,
-      range: `${sh.tab||'Sheet1'}!A${rowNum}:K${rowNum}`,
-      valueInputOption: 'RAW',
-      resource: { values: [[ entry.date, entry.title, entry.desc||'', (entry.cats||[]).join(', '),
-        entry.impact||'', entry.outcome||'', entry.effort||'',
-        entry.month, String(entry.id), entry.created||'', sh.name ]] }
-    });
-    return true;
-  } catch(e) { return false; }
-}
-
-async function syncAllPending() {
-  const pending = entries.filter(e => !e.synced && e.sheetId);
-  if (!pending.length) return;
-  let n = 0;
-  for (const e of pending) { const ok = await pushEntry(e); if (ok) { e.synced = true; n++; } }
-  if (n) { save(); updateLogBar(); if (document.getElementById('panel-history').classList.contains('active')) renderHistory(); }
-}
-
-// ─── ADD ENTRY ────────────────────────────────────────────────────────────────
-async function addEntry() {
-  const date  = document.getElementById('fDate').value;
-  const title = document.getElementById('fTitle').value.trim();
-  if (!date||!title) { toast('Date and title required','err'); return; }
-  const as = activeSheet();
-  const entry = {
-    id: Date.now(), date, title,
-    desc:    document.getElementById('fDesc').value.trim(),
-    cats:    getSelCats('logCats'),
-    impact:  document.getElementById('fImpact').value,
-    outcome: document.getElementById('fOutcome').value.trim(),
-    effort:  document.getElementById('fEffort').value,
-    month: date.slice(0,7), synced: false, created: new Date().toISOString(),
-    sheetId: as?.id||null, sheetName: as?.name||null
-  };
-  entries.unshift(entry); save();
-  document.getElementById('saveHint').textContent = 'Saving…';
-  const ok = await pushEntry(entry);
-  entry.synced = ok; save(); updateLogBar();
-  document.getElementById('saveHint').textContent = ok ? '✓ Synced' : '○ Saved locally';
-  setTimeout(() => document.getElementById('saveHint').textContent = '', 3000);
-  clearForm();
-  toast(ok ? '✅ Entry saved & synced!' : '✅ Saved locally', 'ok');
-}
-
-function clearForm() {
-  ['fTitle','fDesc','fOutcome','fEffort'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('fImpact').value = 'medium';
-  document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
-  setSelCats('logCats',[]);
-}
-
-async function deleteEntry(id) {
-  if (!confirm('Delete this entry?')) return;
-  const entry = entries.find(e => e.id === id);
-  entries = entries.filter(e => e.id !== id);
-  save(); updateLogBar(); renderHistory(); toast('Entry deleted');
-  if (signedIn && entry?.synced && entry?.sheetId) {
-    const sh = sheetById(entry.sheetId);
-    if (!sh?.sheetId) return;
-    try {
-      const res = await gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: sh.sheetId, range: `${sh.tab||'Sheet1'}!I:I`
-      });
-      const rows = res.result.values || [];
-      const rowIndex = rows.findIndex(r => r[0] === String(entry.id));
-      if (rowIndex === -1) return;
-      const meta = await gapi.client.sheets.spreadsheets.get({ spreadsheetId: sh.sheetId });
-      const sheetMeta = meta.result.sheets.find(s => s.properties.title === (sh.tab||'Sheet1'));
-      if (!sheetMeta) return;
-      const numericSheetId = sheetMeta.properties.sheetId;
-      await gapi.client.sheets.spreadsheets.batchUpdate({
-        spreadsheetId: sh.sheetId,
-        resource: { requests: [{ deleteDimension: { range: { sheetId: numericSheetId, dimension: 'ROWS', startIndex: rowIndex, endIndex: rowIndex+1 } } }] }
-      });
-      toast('Deleted from Google Sheet ✓', 'ok');
-    } catch(e) { toast('Local deleted — Sheet row removal failed', 'err'); }
-  }
-}
-
-// ─── EDIT MODAL ───────────────────────────────────────────────────────────────
-function openEdit(id) {
-  const e = entries.find(e=>e.id===id); if (!e) return;
-  editingId = id;
-  document.getElementById('mDate').value    = e.date;
-  document.getElementById('mTitle').value   = e.title;
-  document.getElementById('mDesc').value    = e.desc||'';
-  document.getElementById('mImpact').value  = e.impact||'medium';
-  document.getElementById('mOutcome').value = e.outcome||'';
-  document.getElementById('mEffort').value  = e.effort||'';
-  setSelCats('modalCats', e.cats||[]);
-  document.getElementById('editModal').classList.add('open');
-}
-async function saveEdit() {
-  const e = entries.find(e=>e.id===editingId); if (!e) return;
-  e.date    = document.getElementById('mDate').value;
-  e.title   = document.getElementById('mTitle').value.trim();
-  e.desc    = document.getElementById('mDesc').value.trim();
-  e.cats    = getSelCats('modalCats');
-  e.impact  = document.getElementById('mImpact').value;
-  e.outcome = document.getElementById('mOutcome').value.trim();
-  e.effort  = document.getElementById('mEffort').value;
-  e.month   = e.date.slice(0,7);
-  e.synced  = false;
-  save(); closeEditModal(); renderHistory(); toast('Updated','ok');
-  const ok = await updateEntryInSheet(e);
-  if (ok) { e.synced=true; save(); renderHistory(); toast('Synced to Sheet ✓','ok'); }
-  else if (!signedIn) { toast('Saved locally — will sync later','ok'); }
-}
-function closeEditModal() { document.getElementById('editModal').classList.remove('open'); editingId=null; }
-function closeBgEdit(e)   { if (e.target===document.getElementById('editModal')) closeEditModal(); }
-
-// ─── MANAGE SHEETS MODAL (continued) ──────────────────────────────────────────
 function pickColor(el) {
   document.querySelectorAll('.swatch').forEach(s => s.classList.remove('sel'));
   el.classList.add('sel'); newColor = el.dataset.color;
@@ -1366,8 +1472,10 @@ function pickColor(el) {
 function addNewSheet() {
   const name    = document.getElementById('nsName').value.trim();
   const sheetId = document.getElementById('nsSheetId').value.trim();
-  if (!name)    { toast('Enter a sheet name','err'); return; }
-  if (!sheetId) { toast('Enter a Google Sheet ID','err'); return; }
+  if (!name)    { toast('Enter a sheet name', 'err'); return; }
+  if (!sheetId) { toast('Enter a Google Sheet ID', 'err'); return; }
+  // Basic Sheet ID validation
+  if (sheetId.length < 10 || /\s/.test(sheetId)) { toast('Invalid Google Sheet ID format', 'err'); return; }
   const sheet = { id: uid(), name, sheetId, color: newColor, tab: 'Sheet1' };
   cfg.sheets.push(sheet);
   if (!cfg.activeSheetId) cfg.activeSheetId = sheet.id;
@@ -1376,40 +1484,42 @@ function addNewSheet() {
   document.getElementById('nsSheetId').value = '';
   renderSheetList(); renderSwitcher(); renderDropdowns(); updateLogBar();
   if (signedIn) ensureHeaders(sheet);
-  toast(`"${name}" connected!`, 'ok');
+  toast('"'+name+'" connected!', 'ok');
 }
 
 function removeSheet(id) {
   const s = sheetById(id); if (!s) return;
   const n = entries.filter(e=>e.sheetId===id).length;
-  if (!confirm(`Remove sheet "${s.name}"?\n\n${n>0?n+' entries will keep their local data but won\'t sync.\n\n':''}The Google Sheet itself will NOT be deleted.`)) return;
+  if (!confirm('Remove sheet "'+s.name+'"?\n\n'+(n>0?n+' entries will keep their local data but won\'t sync.\n\n':'')+'The Google Sheet itself will NOT be deleted.')) return;
   cfg.sheets = cfg.sheets.filter(sh => sh.id !== id);
   if (cfg.activeSheetId === id) cfg.activeSheetId = cfg.sheets[0]?.id || null;
   saveCfg();
   renderSheetList(); renderSwitcher(); renderDropdowns(); updateLogBar();
-  toast(`"${s.name}" removed`);
+  toast('"'+s.name+'" removed');
 }
 
 function saveClientId() {
   const cid = document.getElementById('cfgClientId').value.trim();
-  if (!cid) { toast('Enter your Client ID','err'); return; }
+  if (!cid) { toast('Enter your Client ID', 'err'); return; }
+  if (!cid.includes('.apps.googleusercontent.com')) { toast('Client ID should end with .apps.googleusercontent.com', 'err'); return; }
   cfg.clientId = cid; saveCfg();
-  document.getElementById('authStatus').textContent = 'Connecting…';
+  document.getElementById('authStatus').textContent = 'Loading...';
   tokenClient = null; accessToken = null; gapiReady = false; signedIn = false;
+  updateConnStatus();
   loadGapi();
 }
 
 function saveAnthropicKey() {
   const key = document.getElementById('cfgAnthropicKey').value.trim();
-  if (!key) { toast('Enter your Groq API key','err'); return; }
-  if (!key.startsWith('gsk_')) { toast('Groq keys start with gsk_','err'); return; }
+  if (!key) { toast('Enter your Groq API key', 'err'); return; }
+  if (!key.startsWith('gsk_')) { toast('Groq keys start with gsk_', 'err'); return; }
   cfg.anthropicKey = key; saveCfg();
   document.getElementById('aiKeyStatus').textContent = '✓ Groq key saved';
   document.getElementById('aiKeyStatus').style.color = 'var(--dev)';
-  toast('Groq API key saved! Ready to generate reports.', 'ok');
+  toast('Groq API key saved!', 'ok');
 }
 
-// ─── HISTORY ──────────────────────────────────────────────────────────────────
+// ─── HISTORY ──────────────────────────────────────────────────
 function renderHistory() {
   const fm  = document.getElementById('fMonth').value;
   const fsh = document.getElementById('fSheetH').value;
@@ -1422,17 +1532,19 @@ function renderHistory() {
   if (fi)  list = list.filter(e=>e.impact===fi);
 
   document.getElementById('histCount').textContent = list.length+' entries';
-  document.getElementById('syncBtn').style.display = (list.some(e=>!e.synced) && cfg.sheets.length) ? '':'none';
+  document.getElementById('syncBtn').style.display = (list.some(e=>!e.synced) && cfg.sheets.length) ? '' : 'none';
   const histPullBtn = document.getElementById('histPullBtn');
   if (histPullBtn) histPullBtn.style.display = signedIn && cfg.sheets.length ? '' : 'none';
 
   const el = document.getElementById('histList');
   if (!list.length) {
-    el.innerHTML = `<div class="empty"><div class="empty-icon">📓</div><h3>No entries found</h3><p>Try changing filters or log some tasks.</p></div>`;
+    el.innerHTML = '<div class="empty"><div class="empty-icon">&#128211;</div><h3>No entries found</h3><p>Try changing filters or log some tasks.</p></div>';
     return;
   }
+
   const groups = {};
   list.forEach(e => { if (!groups[e.date]) groups[e.date]=[]; groups[e.date].push(e); });
+
   el.innerHTML = Object.keys(groups).sort((a,b)=>b.localeCompare(a)).map(date => {
     const de = groups[date];
     const dayCats = [...new Set(de.flatMap(e=>e.cats||[]))];
@@ -1447,164 +1559,104 @@ function renderHistory() {
       if(c.includes('learn')) return 't-learn';
       return '';
     };
-    return `
-<div class="day-group">
-  <div class="day-header">
-    <div><div class="day-date-label">${dtLbl}</div><div class="day-dow">${dow}</div></div>
-    <div class="day-cat-pills">${dayCats.map(c=>`<span class="day-pill pill-${c}">${c}</span>`).join('')}</div>
-    ${dayHrs>0?`<div class="day-hrs">${dayHrs.toFixed(1)}h</div>`:''}
-  </div>
-  ${de.map(e => {
-    const sh = sheetById(e.sheetId);
-    const impCls = e.impact==='high'?'chip-hi':e.impact==='medium'?'chip-med':'chip-lo';
-    const sheetChip = sh ? `<span class="chip" style="background:${sh.color}18;color:${sh.color};border:1px solid ${sh.color}40">${sh.name}</span>` : '';
-    const fromSheetChip = e.fromSheet ? `<span class="chip chip-sheet-src">from sheet</span>` : '';
-    const syncDotCls = e.fromSheet ? 'sheet' : (e.synced ? 'ok' : 'pend');
-    const syncDotTitle = e.fromSheet ? 'Imported from Sheet' : (e.synced ? 'Synced' : 'Pending sync');
-    return `
-<div class="entry ${mainCat(e)}${e.fromSheet?' t-sheet-modified':''}">
-  <div class="entry-row">
-    <div style="flex:1;min-width:0">
-      <div class="entry-title">${e.title}</div>
-      ${e.desc?`<div class="entry-desc">${e.desc}</div>`:''}
-      <div class="entry-chips">
-        ${(e.cats||[]).map(c=>`<span class="chip chip-${['dev','pm','learn'].includes(c)?c:'other'}">${c}</span>`).join('')}
-        <span class="chip ${impCls}">${e.impact||'medium'}</span>
-        ${e.effort?`<span class="chip chip-other">${e.effort}h</span>`:''}
-        ${sheetChip}
-        ${fromSheetChip}
-        <span class="sync-dot ${syncDotCls}" title="${syncDotTitle}"></span>
-      </div>
-      ${e.outcome?`<div class="entry-outcome">${e.outcome}</div>`:''}
-    </div>
-    <div class="entry-actions">
-      <button class="btn btn-edit" onclick="openEdit(${e.id})">✎</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteEntry(${e.id})">✕</button>
-    </div>
-  </div>
-</div>`;}).join('')}
-</div>`;
+    return '<div class="day-group">' +
+      '<div class="day-header"><div><div class="day-date-label">'+esc(dtLbl)+'</div><div class="day-dow">'+esc(dow)+'</div></div>' +
+      '<div class="day-cat-pills">'+dayCats.map(c=>'<span class="day-pill pill-'+esc(c)+'">'+esc(c)+'</span>').join('')+'</div>' +
+      (dayHrs>0?'<div class="day-hrs">'+dayHrs.toFixed(1)+'h</div>':'') +
+      '</div>' +
+      de.map(e => {
+        const sh = sheetById(e.sheetId);
+        const impCls = e.impact==='high'?'chip-hi':e.impact==='medium'?'chip-med':'chip-lo';
+        const sheetChip = sh ? '<span class="chip" style="background:'+esc(sh.color)+'18;color:'+esc(sh.color)+';border:1px solid '+esc(sh.color)+'40">'+esc(sh.name)+'</span>' : '';
+        const fromSheetChip = e.fromSheet ? '<span class="chip chip-sheet-src">from sheet</span>' : '';
+        const syncDotCls = e.fromSheet ? 'sheet' : (e.synced ? 'ok' : 'pend');
+        const syncDotTitle = e.fromSheet ? 'Imported from Sheet' : (e.synced ? 'Synced' : 'Pending sync');
+        return '<div class="entry '+mainCat(e)+(e.fromSheet?' t-sheet-modified':'')+'">' +
+          '<div class="entry-row"><div style="flex:1;min-width:0">' +
+            '<div class="entry-title">'+esc(e.title)+'</div>' +
+            (e.desc?'<div class="entry-desc">'+esc(e.desc)+'</div>':'') +
+            '<div class="entry-chips">' +
+              (e.cats||[]).map(c=>'<span class="chip chip-'+(['dev','pm','learn'].includes(c)?c:'other')+'">'+esc(c)+'</span>').join('') +
+              '<span class="chip '+impCls+'">'+esc(e.impact||'medium')+'</span>' +
+              (e.effort?'<span class="chip chip-other">'+esc(e.effort)+'h</span>':'') +
+              sheetChip + fromSheetChip +
+              '<span class="sync-dot '+syncDotCls+'" title="'+syncDotTitle+'"></span>' +
+            '</div>' +
+            (e.outcome?'<div class="entry-outcome">'+esc(e.outcome)+'</div>':'') +
+          '</div>' +
+          '<div class="entry-actions">' +
+            '<button class="btn btn-edit" onclick="openEdit('+e.id+')">&#x270E;</button>' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteEntry('+e.id+')">&#x2715;</button>' +
+          '</div></div></div>';
+      }).join('') +
+    '</div>';
   }).join('');
 }
 
-// ─── REPORT ───────────────────────────────────────────────────────────────────
+// ─── REPORT ───────────────────────────────────────────────────
 async function generateReport() {
   const month = document.getElementById('rMonth').value;
   const fsh   = document.getElementById('fSheetR').value;
-  if (!month) { toast('Select a month','err'); return; }
+  if (!month) { toast('Select a month', 'err'); return; }
   let me = entries.filter(e=>e.month===month);
   if (fsh) me = me.filter(e=>e.sheetId===fsh);
 
   const out = document.getElementById('reportOut');
   if (!me.length) {
-    out.innerHTML = `<div class="empty"><div class="empty-icon">📊</div><h3>No entries for this period</h3><p>Log tasks first then generate your report.</p></div>`;
+    out.innerHTML = '<div class="empty"><div class="empty-icon">&#128202;</div><h3>No entries for this period</h3><p>Log tasks first then generate your report.</p></div>';
     return;
   }
-  out.innerHTML = `<div class="loading-wrap"><div class="spin"></div><div class="loading-txt">Analysing all entries with AI — this may take a moment</div></div>`;
 
-  // ── Build rich stats for the prompt ──
-  const totalHrs    = me.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
-  const daysActive  = [...new Set(me.map(e=>e.date))].length;
-  const highCount   = me.filter(e=>e.impact==='high').length;
-  const medCount    = me.filter(e=>e.impact==='medium').length;
-  const lowCount    = me.filter(e=>e.impact==='low').length;
-  const catCounts   = {};
-  me.forEach(e=>(e.cats||[]).forEach(c=>{ catCounts[c]=(catCounts[c]||0)+1; }));
-  const catSummary  = Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).map(([c,n])=>`${c}:${n}`).join(', ');
-  const withOutcome = me.filter(e=>e.outcome).length;
-  const withDesc    = me.filter(e=>e.desc && e.desc.length>20).length;
-  const avgEffort   = me.filter(e=>e.effort).length ? (totalHrs / me.filter(e=>e.effort).length).toFixed(1) : '?';
-
-  // Week-by-week breakdown
-  const byWeek = {};
-  me.forEach(e=>{
-    const d = new Date(e.date+'T12:00');
-    const wk = `W${Math.ceil(d.getDate()/7)}`;
-    if(!byWeek[wk]) byWeek[wk]=[];
-    byWeek[wk].push(e);
-  });
-  const weekSummary = Object.entries(byWeek).map(([w,es])=>`${w}: ${es.length} tasks, ${es.reduce((s,e)=>s+(parseFloat(e.effort)||0),0).toFixed(1)}h`).join(' | ');
-
-  // High-impact entries for deep analysis
-  const highlights = me.filter(e=>e.impact==='high' || e.outcome).slice(0,12)
-    .map(e=>`  [${e.date}] "${e.title}" (${(e.cats||[]).join('+')||'uncategorised'}, ${e.effort||'?'}h) → ${e.outcome||'no outcome noted'} | ${e.desc||'no description'}`).join('\n');
-
-  // All entries compact
-  const allLog = me.sort((a,b)=>a.date.localeCompare(b.date))
-    .map(e=>`[${e.date}] [${e.impact}] [${(e.cats||[]).join('+')||'?'}] ${e.title} (${e.effort||'?'}h) | outcome: ${e.outcome||'—'} | notes: ${e.desc||'—'}`).join('\n');
-
-  const prompt = `You are a senior engineering manager AND product lead conducting a deep monthly performance review.
-Analyse this developer's complete work log for ${month} and produce a thorough, honest, specific report.
-
-== STATISTICS ==
-Total entries: ${me.length} | Active days: ${daysActive} | Total hours logged: ${totalHrs.toFixed(1)}h | Avg effort/task: ${avgEffort}h
-Impact split: ${highCount} high / ${medCount} medium / ${lowCount} low
-Category breakdown: ${catSummary}
-Entries with outcomes: ${withOutcome}/${me.length} | Entries with detail: ${withDesc}/${me.length}
-Week-by-week: ${weekSummary}
-
-== HIGH-IMPACT & OUTCOME ENTRIES (analyse these deeply) ==
-${highlights || 'None tagged as high impact'}
-
-== COMPLETE LOG ==
-${allLog}
-
-Respond with ONLY valid JSON (absolutely no markdown, no explanation, no code blocks):
-{
-  "devGrade": "A/B/C/D",
-  "pmGrade": "A/B/C/D",
-  "overallGrade": "A/B/C/D",
-  "consistencyGrade": "A/B/C/D",
-  "devGradeReason": "One specific sentence citing actual tasks from the log",
-  "pmGradeReason": "One specific sentence citing actual tasks from the log",
-  "executiveSummary": "3-4 sentences: what was accomplished this month, what stands out, overall trajectory. Be specific — name actual projects/tasks.",
-  "deepAnalysis": "4-6 sentences of deep analysis: patterns in the work, quality of outcomes, how dev and PM skills interplay, any concerning gaps, growth trajectory. Reference specific entries.",
-  "oneThingToRemember": "One powerful, memorable insight personalised to THIS person's actual work this month",
-  "devStrengths": ["Specific strength with example from log","Specific strength with example","Specific strength with example"],
-  "devImprove": ["Specific actionable improvement with context","Specific improvement","Specific improvement"],
-  "pmStrengths": ["Specific PM strength observed","Specific PM strength","Specific PM strength"],
-  "pmImprove": ["Specific PM improvement needed","Specific improvement","Specific improvement"],
-  "topLearnings": ["Key learning extracted from outcomes/notes","Key learning","Key learning"],
-  "blindSpots": ["A pattern or area being neglected based on log analysis","Another blind spot"],
-  "weeklyRhythm": "2-3 sentences analysing consistency across weeks — were there productive sprints, dead weeks, clustering of work?",
-  "impactAnalysis": "2-3 sentences on whether the high-impact tasks represent real milestones or whether high-impact is being over- or under-used as a tag",
-  "careerInsight": "2-3 sentences: what does this month's work say about their career trajectory, skills development, and professional brand?",
-  "nextMonthGoals": ["Specific, actionable goal tied to identified gap","Specific goal","Specific goal"],
-  "keyMetrics": {
-    "focusScore": "0-100 integer (how focused vs scattered was the work)",
-    "depthScore": "0-100 integer (how deep vs shallow based on effort and descriptions)",
-    "outcomeScore": "0-100 integer (% of tasks with meaningful outcomes)",
-    "consistencyScore": "0-100 integer (regularity of work across the month)"
-  }
-}`;
-
-  let r;
   const apiKey = cfg.anthropicKey || '';
   if (!apiKey) {
-    out.innerHTML = `<div class="empty"><div class="empty-icon">🔑</div>
-      <h3>Free API Key Required</h3>
-      <p style="margin-bottom:12px">This uses <strong>Groq</strong> — a free AI service. No credit card needed.</p>
-      <p style="margin-bottom:6px;font-size:13px">1. Go to <strong>console.groq.com</strong> and sign up (free)</p>
-      <p style="margin-bottom:6px;font-size:13px">2. Go to <strong>API Keys → Create API Key</strong></p>
-      <p style="margin-bottom:16px;font-size:13px">3. Paste the key in <strong>⚙ Manage → AI Settings</strong></p>
-      <button class="btn btn-primary" onclick="openMgModal()">⚙ Open Settings</button>
-    </div>`;
+    out.innerHTML = '<div class="empty"><div class="empty-icon">&#128273;</div>' +
+      '<h3>Free API Key Required</h3>' +
+      '<p style="margin-bottom:12px">This uses <strong>Groq</strong> &mdash; a free AI service. No credit card needed.</p>' +
+      '<p style="margin-bottom:6px;font-size:13px">1. Go to <strong>console.groq.com</strong> and sign up (free)</p>' +
+      '<p style="margin-bottom:6px;font-size:13px">2. Go to <strong>API Keys &rarr; Create API Key</strong></p>' +
+      '<p style="margin-bottom:16px;font-size:13px">3. Paste the key in <strong>&#9881; Manage &rarr; AI Settings</strong></p>' +
+      '<button class="btn btn-primary" onclick="openMgModal()">&#9881; Open Settings</button></div>';
     return;
   }
+
+  const genBtn = document.getElementById('genRptBtn');
+  genBtn.disabled = true;
+  out.innerHTML = '<div class="loading-wrap"><div class="spin"></div><div class="loading-txt">Analysing entries with AI</div></div>';
+
+  // Build stats
+  const totalHrs   = me.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
+  const daysActive = [...new Set(me.map(e=>e.date))].length;
+  const highCount  = me.filter(e=>e.impact==='high').length;
+  const medCount   = me.filter(e=>e.impact==='medium').length;
+  const lowCount   = me.filter(e=>e.impact==='low').length;
+  const catCounts  = {};
+  me.forEach(e=>(e.cats||[]).forEach(c=>{ catCounts[c]=(catCounts[c]||0)+1; }));
+  const catSummary = Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).map(([c,n])=>c+':'+n).join(', ');
+  const withOutcome= me.filter(e=>e.outcome).length;
+  const withDesc   = me.filter(e=>e.desc && e.desc.length>20).length;
+  const avgEffort  = me.filter(e=>e.effort).length ? (totalHrs / me.filter(e=>e.effort).length).toFixed(1) : '?';
+
+  const byWeek = {};
+  me.forEach(e=>{ const d=new Date(e.date+'T12:00'); const wk='W'+Math.ceil(d.getDate()/7); if(!byWeek[wk]) byWeek[wk]=[]; byWeek[wk].push(e); });
+  const weekSummary = Object.entries(byWeek).map(([w,es])=>w+': '+es.length+' tasks, '+es.reduce((s,e)=>s+(parseFloat(e.effort)||0),0).toFixed(1)+'h').join(' | ');
+
+  const highlights = me.filter(e=>e.impact==='high' || e.outcome).slice(0,12)
+    .map(e=>'  ['+e.date+'] "'+e.title+'" ('+(e.cats||[]).join('+')||'uncategorised'+', '+(e.effort||'?')+'h) -> '+(e.outcome||'no outcome')+' | '+(e.desc||'no description')).join('\n');
+
+  const allLog = me.sort((a,b)=>a.date.localeCompare(b.date))
+    .map(e=>'['+e.date+'] ['+e.impact+'] ['+(e.cats||[]).join('+')||'?'+'] '+e.title+' ('+(e.effort||'?')+'h) | outcome: '+(e.outcome||'—')+' | notes: '+(e.desc||'—')).join('\n');
+
+  const prompt = 'You are a senior engineering manager AND product lead conducting a deep monthly performance review.\nAnalyse this developer\'s complete work log for '+month+' and produce a thorough, honest, specific report.\n\n== STATISTICS ==\nTotal entries: '+me.length+' | Active days: '+daysActive+' | Total hours: '+totalHrs.toFixed(1)+'h | Avg effort/task: '+avgEffort+'h\nImpact: '+highCount+' high / '+medCount+' medium / '+lowCount+' low\nCategories: '+catSummary+'\nEntries with outcomes: '+withOutcome+'/'+me.length+' | With detail: '+withDesc+'/'+me.length+'\nWeek-by-week: '+weekSummary+'\n\n== HIGH-IMPACT ==\n'+(highlights||'None')+'\n\n== COMPLETE LOG ==\n'+allLog+'\n\nRespond with ONLY valid JSON (no markdown, no explanation):\n{"devGrade":"A/B/C/D","pmGrade":"A/B/C/D","overallGrade":"A/B/C/D","consistencyGrade":"A/B/C/D","devGradeReason":"sentence","pmGradeReason":"sentence","executiveSummary":"3-4 sentences","deepAnalysis":"4-6 sentences","oneThingToRemember":"one insight","devStrengths":["str1","str2","str3"],"devImprove":["imp1","imp2","imp3"],"pmStrengths":["str1","str2","str3"],"pmImprove":["imp1","imp2","imp3"],"topLearnings":["l1","l2","l3"],"blindSpots":["b1","b2"],"weeklyRhythm":"2-3 sentences","impactAnalysis":"2-3 sentences","careerInsight":"2-3 sentences","nextMonthGoals":["g1","g2","g3"],"keyMetrics":{"focusScore":50,"depthScore":50,"outcomeScore":50,"consistencyScore":50}}';
+
+  let r;
   try {
-    // Use Groq API (free, OpenAI-compatible, Llama 3.3 70B)
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + apiKey
-      },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+apiKey },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: 2500,
-        temperature: 0.3,
+        model: 'llama-3.3-70b-versatile', max_tokens: 2500, temperature: 0.3,
         messages: [
-          { role: 'system', content: 'You are a senior engineering manager and product lead. You respond ONLY with valid JSON, no markdown, no explanation.' },
+          { role: 'system', content: 'You are a senior engineering manager and product lead. Respond ONLY with valid JSON.' },
           { role: 'user', content: prompt }
         ]
       })
@@ -1614,8 +1666,9 @@ Respond with ONLY valid JSON (absolutely no markdown, no explanation, no code bl
     const raw = (data.choices?.[0]?.message?.content || '').replace(/```json|```/g, '').trim();
     r = JSON.parse(raw);
   } catch(e) {
-    console.error('AI report error:', e);
-    out.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><h3>AI Generation Failed</h3><p style="margin-bottom:8px">${e.message || 'Unknown error'}</p><p style="font-size:12px;color:var(--muted)">Check your Groq API key in ⚙ Manage → AI Settings</p></div>`;
+    console.error('[Footprint] AI report error:', e);
+    out.innerHTML = '<div class="empty"><div class="empty-icon">&#9888;&#65039;</div><h3>AI Generation Failed</h3><p style="margin-bottom:8px">'+esc(e.message||'Unknown error')+'</p><p style="font-size:12px;color:var(--muted)">Check your Groq API key in &#9881; Manage &rarr; AI Settings</p></div>';
+    genBtn.disabled = false;
     return;
   }
 
@@ -1624,32 +1677,7 @@ Respond with ONLY valid JSON (absolutely no markdown, no explanation, no code bl
   currentRating = (reflections[currentReportMonth]||{}).rating||0;
   renderReport(r, me, month, fsh);
   ['saveReflBtn','exportRptBtn','deleteRptBtn'].forEach(id => document.getElementById(id).style.display='');
-}
-
-function fallbackReport(me) {
-  const dN=me.filter(e=>(e.cats||[]).includes('dev')).length;
-  const pN=me.filter(e=>(e.cats||[]).includes('pm')).length;
-  const g=n=>n>=15?'A':n>=8?'B':n>=4?'C':'D';
-  const hrs = me.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
-  return {
-    devGrade:g(dN), pmGrade:g(pN), overallGrade:g(me.length), consistencyGrade:'B',
-    devGradeReason:`${dN} dev tasks logged across the month.`,
-    pmGradeReason:`${pN} PM-related tasks logged.`,
-    executiveSummary:`You logged ${me.length} entries${hrs>0?' totalling '+hrs.toFixed(1)+' hours':''} this period. Add your Anthropic API key in Manage → AI Settings to get deep personalised AI insights.`,
-    deepAnalysis:'Connect to the Anthropic API for a deep analysis of your work patterns, quality, and growth trajectory.',
-    oneThingToRemember:'The more detail you log, the more insight you get back.',
-    devStrengths:['Active development logging','Tracking task outcomes','Cross-category work visibility'],
-    devImprove:['Add more technical detail to entries','Track deep work vs meetings separately','Document key decisions and their rationale'],
-    pmStrengths:['Growing product awareness','Logging cross-functional collaboration','Building outcome-oriented thinking'],
-    pmImprove:['Log more PM-specific tasks','Add user impact context to outcomes','Practice framing work in problem/solution terms'],
-    topLearnings: me.filter(e=>e.outcome).slice(0,3).map(e=>e.outcome).filter(Boolean),
-    blindSpots:['Under-representing PM work relative to dev','Missing effort estimates on many entries'],
-    weeklyRhythm:'Add more entries for weekly pattern analysis.',
-    impactAnalysis:'Tag more entries with impact levels to get meaningful impact distribution analysis.',
-    careerInsight:'Log consistently for 2-3 months to see career trajectory patterns emerge.',
-    nextMonthGoals:['Log at least 1 PM-focused task per week','Add effort hours to every single entry','Write a weekly retro entry every Friday'],
-    keyMetrics:{ focusScore:50, depthScore:50, outcomeScore:Math.round((me.filter(e=>e.outcome).length/me.length)*100)||0, consistencyScore:50 }
-  };
+  genBtn.disabled = false;
 }
 
 function renderReport(r, me, month, fsh) {
@@ -1659,7 +1687,7 @@ function renderReport(r, me, month, fsh) {
   const hN = me.filter(e=>e.impact==='high').length;
   const oN = me.filter(e=>e.outcome).length;
   const hrs = me.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
-  const daysIn = new Date(month.split('-')[0],parseInt(month.split('-')[1]),0).getDate();
+  const daysIn = new Date(month.split('-')[0], parseInt(month.split('-')[1]), 0).getDate();
   const dayMap = {};
   me.forEach(e=>{
     const d=parseInt(e.date.split('-')[2]),c=e.cats||[];
@@ -1671,586 +1699,142 @@ function renderReport(r, me, month, fsh) {
   });
   const dots = Array.from({length:daysIn},(_,i)=>{
     const t=dayMap[i+1];
-    return `<div class="act-dot ${t?'a-'+t:'a-empty'}" data-tip="Day ${i+1}${t?' — '+t:''}"></div>`;
+    return '<div class="act-dot '+(t?'a-'+t:'a-empty')+'" data-tip="Day '+(i+1)+(t?' — '+t:'')+'"></div>';
   }).join('');
-  const ins = (arr,col) => (arr||[]).map(s=>`<div class="ins-item"><div class="ins-dot" style="background:${col}"></div><div>${s}</div></div>`).join('');
+  const ins = (arr,col) => (arr||[]).map(s=>'<div class="ins-item"><div class="ins-dot" style="background:'+col+'"></div><div>'+esc(s)+'</div></div>').join('');
   const ref = reflections[currentReportMonth]||{};
   const sh  = fsh ? sheetById(fsh) : null;
   const km  = r.keyMetrics || {};
 
   const scoreBar = (val, col) => {
     const v = parseInt(val)||0;
-    return `<div style="display:flex;align-items:center;gap:8px;margin-top:5px">
-      <div style="flex:1;background:var(--rule);border-radius:3px;height:7px;overflow:hidden">
-        <div style="width:${v}%;background:${col};height:100%;border-radius:3px;transition:width 0.6s ease"></div>
-      </div>
-      <span style="font-family:DM Mono,monospace;font-size:11px;font-weight:600;color:${col};min-width:32px">${v}</span>
-    </div>`;
+    return '<div style="display:flex;align-items:center;gap:8px;margin-top:5px">' +
+      '<div style="flex:1;background:var(--rule);border-radius:3px;height:7px;overflow:hidden">' +
+        '<div style="width:'+v+'%;background:'+col+';height:100%;border-radius:3px;transition:width 0.6s ease"></div>' +
+      '</div>' +
+      '<span style="font-family:DM Mono,monospace;font-size:11px;font-weight:600;color:'+col+';min-width:32px">'+v+'</span>' +
+    '</div>';
   };
 
-  document.getElementById('reportOut').innerHTML = `
-<div class="report-card">
-  <div class="rc-header">
-    <div>
-      <div class="rc-title">Monthly Report Card</div>
-      <div class="rc-month">${label} · ${sh?`<span style="color:${sh.color}">${sh.name}</span>`:'All Sheets'} · ${me.length} entries</div>
-    </div>
-    <div class="rc-stamp">${r.overallGrade}</div>
-  </div>
+  document.getElementById('reportOut').innerHTML =
+    '<div class="report-card">' +
+    '<div class="rc-header"><div>' +
+      '<div class="rc-title">Monthly Report Card</div>' +
+      '<div class="rc-month">'+esc(label)+' &middot; '+(sh?'<span style="color:'+esc(sh.color)+'">'+esc(sh.name)+'</span>':'All Sheets')+' &middot; '+me.length+' entries</div>' +
+    '</div><div class="rc-stamp">'+esc(r.overallGrade)+'</div></div>' +
 
-  <!-- GRADES -->
-  <div class="grade-grid">
-    <div class="grade-box"><div class="grade-letter grade-${r.devGrade}">${r.devGrade}</div><div class="grade-lbl">Dev Skills</div><div class="grade-sub">${r.devGradeReason}</div></div>
-    <div class="grade-box"><div class="grade-letter grade-${r.pmGrade}">${r.pmGrade}</div><div class="grade-lbl">PM Thinking</div><div class="grade-sub">${r.pmGradeReason}</div></div>
-    <div class="grade-box"><div class="grade-letter grade-${r.consistencyGrade}">${r.consistencyGrade}</div><div class="grade-lbl">Consistency</div><div class="grade-sub">${Object.keys(dayMap).length} active days</div></div>
-    <div class="grade-box"><div class="grade-letter grade-${r.overallGrade}">${r.overallGrade}</div><div class="grade-lbl">Overall</div><div class="grade-sub">${hN} high-impact</div></div>
-  </div>
+    '<div class="grade-grid">' +
+      '<div class="grade-box"><div class="grade-letter grade-'+esc(r.devGrade)+'">'+esc(r.devGrade)+'</div><div class="grade-lbl">Dev Skills</div><div class="grade-sub">'+esc(r.devGradeReason)+'</div></div>' +
+      '<div class="grade-box"><div class="grade-letter grade-'+esc(r.pmGrade)+'">'+esc(r.pmGrade)+'</div><div class="grade-lbl">PM Thinking</div><div class="grade-sub">'+esc(r.pmGradeReason)+'</div></div>' +
+      '<div class="grade-box"><div class="grade-letter grade-'+esc(r.consistencyGrade)+'">'+esc(r.consistencyGrade)+'</div><div class="grade-lbl">Consistency</div><div class="grade-sub">'+Object.keys(dayMap).length+' active days</div></div>' +
+      '<div class="grade-box"><div class="grade-letter grade-'+esc(r.overallGrade)+'">'+esc(r.overallGrade)+'</div><div class="grade-lbl">Overall</div><div class="grade-sub">'+hN+' high-impact</div></div>' +
+    '</div>' +
 
-  <!-- STATS -->
-  <div class="stat-strip">
-    <div class="stat-item"><div class="stat-num">${me.length}</div><div class="stat-lbl">Entries</div></div>
-    <div class="stat-item" style="border-left-color:var(--dev)"><div class="stat-num">${dN}</div><div class="stat-lbl">Dev</div></div>
-    <div class="stat-item" style="border-left-color:var(--pm)"><div class="stat-num">${pN}</div><div class="stat-lbl">PM</div></div>
-    <div class="stat-item" style="border-left-color:var(--red)"><div class="stat-num">${hN}</div><div class="stat-lbl">High Impact</div></div>
-    <div class="stat-item"><div class="stat-num">${oN}</div><div class="stat-lbl">Outcomes</div></div>
-    <div class="stat-item" style="border-left-color:var(--gold)"><div class="stat-num">${hrs>0?hrs.toFixed(1):'—'}</div><div class="stat-lbl">Hours</div></div>
-  </div>
+    '<div class="stat-strip">' +
+      '<div class="stat-item"><div class="stat-num">'+me.length+'</div><div class="stat-lbl">Entries</div></div>' +
+      '<div class="stat-item" style="border-left-color:var(--dev)"><div class="stat-num">'+dN+'</div><div class="stat-lbl">Dev</div></div>' +
+      '<div class="stat-item" style="border-left-color:var(--pm)"><div class="stat-num">'+pN+'</div><div class="stat-lbl">PM</div></div>' +
+      '<div class="stat-item" style="border-left-color:var(--red)"><div class="stat-num">'+hN+'</div><div class="stat-lbl">High Impact</div></div>' +
+      '<div class="stat-item"><div class="stat-num">'+oN+'</div><div class="stat-lbl">Outcomes</div></div>' +
+      '<div class="stat-item" style="border-left-color:var(--gold)"><div class="stat-num">'+(hrs>0?hrs.toFixed(1):'—')+'</div><div class="stat-lbl">Hours</div></div>' +
+    '</div>' +
 
-  <!-- SCORE METERS -->
-  ${km.focusScore !== undefined ? `
-  <div class="ins-box" style="margin-bottom:20px">
-    <div class="ins-box-title" style="margin-bottom:12px">📐 Quality Scores</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-      <div><div style="font-size:12px;font-weight:600">Focus</div><div style="font-size:11px;color:var(--muted);margin-bottom:2px">How focused vs scattered</div>${scoreBar(km.focusScore,'var(--dev)')}</div>
-      <div><div style="font-size:12px;font-weight:600">Depth</div><div style="font-size:11px;color:var(--muted);margin-bottom:2px">Effort & detail quality</div>${scoreBar(km.depthScore,'var(--sync-pull)')}</div>
-      <div><div style="font-size:12px;font-weight:600">Outcomes</div><div style="font-size:11px;color:var(--muted);margin-bottom:2px">Tasks with clear results</div>${scoreBar(km.outcomeScore,'var(--gold)')}</div>
-      <div><div style="font-size:12px;font-weight:600">Consistency</div><div style="font-size:11px;color:var(--muted);margin-bottom:2px">Regularity across month</div>${scoreBar(km.consistencyScore,'var(--pm)')}</div>
-    </div>
-  </div>` : ''}
+    (km.focusScore !== undefined ?
+    '<div class="ins-box" style="margin-bottom:20px"><div class="ins-box-title" style="margin-bottom:12px">Quality Scores</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">' +
+        '<div><div style="font-size:12px;font-weight:600">Focus</div>'+scoreBar(km.focusScore,'var(--dev)')+'</div>' +
+        '<div><div style="font-size:12px;font-weight:600">Depth</div>'+scoreBar(km.depthScore,'var(--sync-pull)')+'</div>' +
+        '<div><div style="font-size:12px;font-weight:600">Outcomes</div>'+scoreBar(km.outcomeScore,'var(--gold)')+'</div>' +
+        '<div><div style="font-size:12px;font-weight:600">Consistency</div>'+scoreBar(km.consistencyScore,'var(--pm)')+'</div>' +
+      '</div></div>' : '') +
 
-  <!-- EXECUTIVE SUMMARY -->
-  <div class="summary-box">
-    <div class="ins-box-title" style="color:var(--dev);margin-bottom:7px">✨ Executive Summary <span class="badge badge-ai" style="margin-left:4px">AI</span></div>
-    <p style="font-size:14px;line-height:1.8">${r.executiveSummary}</p>
-    ${r.oneThingToRemember?`<p style="margin-top:10px;font-size:13px;font-family:DM Mono,monospace;color:var(--dev);font-style:italic;border-top:1px solid rgba(26,77,62,0.15);padding-top:10px">"${r.oneThingToRemember}"</p>`:''}
-  </div>
+    '<div class="summary-box"><div class="ins-box-title" style="color:var(--dev);margin-bottom:7px">Executive Summary <span class="badge badge-ai" style="margin-left:4px">AI</span></div>' +
+      '<p style="font-size:14px;line-height:1.8">'+esc(r.executiveSummary)+'</p>' +
+      (r.oneThingToRemember?'<p style="margin-top:10px;font-size:13px;font-family:DM Mono,monospace;color:var(--dev);font-style:italic;border-top:1px solid rgba(26,77,62,0.15);padding-top:10px">"'+esc(r.oneThingToRemember)+'"</p>':'') +
+    '</div>' +
 
-  <!-- DEEP ANALYSIS -->
-  ${r.deepAnalysis ? `
-  <div class="ins-box" style="margin-bottom:20px;border-color:rgba(21,101,192,0.25);background:var(--sync-pull-light)">
-    <div class="ins-box-title" style="color:var(--sync-pull);margin-bottom:8px">🔬 Deep Analysis</div>
-    <p style="font-size:13px;line-height:1.8;color:var(--text)">${r.deepAnalysis}</p>
-  </div>` : ''}
+    (r.deepAnalysis ?
+    '<div class="ins-box" style="margin-bottom:20px;border-color:rgba(21,101,192,0.25);background:var(--sync-pull-light)">' +
+      '<div class="ins-box-title" style="color:var(--sync-pull);margin-bottom:8px">Deep Analysis</div>' +
+      '<p style="font-size:13px;line-height:1.8;color:var(--text)">'+esc(r.deepAnalysis)+'</p></div>' : '') +
 
-  <!-- ACTIVITY MAP -->
-  <div style="margin-bottom:20px">
-    <div class="ins-box-title" style="margin-bottom:9px">Activity Heatmap — ${label}</div>
-    <div class="act-dots">${dots}</div>
-    <div style="display:flex;gap:14px;margin-top:6px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">
-      <span><span style="display:inline-block;width:10px;height:10px;background:var(--dev);opacity:.7;border-radius:2px;margin-right:4px"></span>Dev</span>
-      <span><span style="display:inline-block;width:10px;height:10px;background:var(--pm);opacity:.7;border-radius:2px;margin-right:4px"></span>PM</span>
-      <span><span style="display:inline-block;width:10px;height:10px;background:var(--gold);opacity:.7;border-radius:2px;margin-right:4px"></span>Learn</span>
-    </div>
-  </div>
+    '<div style="margin-bottom:20px"><div class="ins-box-title" style="margin-bottom:9px">Activity Heatmap &mdash; '+esc(label)+'</div>' +
+      '<div class="act-dots">'+dots+'</div>' +
+      '<div style="display:flex;gap:14px;margin-top:6px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">' +
+        '<span><span style="display:inline-block;width:10px;height:10px;background:var(--dev);opacity:.7;border-radius:2px;margin-right:4px"></span>Dev</span>' +
+        '<span><span style="display:inline-block;width:10px;height:10px;background:var(--pm);opacity:.7;border-radius:2px;margin-right:4px"></span>PM</span>' +
+        '<span><span style="display:inline-block;width:10px;height:10px;background:var(--gold);opacity:.7;border-radius:2px;margin-right:4px"></span>Learn</span>' +
+      '</div></div>' +
 
-  <!-- WEEKLY RHYTHM -->
-  ${r.weeklyRhythm ? `
-  <div class="ins-box" style="margin-bottom:20px">
-    <div class="ins-box-title" style="margin-bottom:6px">📅 Weekly Rhythm</div>
-    <p style="font-size:13px;line-height:1.75;color:var(--text)">${r.weeklyRhythm}</p>
-  </div>` : ''}
+    (r.weeklyRhythm ? '<div class="ins-box" style="margin-bottom:20px"><div class="ins-box-title" style="margin-bottom:6px">Weekly Rhythm</div><p style="font-size:13px;line-height:1.75;color:var(--text)">'+esc(r.weeklyRhythm)+'</p></div>' : '') +
 
-  <!-- STRENGTHS & IMPROVEMENTS -->
-  <div class="ins-grid">
-    <div class="ins-box"><div class="ins-box-title">🖥 Dev — Strengths</div>${ins(r.devStrengths,'var(--dev)')}</div>
-    <div class="ins-box"><div class="ins-box-title">🖥 Dev — Improve</div>${ins(r.devImprove,'var(--red)')}</div>
-    <div class="ins-box"><div class="ins-box-title">📦 PM — Strengths</div>${ins(r.pmStrengths,'var(--pm)')}</div>
-    <div class="ins-box"><div class="ins-box-title">📦 PM — Improve</div>${ins(r.pmImprove,'var(--red)')}</div>
-    <div class="ins-box"><div class="ins-box-title">📚 Top Learnings</div>${ins(r.topLearnings,'var(--gold)')}</div>
-    <div class="ins-box"><div class="ins-box-title">⚠️ Blind Spots</div>${ins(r.blindSpots,'var(--pm)')}</div>
-  </div>
+    '<div class="ins-grid">' +
+      '<div class="ins-box"><div class="ins-box-title">Dev &mdash; Strengths</div>'+ins(r.devStrengths,'var(--dev)')+'</div>' +
+      '<div class="ins-box"><div class="ins-box-title">Dev &mdash; Improve</div>'+ins(r.devImprove,'var(--red)')+'</div>' +
+      '<div class="ins-box"><div class="ins-box-title">PM &mdash; Strengths</div>'+ins(r.pmStrengths,'var(--pm)')+'</div>' +
+      '<div class="ins-box"><div class="ins-box-title">PM &mdash; Improve</div>'+ins(r.pmImprove,'var(--red)')+'</div>' +
+      '<div class="ins-box"><div class="ins-box-title">Top Learnings</div>'+ins(r.topLearnings,'var(--gold)')+'</div>' +
+      '<div class="ins-box"><div class="ins-box-title">Blind Spots</div>'+ins(r.blindSpots,'var(--pm)')+'</div>' +
+    '</div>' +
 
-  <!-- IMPACT ANALYSIS -->
-  ${r.impactAnalysis ? `
-  <div class="ins-box" style="margin-top:14px">
-    <div class="ins-box-title" style="margin-bottom:6px">🎯 Impact Analysis</div>
-    <p style="font-size:13px;line-height:1.75">${r.impactAnalysis}</p>
-  </div>` : ''}
+    (r.impactAnalysis ? '<div class="ins-box" style="margin-top:14px"><div class="ins-box-title" style="margin-bottom:6px">Impact Analysis</div><p style="font-size:13px;line-height:1.75">'+esc(r.impactAnalysis)+'</p></div>' : '') +
+    (r.careerInsight ? '<div class="ins-box" style="margin-top:14px;border-color:rgba(200,151,58,0.35);background:var(--gold-light)"><div class="ins-box-title" style="color:var(--gold);margin-bottom:6px">Career Insight</div><p style="font-size:13px;line-height:1.75">'+esc(r.careerInsight)+'</p></div>' : '') +
 
-  <!-- CAREER INSIGHT -->
-  ${r.careerInsight ? `
-  <div class="ins-box" style="margin-top:14px;border-color:rgba(200,151,58,0.35);background:var(--gold-light)">
-    <div class="ins-box-title" style="color:var(--gold);margin-bottom:6px">🚀 Career Insight</div>
-    <p style="font-size:13px;line-height:1.75">${r.careerInsight}</p>
-  </div>` : ''}
+    '<div class="ins-box" style="margin-top:14px"><div class="ins-box-title">Next Month Goals</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px">' +
+        (r.nextMonthGoals||[]).map((g,i)=>'<div style="display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.6;padding:10px;background:var(--paper);border-radius:4px;border:1px solid var(--rule)"><span style="font-family:DM Mono,monospace;font-weight:700;color:var(--dev);min-width:22px;font-size:12px">0'+(i+1)+'</span><span>'+esc(g)+'</span></div>').join('') +
+      '</div></div>' +
 
-  <!-- NEXT MONTH GOALS -->
-  <div class="ins-box" style="margin-top:14px">
-    <div class="ins-box-title">🎯 Next Month Goals</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px">
-      ${(r.nextMonthGoals||[]).map((g,i)=>`<div style="display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.6;padding:10px;background:var(--paper);border-radius:4px;border:1px solid var(--rule)"><span style="font-family:DM Mono,monospace;font-weight:700;color:var(--dev);min-width:22px;font-size:12px">0${i+1}</span><span>${g}</span></div>`).join('')}
-    </div>
-  </div>
+    '<hr class="rc-divider">' +
 
-  <hr class="rc-divider">
-
-  <!-- SELF REFLECTIONS -->
-  <div>
-    <div style="font-family:Playfair Display,serif;font-size:19px;font-weight:800;margin-bottom:14px">Self Reflections <span class="badge badge-self" style="font-size:9px;vertical-align:middle">Your Words</span></div>
-    <div class="manual-grid">
-      <div class="field"><label>What am I most proud of?</label><textarea id="rfl_proud" placeholder="Be specific...">${ref.proud||''}</textarea></div>
-      <div class="field"><label>Biggest challenge this month</label><textarea id="rfl_challenge" placeholder="Be honest...">${ref.challenge||''}</textarea></div>
-      <div class="field"><label>As a developer, I must focus on…</label><textarea id="rfl_dev" placeholder="Skill, habit, tool...">${ref.dev||''}</textarea></div>
-      <div class="field"><label>As a PM thinker, I need to…</label><textarea id="rfl_pm" placeholder="User thinking, prioritization...">${ref.pm||''}</textarea></div>
-      <div class="field manual-full"><label>Note to myself for next month</label><textarea id="rfl_note" style="min-height:60px" placeholder="Anything to remember...">${ref.note||''}</textarea></div>
-      <div class="field"><label>Satisfaction this month</label>
-        <div class="star-row" id="starRow">${[1,2,3,4,5].map(n=>`<button class="star-btn ${(ref.rating||0)>=n?'on':''}" onclick="setStar(${n})">★</button>`).join('')}</div>
-      </div>
-      <div class="field"><label>Would I share this report?</label>
-        <select id="rfl_share">
-          <option value="">Choose...</option>
-          <option value="yes" ${ref.share==='yes'?'selected':''}>Yes — I'm proud of it</option>
-          <option value="maybe" ${ref.share==='maybe'?'selected':''}>Maybe — if asked</option>
-          <option value="no" ${ref.share==='no'?'selected':''}>Not yet — still growing</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>`;
+    '<div><div style="font-family:Playfair Display,serif;font-size:19px;font-weight:800;margin-bottom:14px">Self Reflections <span class="badge badge-self" style="font-size:9px;vertical-align:middle">Your Words</span></div>' +
+    '<div class="manual-grid">' +
+      '<div class="field"><label>What am I most proud of?</label><textarea id="rfl_proud" placeholder="Be specific...">'+esc(ref.proud||'')+'</textarea></div>' +
+      '<div class="field"><label>Biggest challenge this month</label><textarea id="rfl_challenge" placeholder="Be honest...">'+esc(ref.challenge||'')+'</textarea></div>' +
+      '<div class="field"><label>As a developer, I must focus on...</label><textarea id="rfl_dev" placeholder="Skill, habit, tool...">'+esc(ref.dev||'')+'</textarea></div>' +
+      '<div class="field"><label>As a PM thinker, I need to...</label><textarea id="rfl_pm" placeholder="User thinking, prioritization...">'+esc(ref.pm||'')+'</textarea></div>' +
+      '<div class="field manual-full"><label>Note to myself for next month</label><textarea id="rfl_note" style="min-height:60px" placeholder="Anything to remember...">'+esc(ref.note||'')+'</textarea></div>' +
+      '<div class="field"><label>Satisfaction this month</label><div class="star-row" id="starRow">'+[1,2,3,4,5].map(n=>'<button class="star-btn '+((ref.rating||0)>=n?'on':'')+'" onclick="setStar('+n+')">&#9733;</button>').join('')+'</div></div>' +
+      '<div class="field"><label>Would I share this report?</label><select id="rfl_share"><option value="">Choose...</option><option value="yes" '+(ref.share==='yes'?'selected':'')+'>Yes &mdash; I\'m proud of it</option><option value="maybe" '+(ref.share==='maybe'?'selected':'')+'>Maybe &mdash; if asked</option><option value="no" '+(ref.share==='no'?'selected':'')+'>Not yet &mdash; still growing</option></select></div>' +
+    '</div></div></div>';
 }
 
-function setStar(n) { currentRating=n; document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('on',i<n)); }
+function setStar(n) {
+  currentRating = n;
+  document.querySelectorAll('.star-btn').forEach((b,i) => b.classList.toggle('on', i<n));
+}
 
 function saveReflections() {
-  const m=currentReportMonth; if(!m) return;
+  const m = currentReportMonth; if(!m) return;
   reflections[m] = {
-    proud:document.getElementById('rfl_proud')?.value||'',
-    challenge:document.getElementById('rfl_challenge')?.value||'',
-    dev:document.getElementById('rfl_dev')?.value||'',
-    pm:document.getElementById('rfl_pm')?.value||'',
-    note:document.getElementById('rfl_note')?.value||'',
-    rating:currentRating,
-    share:document.getElementById('rfl_share')?.value||'',
-    saved:new Date().toISOString()
+    proud: document.getElementById('rfl_proud')?.value||'',
+    challenge: document.getElementById('rfl_challenge')?.value||'',
+    dev: document.getElementById('rfl_dev')?.value||'',
+    pm: document.getElementById('rfl_pm')?.value||'',
+    note: document.getElementById('rfl_note')?.value||'',
+    rating: currentRating,
+    share: document.getElementById('rfl_share')?.value||'',
+    saved: new Date().toISOString()
   };
-  saveReflStore(); toast('Reflections saved!','ok');
+  saveReflStore(); toast('Reflections saved!', 'ok');
 }
 
 async function exportPDF() {
-  const m = currentReportMonth; const r = currentReport;
-  if (!m || !r) { toast('Generate a report first','err'); return; }
-
-  toast('Building PDF…', 'info');
-
-  // Load jsPDF from CDN if not present
-  if (!window.jspdf) {
-    await new Promise((res, rej) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-      s.onload = res; s.onerror = rej;
-      document.head.appendChild(s);
-    });
-  }
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-  const PW = 210, PH = 297;
-  const ML = 18, MR = 18, MT = 18;
-  const CW = PW - ML - MR;
-  let y = MT;
-
-  // ── Colour palette ──
-  const C = {
-    ink:    [14,14,20],
-    dev:    [26,77,62],
-    pm:     [92,26,0],
-    gold:   [200,151,58],
-    red:    [192,57,43],
-    blue:   [21,101,192],
-    paper:  [245,242,237],
-    paper2: [237,233,225],
-    rule:   [217,211,200],
-    muted:  [122,112,101],
-    white:  [255,255,255],
-  };
-
-  const mp = m.split('::')[0];
-  const fsh = m.includes('::') ? m.split('::')[1] : '';
-  const label = new Date(mp+'-02').toLocaleString('default',{month:'long',year:'numeric'});
-  const ref = reflections[m] || {};
-  const me = (() => {
-    let l = entries.filter(e => e.month === mp);
-    if (fsh) l = l.filter(e => e.sheetId === fsh);
-    return l;
-  })();
-
-  const dN  = me.filter(e=>(e.cats||[]).includes('dev')).length;
-  const pN  = me.filter(e=>(e.cats||[]).includes('pm')).length;
-  const hN  = me.filter(e=>e.impact==='high').length;
-  const oN  = me.filter(e=>e.outcome).length;
-  const hrs = me.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
-  const daysActive = [...new Set(me.map(e=>e.date))].length;
-  const km = r.keyMetrics || {};
-
-  // ── Helpers ──
-  function setFill(col) { doc.setFillColor(...col); }
-  function setDraw(col) { doc.setDrawColor(...col); }
-  function setTxt(col)  { doc.setTextColor(...col); }
-  function setFont(style, size) {
-    doc.setFont('helvetica', style);
-    doc.setFontSize(size);
-  }
-
-  function drawPageBase() {
-    // Plain white background
-    setFill(C.white);
-    doc.rect(0, 0, PW, PH, 'F');
-  }
-
-  function newPage() {
-    doc.addPage();
-    drawPageBase();
-    y = MT;
-  }
-
-  function checkPage(needed = 20) {
-    if (y + needed > PH - 15) newPage();
-  }
-
-  function wrappedText(text, x, maxW, lineH, align='left') {
-    const lines = doc.splitTextToSize(String(text||''), maxW);
-    doc.text(lines, x, y, { align });
-    y += lines.length * lineH;
-    return lines.length;
-  }
-
-  function sectionHeader(title, col = C.ink) {
-    checkPage(14);
-    y += 3;
-    setFill(col); doc.rect(ML, y-4, CW, 8, 'F');
-    setTxt(C.white); setFont('bold', 9);
-    doc.text(title.toUpperCase(), ML+3, y+0.5);
-    setTxt(C.ink);
-    y += 7;
-  }
-
-  function gradeBox(x, bw, grade, label2, sub, col) {
-    const bh = 22;
-    setFill([...col, ...[]]); doc.setFillColor(...col);
-    doc.roundedRect(x, y, bw, bh, 2, 2, 'F');
-    setTxt(C.white); setFont('bold', 18);
-    doc.text(grade, x + bw/2, y + 12, { align:'center' });
-    setFont('normal', 7); doc.setTextColor(255,255,255,160);
-    doc.text(label2.toUpperCase(), x + bw/2, y + 17.5, { align:'center' });
-    if (sub) {
-      setFont('normal', 6); setTxt([255,255,255]);
-      const lines = doc.splitTextToSize(sub, bw-4);
-      doc.text(lines[0]||'', x + bw/2, y + 21, { align:'center' });
-    }
-    setTxt(C.ink);
-  }
-
-  function scoreBar(label3, val, col, bx, barW) {
-    checkPage(12);
-    setFont('normal', 8); setTxt(C.muted);
-    doc.text(label3, bx, y);
-    const v = Math.min(100, Math.max(0, parseInt(val)||0));
-    const bh = 4; const fullW = barW - 35;
-    // background
-    setFill([235,235,235]); doc.roundedRect(bx+30, y-3.5, fullW, bh, 1, 1, 'F');
-    // fill
-    doc.setFillColor(...col); doc.roundedRect(bx+30, y-3.5, fullW*(v/100), bh, 1, 1, 'F');
-    setFont('bold', 8); setTxt(col);
-    doc.text(String(v), bx+30+fullW+3, y);
-    setTxt(C.ink);
-    y += 8;
-  }
-
-  function bulletList(items, col, indent=2) {
-    (items||[]).forEach(item => {
-      checkPage(8);
-      setFill(col); doc.circle(ML+indent+1.5, y-1.2, 1.2, 'F');
-      setFont('normal', 9); setTxt(C.ink);
-      const lines = doc.splitTextToSize(String(item||''), CW - indent - 6);
-      doc.text(lines, ML+indent+5, y);
-      y += lines.length * 5 + 1;
-    });
-  }
-
-  function twoColBullets(leftItems, leftTitle, leftCol, rightItems, rightTitle, rightCol) {
-    checkPage(30);
-    const colW = (CW - 4) / 2;
-    const startY = y;
-    // Left
-    setFont('bold', 8); setTxt(leftCol);
-    doc.text(leftTitle, ML, y); y += 5;
-    const leftStart = y;
-    (leftItems||[]).forEach(item => {
-      doc.setFillColor(...leftCol); doc.circle(ML+1.5, y-1.2, 1.2, 'F');
-      setFont('normal', 8); setTxt(C.ink);
-      const lines = doc.splitTextToSize(String(item||''), colW-8);
-      doc.text(lines, ML+5, y);
-      y += lines.length * 4.5 + 1;
-    });
-    const leftEndY = y;
-    // Right (reset y to start)
-    y = startY;
-    const rx = ML + colW + 4;
-    setFont('bold', 8); setTxt(rightCol);
-    doc.text(rightTitle, rx, y); y += 5;
-    (rightItems||[]).forEach(item => {
-      doc.setFillColor(...rightCol); doc.circle(rx+1.5, y-1.2, 1.2, 'F');
-      setFont('normal', 8); setTxt(C.ink);
-      const lines = doc.splitTextToSize(String(item||''), colW-8);
-      doc.text(lines, rx+5, y);
-      y += lines.length * 4.5 + 1;
-    });
-    y = Math.max(leftEndY, y) + 3;
-  }
-
-  // ══════════════════════════════════════════════════════════════
-  // PAGE 1 — COVER
-  // ══════════════════════════════════════════════════════════════
-
-  // Draw page 1 background (paper + ruled lines + margin)
-  drawPageBase();
-
-  // Dark header band
-  setFill(C.ink); doc.rect(0, 0, PW, 55, 'F');
-
-  // Title
-  setTxt(C.white); setFont('bold', 28);
-  doc.text('Footprint', ML+10, 22);
-  setFont('normal', 11); setTxt(C.gold);
-  doc.text('Monthly Report Card', ML+10, 31);
-  setFont('normal', 9); setTxt([180,170,160]);
-  doc.text(label, ML+10, 39);
-  doc.text(`${me.length} entries  ·  ${daysActive} active days  ·  ${hrs.toFixed(1)} hrs`, ML+10, 46);
-
-  // Overall grade stamp
-  setFont('bold', 42); setTxt(C.dev);
-  doc.text(r.overallGrade, PW-MR-8, 42, { align:'right' });
-  setFont('normal', 8); setTxt(C.gold);
-  doc.text('OVERALL', PW-MR-8, 50, { align:'right' });
-
-  y = 65;
-
-  // Grade boxes
-  const gw = (CW-9) / 4;
-  const gradeColors = { A:C.dev, B:C.blue, C:C.gold, D:C.red };
-  gradeBox(ML,        gw, r.devGrade,         'Dev Skills',   r.devGradeReason,   gradeColors[r.devGrade]||C.muted);
-  gradeBox(ML+gw+3,   gw, r.pmGrade,          'PM Thinking',  r.pmGradeReason,    gradeColors[r.pmGrade]||C.muted);
-  gradeBox(ML+2*gw+6, gw, r.consistencyGrade, 'Consistency',  `${daysActive} days`, gradeColors[r.consistencyGrade]||C.muted);
-  gradeBox(ML+3*gw+9, gw, r.overallGrade,     'Overall',      `${hN} high-impact`, gradeColors[r.overallGrade]||C.muted);
-  y += 27;
-
-  // Stats row
-  const stats = [
-    {n:String(me.length), l:'Entries',    col:C.ink},
-    {n:String(dN),        l:'Dev',        col:C.dev},
-    {n:String(pN),        l:'PM',         col:C.pm},
-    {n:String(hN),        l:'High Impact',col:C.red},
-    {n:String(oN),        l:'Outcomes',   col:C.muted},
-    {n:hrs>0?hrs.toFixed(1):'—', l:'Hours', col:C.gold},
-  ];
-  const sw = CW / stats.length;
-  stats.forEach((s,i) => {
-    const sx = ML + i*sw;
-    doc.setFillColor(...s.col); doc.rect(sx, y, 2.5, 12, 'F');
-    setFont('bold', 14); setTxt(s.col);
-    doc.text(s.n, sx+5, y+8);
-    setFont('normal', 7); setTxt(C.muted);
-    doc.text(s.l.toUpperCase(), sx+5, y+13);
-  });
-  y += 18;
-
-  // Quality scores
-  if (km.focusScore !== undefined) {
-    setFont('bold', 9); setTxt(C.muted);
-    doc.text('QUALITY SCORES', ML, y); y += 5;
-    const hw = CW/2 - 3;
-    const sy = y;
-    scoreBar('Focus',       km.focusScore,       C.dev,  ML,       hw);
-    scoreBar('Depth',       km.depthScore,        C.blue, ML,       hw);
-    y = sy;
-    scoreBar('Outcomes',    km.outcomeScore,      C.gold, ML+hw+6,  hw);
-    scoreBar('Consistency', km.consistencyScore,  C.pm,   ML+hw+6,  hw);
-    y += 3;
-  }
-
-  // Executive Summary
-  sectionHeader('Executive Summary', C.dev);
-  setFont('normal', 9); setTxt(C.ink);
-  y += 1;
-  wrappedText(r.executiveSummary, ML, CW, 5.5);
-  y += 2;
-  if (r.oneThingToRemember) {
-    checkPage(14);
-    setFill(C.dev); doc.roundedRect(ML, y, CW, 12, 2, 2, 'F');
-    setFont('italic', 9); setTxt(C.white);
-    const qlines = doc.splitTextToSize(`"${r.oneThingToRemember}"`, CW-8);
-    doc.text(qlines, ML+4, y+4.5);
-    y += Math.max(12, qlines.length*5) + 3;
-  }
-  setTxt(C.ink);
-
-  // Deep Analysis
-  if (r.deepAnalysis) {
-    sectionHeader('Deep Analysis', C.blue);
-    setFont('normal', 9); setTxt(C.ink);
-    wrappedText(r.deepAnalysis, ML, CW, 5.5);
-    y += 2;
-  }
-
-  // ══════════════════════════════════════════════════════════════
-  // PAGE 2 — STRENGTHS & IMPROVEMENTS
-  // ══════════════════════════════════════════════════════════════
-  newPage();
-
-  setFill(C.ink); doc.rect(0, 0, PW, 14, 'F');
-  setTxt(C.white); setFont('bold', 11); doc.text('Strengths & Improvements', ML+10, 9.5);
-  setFont('normal', 8); setTxt(C.gold); doc.text(label, PW-MR, 9.5, {align:'right'});
-  y = 20;
-
-  twoColBullets(r.devStrengths, '🖥  Dev — Strengths', C.dev,   r.devImprove,  '🖥  Dev — Improve',  C.red);
-  y += 4;
-  twoColBullets(r.pmStrengths,  '📦 PM — Strengths',  C.pm,    r.pmImprove,   '📦 PM — Improve',   C.red);
-  y += 4;
-  twoColBullets(r.topLearnings, '📚 Top Learnings',   C.gold,  r.blindSpots,  '⚠  Blind Spots',    C.pm);
-  y += 4;
-
-  // Weekly rhythm
-  if (r.weeklyRhythm) {
-    sectionHeader('Weekly Rhythm', C.muted);
-    setFont('normal', 9); setTxt(C.ink);
-    wrappedText(r.weeklyRhythm, ML, CW, 5.5); y += 2;
-  }
-
-  // Impact analysis
-  if (r.impactAnalysis) {
-    sectionHeader('Impact Analysis', C.red);
-    setFont('normal', 9); setTxt(C.ink);
-    wrappedText(r.impactAnalysis, ML, CW, 5.5); y += 2;
-  }
-
-  // Career insight
-  if (r.careerInsight) {
-    checkPage(30);
-    setFill(C.gold); doc.roundedRect(ML, y, CW, 2, 0, 0, 'F');
-    y += 5;
-    sectionHeader('Career Insight', C.gold);
-    setFont('normal', 9); setTxt(C.ink);
-    wrappedText(r.careerInsight, ML, CW, 5.5); y += 2;
-  }
-
-  // Next month goals
-  sectionHeader('Next Month Goals', C.dev);
-  (r.nextMonthGoals||[]).forEach((g,i) => {
-    checkPage(10);
-    setFill(C.dev); doc.roundedRect(ML, y-4, 6, 6, 1, 1, 'F');
-    setFont('bold', 8); setTxt(C.white);
-    doc.text(`0${i+1}`, ML+3, y+0.2, {align:'center'});
-    setFont('normal', 9); setTxt(C.ink);
-    const lines = doc.splitTextToSize(String(g||''), CW-10);
-    doc.text(lines, ML+9, y);
-    y += lines.length * 5 + 3;
-  });
-
-  // ══════════════════════════════════════════════════════════════
-  // PAGE 3 — REFLECTIONS + ENTRY LOG
-  // ══════════════════════════════════════════════════════════════
-  newPage();
-  setFill(C.pm); doc.rect(0, 0, PW, 14, 'F');
-  setTxt(C.white); setFont('bold', 11); doc.text('Self Reflections', ML+10, 9.5);
-  setFont('normal', 8); setTxt([255,200,180]); doc.text(label, PW-MR, 9.5, {align:'right'});
-  y = 20;
-
-  const reflFields = [
-    ['Most Proud Of',           ref.proud],
-    ['Biggest Challenge',       ref.challenge],
-    ['As a Developer, Focus On',ref.dev],
-    ['As a PM Thinker, I Need To', ref.pm],
-    ['Note to Myself',          ref.note],
-  ];
-  reflFields.forEach(([lbl, val]) => {
-    if (!val) return;
-    checkPage(16);
-    setFont('bold', 8); setTxt(C.pm);
-    doc.text(lbl.toUpperCase(), ML, y); y += 4;
-    setFill([230,230,230]); doc.roundedRect(ML, y, CW, 1, 0, 0, 'F');
-    setFont('normal', 9); setTxt(C.ink);
-    const lines = doc.splitTextToSize(val, CW-4);
-    doc.text(lines, ML+2, y+4);
-    y += lines.length * 5 + 5;
-  });
-
-  if (ref.rating) {
-    checkPage(10);
-    setFont('bold', 8); setTxt(C.pm); doc.text('SATISFACTION', ML, y); y += 5;
-    setFont('normal', 14); setTxt(C.gold);
-    doc.text('★'.repeat(ref.rating) + '☆'.repeat(5-ref.rating), ML, y); y += 8;
-  }
-
-  // Entry log
-  sectionHeader('Complete Entry Log', C.ink);
-  setFont('bold', 7); setTxt(C.muted);
-  doc.text('Date', ML, y);
-  doc.text('Title', ML+18, y);
-  doc.text('Category', ML+100, y);
-  doc.text('Impact', ML+130, y);
-  doc.text('Hrs', ML+150, y);
-  y += 2;
-  setDraw(C.rule); doc.setLineWidth(0.2);
-  doc.line(ML, y, PW-MR, y); y += 4;
-
-  const sorted = [...me].sort((a,b)=>a.date.localeCompare(b.date));
-  sorted.forEach((e,i) => {
-    checkPage(8);
-    if (i % 2 === 0) { setFill([245,245,245]); doc.rect(ML, y-3, CW, 6, 'F'); }
-    setFont('normal', 7.5); setTxt(C.muted);
-    doc.text(e.date, ML, y);
-    setTxt(C.ink);
-    const titleLines = doc.splitTextToSize(e.title||'', 78);
-    doc.text(titleLines[0], ML+18, y);
-    const catStr = (e.cats||[]).join('+') || '—';
-    setTxt(C.dev);
-    doc.text(catStr.slice(0,18), ML+100, y);
-    const impCol = e.impact==='high'?C.red : e.impact==='medium'?C.dev : C.muted;
-    setTxt(impCol); doc.text(e.impact||'—', ML+130, y);
-    setTxt(C.muted); doc.text(e.effort?String(e.effort):'—', ML+150, y);
-    y += 6;
-    if (e.outcome) {
-      setFont('italic', 7); setTxt(C.dev);
-      const olines = doc.splitTextToSize('→ '+e.outcome, CW-20);
-      doc.text(olines[0], ML+18, y);
-      y += 5;
-    }
-  });
-
-  // Footer on last page
-  y = PH - 12;
-  setDraw(C.rule); doc.line(ML, y, PW-MR, y);
-  setFont('normal', 7.5); setTxt(C.muted);
-  doc.text(`Generated by Footprint Growth Portal · ${new Date().toLocaleDateString('en-IN')}`, ML, y+5);
-  setTxt(C.gold);
-  doc.text('footprint · growth portal', PW-MR, y+5, {align:'right'});
-
-  doc.save(`footprint-report-${mp}.pdf`);
-  toast('PDF saved!', 'ok');
+  toast('PDF export coming soon — use browser Print (Ctrl+P) for now', 'info');
 }
 
 function deleteReport() {
-  const m=currentReportMonth; if(!m) return;
-  const label=new Date(m.split('::')[0]+'-02').toLocaleString('default',{month:'long',year:'numeric'});
-  if(!confirm(`Delete the report & reflections for ${label}?\n\nTask entries will NOT be deleted.`)) return;
+  const m = currentReportMonth; if(!m) return;
+  const label = new Date(m.split('::')[0]+'-02').toLocaleString('default',{month:'long',year:'numeric'});
+  if(!confirm('Delete the report & reflections for '+label+'?\n\nTask entries will NOT be deleted.')) return;
   delete reflections[m]; saveReflStore();
   currentReport=null; currentReportMonth=null; currentRating=0;
   document.getElementById('reportOut').innerHTML='';
   ['saveReflBtn','exportRptBtn','deleteRptBtn'].forEach(id=>document.getElementById(id).style.display='none');
-  toast('Report deleted','ok');
+  toast('Report deleted', 'ok');
 }
 
-// Update "last checked" label every 30s
+// Update sync label periodically
 setInterval(updateLastSyncLabel, 30000);
 </script>
 </body>
