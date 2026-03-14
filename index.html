@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Footprint — Growth Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
   --ink: #0e0e14;
@@ -82,7 +83,7 @@ body::after {
 .btn-mgr:hover { border-color: var(--gold); color: var(--gold); }
 
 /* TABS */
-.tabs { display: flex; gap: 0; margin-bottom: 26px; border-bottom: 2px solid var(--ink); }
+.tabs { display: flex; gap: 0; margin-bottom: 26px; border-bottom: 2px solid var(--ink); flex-wrap: wrap; }
 .tab { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 14px; padding: 10px 22px 12px; cursor: pointer; border: none; background: transparent; color: var(--muted); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
 .tab.active { color: var(--ink); border-bottom-color: var(--ink); }
 .tab:hover:not(.active) { color: var(--text); }
@@ -156,6 +157,10 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .btn-sync-now:hover:not(:disabled) { background: rgba(21,101,192,0.12); }
 .btn-row { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; align-items: center; }
 .save-hint { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+.btn-pdf { background: #c0392b; color: #fff; border-color: #c0392b; }
+.btn-pdf:hover:not(:disabled) { background: #a93226; border-color: #a93226; }
+.btn-kra { background: var(--dev); color: #fff; border-color: var(--dev); }
+.btn-kra:hover:not(:disabled) { background: #154031; border-color: #154031; }
 
 /* FILTER BAR */
 .filter-bar { background: #fff; border: 1.5px solid var(--rule); border-radius: 6px; padding: 14px 18px; margin-bottom: 16px; display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
@@ -303,6 +308,40 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .badge-ai   { background: var(--dev-light); color: var(--dev); }
 .badge-self { background: var(--pm-light);  color: var(--pm); }
 
+/* KRA STYLES */
+.kra-card { background: #fff; border: 1.5px solid var(--rule); border-radius: 6px; padding: 28px 32px; box-shadow: 0 2px 14px var(--shadow); }
+.kra-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 16px; border-bottom: 2px solid var(--ink); margin-bottom: 22px; flex-wrap: wrap; gap: 10px; }
+.kra-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; letter-spacing: -0.5px; }
+.kra-meta { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 4px; }
+.kra-overall-badge { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: #fff; background: var(--dev); border-radius: 6px; padding: 6px 16px; line-height: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.kra-overall-label { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 2px; opacity: 0.8; }
+.kra-section { margin-bottom: 24px; }
+.kra-section-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+.kra-section-icon { font-size: 20px; }
+.kra-section-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 800; }
+.kra-section-weight { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-left: auto; }
+.kra-section-score { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; }
+.kra-bar-wrap { height: 8px; background: var(--paper2); border-radius: 4px; margin-bottom: 14px; overflow: hidden; }
+.kra-bar { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+.kra-task-list { list-style: none; padding: 0; }
+.kra-task { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; margin-bottom: 6px; background: var(--paper); border-radius: 4px; border-left: 3px solid var(--rule); font-size: 13px; line-height: 1.6; }
+.kra-task .t-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); min-width: 70px; padding-top: 2px; }
+.kra-task .t-body { flex: 1; }
+.kra-task .t-title { font-weight: 600; }
+.kra-task .t-outcome { font-size: 11px; color: var(--dev); font-family: 'DM Mono', monospace; margin-top: 3px; }
+.kra-task .t-impact { font-size: 9px; font-family: 'DM Mono', monospace; padding: 1px 6px; border-radius: 2px; margin-left: 6px; }
+.kra-summary-box { background: var(--gold-light); border: 1.5px solid rgba(200,151,58,0.3); border-radius: 6px; padding: 16px 20px; margin-top: 20px; }
+.kra-summary-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+.kra-rec-list { list-style: none; padding: 0; }
+.kra-rec-list li { display: flex; gap: 8px; font-size: 13px; line-height: 1.7; margin-bottom: 6px; }
+.kra-rec-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 8px; flex-shrink: 0; background: var(--gold); }
+
+/* PDF Export overlay */
+.pdf-generating { position: fixed; inset: 0; z-index: 9999; background: rgba(14,14,20,0.7); display: flex; align-items: center; justify-content: center; }
+.pdf-generating-inner { background: #fff; border-radius: 10px; padding: 40px 48px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.pdf-generating-inner .spin { margin-bottom: 16px; }
+.pdf-generating-inner p { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); }
+
 /* TOAST */
 .toast { position: fixed; bottom: 20px; right: 20px; z-index: 999; background: var(--ink); color: var(--paper); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.5px; padding: 10px 17px; border-radius: 4px; transform: translateY(70px); opacity: 0; transition: all 0.27s; box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
 .toast.show { transform: translateY(0); opacity: 1; }
@@ -326,6 +365,11 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
   font-family: 'DM Mono', monospace; font-size: 11px; padding: 6px 16px;
 }
 .offline-banner.visible { display: block; }
+
+/* PDF-specific: hide interactive elements during export */
+.pdf-mode .btn, .pdf-mode .entry-actions, .pdf-mode .star-btn,
+.pdf-mode textarea, .pdf-mode select, .pdf-mode input { }
+.pdf-mode .report-card, .pdf-mode .kra-card { box-shadow: none; border: 2px solid var(--ink); }
 </style>
 </head>
 <body>
@@ -353,13 +397,13 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 <div class="tabs">
   <button class="tab active" onclick="gotoTab('log',this)">&#128221; Log Task</button>
   <button class="tab" onclick="gotoTab('history',this)">&#128203; History</button>
+  <button class="tab" onclick="gotoTab('kra',this)">&#127919; KRA Sheet</button>
   <button class="tab" onclick="gotoTab('report',this)">&#128202; Report Card</button>
 </div>
 
 <!-- LOG PANEL -->
 <div id="panel-log" class="panel active">
   <div id="logBar" class="active-bar" style="display:none"></div>
-
   <div class="sync-banner" id="syncBanner">
     <div class="sync-banner-icon">&#128260;</div>
     <div class="sync-banner-txt">
@@ -371,7 +415,6 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
       <button class="btn-pull-dismiss" onclick="dismissSyncBanner()">Dismiss</button>
     </div>
   </div>
-
   <div class="log-card">
     <div class="section-label">New Entry</div>
     <div class="frow c2">
@@ -449,6 +492,28 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
   <div id="histList"></div>
 </div>
 
+<!-- KRA PANEL -->
+<div id="panel-kra" class="panel">
+  <div class="log-card" style="margin-bottom:20px">
+    <div class="section-label">Generate KRA Sheet</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7">
+      AI maps your logged tasks to Key Result Areas for appraisal. Select a period and generate a structured KRA sheet with ratings, evidence, and recommendations.
+    </p>
+    <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+      <div class="field"><label>From Month</label><input type="month" id="kraFromMonth"></div>
+      <div class="field"><label>To Month</label><input type="month" id="kraToMonth"></div>
+      <div class="field"><label>Filter by Sheet</label>
+        <select id="fSheetKRA"><option value="">All Sheets</option></select>
+      </div>
+      <div class="field"><label>Your Name</label><input type="text" id="kraName" placeholder="Full Name" maxlength="100"></div>
+      <div class="field"><label>Role / Designation</label><input type="text" id="kraRole" placeholder="e.g. Software Engineer II" maxlength="100"></div>
+      <button class="btn btn-kra" id="genKraBtn" onclick="generateKRA()">&#127919; Generate KRA Sheet</button>
+      <button class="btn btn-pdf" id="exportKraPdfBtn" onclick="exportKraPDF()" style="display:none">&#128196; Export PDF</button>
+    </div>
+  </div>
+  <div id="kraOut"></div>
+</div>
+
 <!-- REPORT PANEL -->
 <div id="panel-report" class="panel">
   <div class="log-card" style="margin-bottom:20px">
@@ -459,8 +524,8 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
         <select id="fSheetR"><option value="">All Sheets</option></select>
       </div>
       <button class="btn btn-gold" id="genRptBtn" onclick="generateReport()">&#10024; Generate AI Report</button>
+      <button class="btn btn-pdf" id="exportRptPdfBtn" onclick="exportReportPDF()" style="display:none">&#128196; Export PDF</button>
       <button class="btn btn-outline" id="saveReflBtn" onclick="saveReflections()" style="display:none">&#128190; Save Reflections</button>
-      <button class="btn btn-outline" id="exportRptBtn" onclick="exportPDF()" style="display:none">&#11015;&#65039; Export PDF</button>
       <button class="btn btn-danger" id="deleteRptBtn" onclick="deleteReport()" style="display:none;font-size:11px;padding:10px 18px">&#128465; Delete</button>
     </div>
   </div>
@@ -477,23 +542,14 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
       <button class="modal-close" onclick="closeMgModal()">&times;</button>
     </div>
     <div id="sheetListEl"></div>
-
     <div class="sync-settings" id="syncSettingsBox">
       <h4>&#128260; Two-Way Sync Settings</h4>
       <div class="sync-opt-row">
-        <div class="sync-opt-label">
-          Auto-check for sheet changes
-          <small>Polls your Google Sheet at a set interval for new/edited rows</small>
-        </div>
-        <div class="toggle-wrap">
-          <button class="toggle-btn" id="autoSyncToggle" onclick="toggleAutoSync()">OFF</button>
-        </div>
+        <div class="sync-opt-label">Auto-check for sheet changes<small>Polls your Google Sheet at a set interval</small></div>
+        <div class="toggle-wrap"><button class="toggle-btn" id="autoSyncToggle" onclick="toggleAutoSync()">OFF</button></div>
       </div>
       <div class="sync-opt-row" id="intervalRow" style="display:none">
-        <div class="sync-opt-label">
-          Poll interval
-          <small>How often to check the Google Sheet for changes</small>
-        </div>
+        <div class="sync-opt-label">Poll interval<small>How often to check</small></div>
         <div class="field" style="max-width:150px;margin:0">
           <select id="pollInterval" onchange="saveSyncSettings()">
             <option value="30000">Every 30 sec</option>
@@ -504,10 +560,7 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
         </div>
       </div>
       <div class="sync-opt-row">
-        <div class="sync-opt-label">
-          Conflict resolution strategy
-          <small>What to do when the same entry has been edited both locally and in the sheet</small>
-        </div>
+        <div class="sync-opt-label">Conflict resolution<small>When same entry edited both locally and in sheet</small></div>
         <div class="toggle-wrap">
           <button class="toggle-btn" id="conflictLocal" onclick="setConflict('local')" style="font-size:9px">Keep Local</button>
           <button class="toggle-btn" id="conflictSheet" onclick="setConflict('sheet')" style="font-size:9px">Keep Sheet</button>
@@ -515,7 +568,6 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
         </div>
       </div>
     </div>
-
     <div class="add-form">
       <h4>+ Connect a New Sheet</h4>
       <p>Create a blank Google Sheet, then copy its ID from the URL:<br>
@@ -540,29 +592,24 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
       </div>
       <button class="btn btn-primary" onclick="addNewSheet()">Add Sheet</button>
     </div>
-
-    <!-- Groq AI Key -->
     <div class="api-section" id="aiSection">
       <div class="section-label" style="margin-bottom:12px">AI Report Settings (Free)</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.7">
-        Uses <strong>Groq</strong> &mdash; completely free, no credit card needed. Powered by <strong>Llama 3.3 70B</strong>.<br>
-        Get a free key at <code>console.groq.com</code> &rarr; API Keys &rarr; Create API Key.
+        Uses <strong>Groq</strong> — free, no credit card. Powered by <strong>Llama 3.3 70B</strong>.<br>
+        Get a key at <code>console.groq.com</code> &rarr; API Keys &rarr; Create.
       </p>
       <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
-        <div class="field" style="flex:1;min-width:200px"><label>Groq API Key (Free)</label>
+        <div class="field" style="flex:1;min-width:200px"><label>Groq API Key</label>
           <input type="password" id="cfgAnthropicKey" placeholder="gsk_...">
         </div>
         <button class="btn btn-primary" onclick="saveAnthropicKey()">Save Key</button>
         <div id="aiKeyStatus" style="font-family:DM Mono,monospace;font-size:11px;color:var(--muted);align-self:flex-end;padding-bottom:2px"></div>
       </div>
     </div>
-
-    <!-- Google API -->
     <div class="api-section" id="apiSection">
       <div class="section-label" style="margin-bottom:12px">Google API Connection</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.7">
-        Enable <code>Google Sheets API</code> in <code>console.cloud.google.com</code>, create an
-        OAuth 2.0 Web Application credential, add your site URL to Authorized JavaScript Origins.
+        Enable <code>Google Sheets API</code> in <code>console.cloud.google.com</code>, create OAuth 2.0 credential.
       </p>
       <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
         <div class="field" style="flex:1;min-width:200px"><label>Google OAuth Client ID</label>
@@ -592,11 +639,7 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
     </div>
     <div class="frow c3">
       <div class="field"><label>Impact</label>
-        <select id="mImpact">
-          <option value="low">&#x1F7E1; Low</option>
-          <option value="medium">&#x1F7E2; Medium</option>
-          <option value="high">&#x1F534; High</option>
-        </select>
+        <select id="mImpact"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select>
       </div>
       <div class="field"><label>Outcome</label><input type="text" id="mOutcome" maxlength="300"></div>
       <div class="field"><label>Effort (hrs)</label><input type="number" id="mEffort" min="0" max="24" step="0.5"></div>
@@ -604,15 +647,15 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
     <div class="field" style="margin-bottom:16px">
       <label>Categories</label>
       <div class="cats-wrap" id="modalCats">
-        <div class="cat-chip" data-cat="dev"     data-sel="dev"   onclick="toggleCat(this)">&#x1F5A5; Dev</div>
-        <div class="cat-chip" data-cat="pm"      data-sel="pm"    onclick="toggleCat(this)">&#x1F4E6; PM</div>
-        <div class="cat-chip" data-cat="learn"   data-sel="learn" onclick="toggleCat(this)">&#x1F4DA; Learning</div>
-        <div class="cat-chip" data-cat="review"  data-sel="other" onclick="toggleCat(this)">&#x1F50D; Review</div>
-        <div class="cat-chip" data-cat="design"  data-sel="other" onclick="toggleCat(this)">&#x1F3A8; Design</div>
-        <div class="cat-chip" data-cat="infra"   data-sel="other" onclick="toggleCat(this)">&#x2699;&#xFE0F; Infra</div>
-        <div class="cat-chip" data-cat="collab"  data-sel="other" onclick="toggleCat(this)">&#x1F91D; Collab</div>
-        <div class="cat-chip" data-cat="bug"     data-sel="other" onclick="toggleCat(this)">&#x1F41B; Bug Fix</div>
-        <div class="cat-chip" data-cat="meeting" data-sel="other" onclick="toggleCat(this)">&#x1F5E3; Meeting</div>
+        <div class="cat-chip" data-cat="dev" data-sel="dev" onclick="toggleCat(this)">Dev</div>
+        <div class="cat-chip" data-cat="pm" data-sel="pm" onclick="toggleCat(this)">PM</div>
+        <div class="cat-chip" data-cat="learn" data-sel="learn" onclick="toggleCat(this)">Learning</div>
+        <div class="cat-chip" data-cat="review" data-sel="other" onclick="toggleCat(this)">Review</div>
+        <div class="cat-chip" data-cat="design" data-sel="other" onclick="toggleCat(this)">Design</div>
+        <div class="cat-chip" data-cat="infra" data-sel="other" onclick="toggleCat(this)">Infra</div>
+        <div class="cat-chip" data-cat="collab" data-sel="other" onclick="toggleCat(this)">Collab</div>
+        <div class="cat-chip" data-cat="bug" data-sel="other" onclick="toggleCat(this)">Bug Fix</div>
+        <div class="cat-chip" data-cat="meeting" data-sel="other" onclick="toggleCat(this)">Meeting</div>
       </div>
     </div>
     <div class="btn-row">
@@ -634,9 +677,9 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
     </p>
     <div class="conflict-row" id="conflictCompare"></div>
     <div class="btn-row">
-      <button class="btn btn-primary" onclick="resolveConflict('local')">Keep Local Version</button>
-      <button class="btn btn-pull" onclick="resolveConflict('sheet')">Keep Sheet Version</button>
-      <button class="btn btn-outline" onclick="resolveConflict('skip')">Skip for Now</button>
+      <button class="btn btn-primary" onclick="resolveConflict('local')">Keep Local</button>
+      <button class="btn btn-pull" onclick="resolveConflict('sheet')">Keep Sheet</button>
+      <button class="btn btn-outline" onclick="resolveConflict('skip')">Skip</button>
     </div>
   </div>
 </div>
@@ -645,1341 +688,561 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   FOOTPRINT GROWTH PORTAL — PRODUCTION BUILD
-   Fixes: Date timezone, Google Sheets auth flow, XSS sanitization,
-   localStorage safety, retry logic, offline detection, connection UI
+   FOOTPRINT GROWTH PORTAL — ENHANCED WITH KRA + PDF EXPORT
    ═══════════════════════════════════════════════════════════════ */
 
 // ─── SAFE LOCAL STORAGE ───────────────────────────────────────
 const Storage = {
   get(key, fallback) {
     try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
-    catch(e) { console.warn('Storage read error:', key, e); return fallback; }
+    catch(e) { return fallback; }
   },
   set(key, val) {
     try { localStorage.setItem(key, JSON.stringify(val)); return true; }
-    catch(e) {
-      console.error('Storage write error:', key, e);
-      toast('Storage full or unavailable — data may not persist', 'err');
-      return false;
-    }
+    catch(e) { toast('Storage full — data may not persist', 'err'); return false; }
   }
 };
-
-// ─── XSS SANITIZER ───────────────────────────────────────────
-function esc(str) {
-  if (!str) return '';
-  const div = document.createElement('div');
-  div.textContent = String(str);
-  return div.innerHTML;
-}
-
-// ─── LOCAL DATE HELPERS (timezone-safe) ───────────────────────
-function localDateStr(d) {
-  // Returns YYYY-MM-DD in local timezone
-  if (!d) d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-function localMonthStr(d) {
-  if (!d) d = new Date();
-  return localDateStr(d).slice(0, 7);
-}
+function esc(str) { if(!str) return ''; const d=document.createElement('div'); d.textContent=String(str); return d.innerHTML; }
+function localDateStr(d) { if(!d)d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function localMonthStr(d) { return localDateStr(d).slice(0,7); }
 
 // ─── STATE ────────────────────────────────────────────────────
-let entries     = Storage.get('fp_entries', []);
-let cfg         = Storage.get('fp_cfg', { sheets:[], activeSheetId:null, clientId:null, autoSync:false, pollInterval:60000, syncConflict:'ask' });
+let entries = Storage.get('fp_entries', []);
+let cfg = Storage.get('fp_cfg', { sheets:[], activeSheetId:null, clientId:null, autoSync:false, pollInterval:60000, syncConflict:'ask' });
 let reflections = Storage.get('fp_refl', {});
+if(!cfg.sheets) cfg.sheets=[]; if(!cfg.pollInterval) cfg.pollInterval=60000;
+if(!cfg.syncConflict) cfg.syncConflict='ask'; if(cfg.autoSync===undefined) cfg.autoSync=false;
 
-// Migrate old data
-if (!cfg.sheets)       cfg.sheets = [];
-if (!cfg.pollInterval) cfg.pollInterval = 60000;
-if (!cfg.syncConflict) cfg.syncConflict = 'ask';
-if (cfg.autoSync === undefined) cfg.autoSync = false;
+let gapiReady=false, signedIn=false, editingId=null, newColor='#1a4d3e';
+let currentRating=0, currentReportMonth=null, currentReport=null;
+let pendingSheetChanges=[], pollTimer=null, lastPollTime=null;
+let conflictQueue=[], currentConflict=null, tokenClient=null, accessToken=null;
+let isOnline=navigator.onLine;
 
-let gapiReady  = false;
-let signedIn   = false;
-let editingId  = null;
-let newColor   = '#1a4d3e';
-let currentRating = 0;
-let currentReportMonth = null;
-let currentReport = null;
-let pendingSheetChanges = [];
-let pollTimer = null;
-let lastPollTime = null;
-let conflictQueue = [];
-let currentConflict = null;
-let tokenClient = null;
-let accessToken = null;
-let isOnline = navigator.onLine;
+function save(){ Storage.set('fp_entries',entries); }
+function saveCfg(){ Storage.set('fp_cfg',cfg); }
+function saveReflStore(){ Storage.set('fp_refl',reflections); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function activeSheet(){ return cfg.sheets.find(s=>s.id===cfg.activeSheetId)||null; }
+function sheetById(id){ return cfg.sheets.find(s=>s.id===id)||null; }
 
-// ─── UTILS ────────────────────────────────────────────────────
-function save()         { Storage.set('fp_entries', entries); }
-function saveCfg()      { Storage.set('fp_cfg', cfg); }
-function saveReflStore(){ Storage.set('fp_refl', reflections); }
-function uid()          { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
-function activeSheet()  { return cfg.sheets.find(s => s.id === cfg.activeSheetId) || null; }
-function sheetById(id)  { return cfg.sheets.find(s => s.id === id) || null; }
+let toastTimer=null;
+function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='toast',3200);}
 
-let toastTimer = null;
-function toast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast show ' + (type||'');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.className = 'toast', 3200);
+const CAT_SEL={dev:'sel-dev',pm:'sel-pm',learn:'sel-learn'};
+function catSelCls(cat){return CAT_SEL[cat]||'sel-other';}
+function toggleCat(el){el.classList.toggle(catSelCls(el.dataset.cat));}
+function getSelCats(cid){return[...document.querySelectorAll('#'+cid+' .cat-chip')].filter(c=>c.className.match(/sel-/)).map(c=>c.dataset.cat);}
+function setSelCats(cid,cats){document.querySelectorAll('#'+cid+' .cat-chip').forEach(c=>{['sel-dev','sel-pm','sel-learn','sel-other'].forEach(cl=>c.classList.remove(cl));if((cats||[]).includes(c.dataset.cat))c.classList.add(catSelCls(c.dataset.cat));});}
+
+// ─── OFFLINE ──────────────────────────────────────────────────
+window.addEventListener('online',()=>{isOnline=true;document.getElementById('offlineBanner').classList.remove('visible');updateConnStatus();if(signedIn)syncAllPending();});
+window.addEventListener('offline',()=>{isOnline=false;document.getElementById('offlineBanner').classList.add('visible');updateConnStatus();});
+
+function updateConnStatus(){
+  const dot=document.querySelector('#connStatus .dot'),lbl=document.getElementById('connLabel'),btn=document.getElementById('signInBtn');
+  if(!cfg.clientId){dot.className='dot offline';lbl.textContent='No Google API configured';if(btn)btn.style.display='none';}
+  else if(!isOnline){dot.className='dot offline';lbl.textContent='Offline';if(btn)btn.style.display='none';}
+  else if(signedIn){dot.className='dot online';lbl.textContent='Google Sheets connected';if(btn)btn.style.display='none';}
+  else{dot.className='dot connecting';lbl.textContent='Not signed in';if(btn)btn.style.display='';}
 }
 
-const CAT_SEL = { dev:'sel-dev', pm:'sel-pm', learn:'sel-learn' };
-function catSelCls(cat) { return CAT_SEL[cat] || 'sel-other'; }
-function toggleCat(el) { el.classList.toggle(catSelCls(el.dataset.cat)); }
-function getSelCats(cid) {
-  return [...document.querySelectorAll('#'+cid+' .cat-chip')].filter(c => c.className.match(/sel-/)).map(c => c.dataset.cat);
-}
-function setSelCats(cid, cats) {
-  document.querySelectorAll('#'+cid+' .cat-chip').forEach(c => {
-    ['sel-dev','sel-pm','sel-learn','sel-other'].forEach(cl => c.classList.remove(cl));
-    if ((cats||[]).includes(c.dataset.cat)) c.classList.add(catSelCls(c.dataset.cat));
-  });
-}
-
-// ─── OFFLINE DETECTION ────────────────────────────────────────
-window.addEventListener('online', () => {
-  isOnline = true;
-  document.getElementById('offlineBanner').classList.remove('visible');
-  updateConnStatus();
-  // Auto-sync pending when coming back online
-  if (signedIn) syncAllPending();
-});
-window.addEventListener('offline', () => {
-  isOnline = false;
-  document.getElementById('offlineBanner').classList.add('visible');
-  updateConnStatus();
-});
-
-function updateConnStatus() {
-  const dot = document.querySelector('#connStatus .dot');
-  const lbl = document.getElementById('connLabel');
-  const signInBtn = document.getElementById('signInBtn');
-
-  if (!cfg.clientId) {
-    dot.className = 'dot offline';
-    lbl.textContent = 'No Google API configured';
-    if (signInBtn) signInBtn.style.display = 'none';
-  } else if (!isOnline) {
-    dot.className = 'dot offline';
-    lbl.textContent = 'Offline';
-    if (signInBtn) signInBtn.style.display = 'none';
-  } else if (signedIn) {
-    dot.className = 'dot online';
-    lbl.textContent = 'Google Sheets connected';
-    if (signInBtn) signInBtn.style.display = 'none';
-  } else {
-    dot.className = 'dot connecting';
-    lbl.textContent = 'Not signed in';
-    if (signInBtn) signInBtn.style.display = '';
-  }
-}
-
-// ─── ROW → ENTRY PARSER ──────────────────────────────────────
-function rowToEntry(row, sheetMeta) {
-  const rawId = (row[8] || '').toString().trim();
-  const id = rawId && !isNaN(rawId) ? parseInt(rawId) : null;
-  const date = (row[0] || '').trim();
-  const month = date.length >= 7 ? date.slice(0,7) : (row[7]||'').trim();
-  return {
-    id, _sheetRowId: rawId || null, date,
-    title: (row[1] || '').trim(),
-    desc: (row[2] || '').trim(),
-    cats: (row[3] || '').split(',').map(s=>s.trim()).filter(Boolean),
-    impact: (row[4] || 'medium').trim().toLowerCase(),
-    outcome: (row[5] || '').trim(),
-    effort: (row[6] || '').trim(),
-    month, synced: true, fromSheet: true,
-    sheetId: sheetMeta.id, sheetName: sheetMeta.name,
-    created: (row[9] || new Date().toISOString()).trim()
-  };
+function rowToEntry(row,sheetMeta){
+  const rawId=(row[8]||'').toString().trim(),id=rawId&&!isNaN(rawId)?parseInt(rawId):null;
+  const date=(row[0]||'').trim(),month=date.length>=7?date.slice(0,7):(row[7]||'').trim();
+  return{id,_sheetRowId:rawId||null,date,title:(row[1]||'').trim(),desc:(row[2]||'').trim(),
+    cats:(row[3]||'').split(',').map(s=>s.trim()).filter(Boolean),impact:(row[4]||'medium').trim().toLowerCase(),
+    outcome:(row[5]||'').trim(),effort:(row[6]||'').trim(),month,synced:true,fromSheet:true,
+    sheetId:sheetMeta.id,sheetName:sheetMeta.name,created:(row[9]||new Date().toISOString()).trim()};
 }
 
 // ─── INIT ─────────────────────────────────────────────────────
-(function() {
-  const now = new Date();
-  document.getElementById('dateDisp').textContent = now.toLocaleDateString('en-IN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-  // FIX: Use local date, not UTC
-  document.getElementById('fDate').value = localDateStr(now);
-  const ym = localMonthStr(now);
-  ['fMonth','rMonth'].forEach(id => document.getElementById(id).value = ym);
-  renderSwitcher();
-  renderDropdowns();
-  updateLogBar();
-  applySyncSettingsUI();
-  updateConnStatus();
-  if (cfg.clientId) loadGapi();
+(function(){
+  const now=new Date();
+  document.getElementById('dateDisp').textContent=now.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('fDate').value=localDateStr(now);
+  const ym=localMonthStr(now);
+  ['fMonth','rMonth','kraToMonth'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=ym;});
+  // Default KRA from month to 3 months ago
+  const threeAgo=new Date(now); threeAgo.setMonth(threeAgo.getMonth()-2);
+  document.getElementById('kraFromMonth').value=localMonthStr(threeAgo);
+  // Restore KRA user info
+  document.getElementById('kraName').value=Storage.get('fp_kra_name','')||'';
+  document.getElementById('kraRole').value=Storage.get('fp_kra_role','')||'';
+  renderSwitcher(); renderDropdowns(); updateLogBar(); applySyncSettingsUI(); updateConnStatus();
+  if(cfg.clientId) loadGapi();
 })();
 
 // ─── TABS ─────────────────────────────────────────────────────
-function gotoTab(name, el) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+function gotoTab(name,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
   el.classList.add('active');
-  if (name === 'history') renderHistory();
+  if(name==='history') renderHistory();
 }
 
 // ─── SHEET SWITCHER ───────────────────────────────────────────
-function renderSwitcher() {
-  const sw = document.getElementById('sheetSwitcher');
-  let html = cfg.sheets.map(s => {
-    const isActive = s.id === cfg.activeSheetId;
-    return '<button class="sh-tab '+(isActive?'active':'')+'" onclick="setActive(\''+esc(s.id)+'\')">' +
-      '<span class="sh-cdot" style="background:'+esc(s.color||'#1a4d3e')+'"></span>' +
-      esc(s.name) +
-      '<span class="sh-sdot '+(signedIn?'ok':'off')+'" title="'+(signedIn?'Syncing':'Not connected')+'"></span>' +
-      '</button>';
+function renderSwitcher(){
+  const sw=document.getElementById('sheetSwitcher');
+  let html=cfg.sheets.map(s=>{
+    const a=s.id===cfg.activeSheetId;
+    return '<button class="sh-tab '+(a?'active':'')+'" onclick="setActive(\''+esc(s.id)+'\')"><span class="sh-cdot" style="background:'+esc(s.color||'#1a4d3e')+'"></span>'+esc(s.name)+'<span class="sh-sdot '+(signedIn?'ok':'off')+'"></span></button>';
   }).join('');
-  html += '<button class="btn-add-sheet" onclick="openMgModal()">+ Sheet</button>';
-  html += '<button class="btn-mgr" onclick="openMgModal()">&#9881; Manage</button>';
-  sw.innerHTML = html;
+  html+='<button class="btn-add-sheet" onclick="openMgModal()">+ Sheet</button>';
+  html+='<button class="btn-mgr" onclick="openMgModal()">&#9881; Manage</button>';
+  sw.innerHTML=html;
 }
-
-function setActive(id) {
-  cfg.activeSheetId = id; saveCfg();
-  renderSwitcher(); renderDropdowns(); updateLogBar(); renderHistory();
-}
-
-function updateLogBar() {
-  const bar = document.getElementById('logBar');
-  const s = activeSheet();
-  const btnSyncNow = document.getElementById('btnSyncNow');
-  if (!s) { bar.style.display = 'none'; if(btnSyncNow) btnSyncNow.style.display='none'; return; }
-  bar.style.display = 'flex';
-  if(btnSyncNow) btnSyncNow.style.display = signedIn ? '' : 'none';
-  const total = entries.filter(e => e.sheetId === s.id).length;
-  const pending = entries.filter(e => e.sheetId === s.id && !e.synced).length;
-  bar.innerHTML =
-    '<span class="sh-cdot" style="background:'+esc(s.color)+';width:10px;height:10px"></span>' +
-    '<span class="ab-name">'+esc(s.name)+'</span>' +
-    '<span class="ab-info">'+total+' entries'+(pending?' &middot; '+pending+' pending':'')+'</span>' +
-    '<span class="ab-status"><span class="sh-sdot '+(signedIn?'ok':'off')+'"></span>' +
-    (signedIn?'Two-way sync active':'Not connected &mdash; entries saved locally') + '</span>';
+function setActive(id){cfg.activeSheetId=id;saveCfg();renderSwitcher();renderDropdowns();updateLogBar();renderHistory();}
+function updateLogBar(){
+  const bar=document.getElementById('logBar'),s=activeSheet(),btn=document.getElementById('btnSyncNow');
+  if(!s){bar.style.display='none';if(btn)btn.style.display='none';return;}
+  bar.style.display='flex'; if(btn)btn.style.display=signedIn?'':'none';
+  const total=entries.filter(e=>e.sheetId===s.id).length,pending=entries.filter(e=>e.sheetId===s.id&&!e.synced).length;
+  bar.innerHTML='<span class="sh-cdot" style="background:'+esc(s.color)+';width:10px;height:10px"></span><span class="ab-name">'+esc(s.name)+'</span><span class="ab-info">'+total+' entries'+(pending?' · '+pending+' pending':'')+'</span><span class="ab-status"><span class="sh-sdot '+(signedIn?'ok':'off')+'"></span>'+(signedIn?'Two-way sync active':'Local only')+'</span>';
   updateLastSyncLabel();
 }
-
-function updateLastSyncLabel() {
-  const el = document.getElementById('lastSyncInfo');
-  if (!el) return;
-  if (!lastPollTime) { el.textContent = ''; return; }
-  const diff = Math.round((Date.now() - lastPollTime)/1000);
-  el.textContent = 'Last checked: ' + (diff < 60 ? diff+'s ago' : Math.round(diff/60)+'m ago');
+function updateLastSyncLabel(){const el=document.getElementById('lastSyncInfo');if(!el)return;if(!lastPollTime){el.textContent='';return;}const d=Math.round((Date.now()-lastPollTime)/1000);el.textContent='Last checked: '+(d<60?d+'s ago':Math.round(d/60)+'m ago');}
+function renderDropdowns(){
+  const opts='<option value="">All Sheets</option>'+cfg.sheets.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.name)+'</option>').join('');
+  ['fSheetH','fSheetR','fSheetKRA'].forEach(id=>{const el=document.getElementById(id);if(!el)return;const v=el.value;el.innerHTML=opts;el.value=v;});
 }
 
-function renderDropdowns() {
-  const opts = '<option value="">All Sheets</option>' +
-    cfg.sheets.map(s => '<option value="'+esc(s.id)+'">'+esc(s.name)+'</option>').join('');
-  ['fSheetH','fSheetR'].forEach(id => {
-    const el = document.getElementById(id); if (!el) return;
-    const v = el.value; el.innerHTML = opts; el.value = v;
-  });
+// ─── GAPI ─────────────────────────────────────────────────────
+function loadGapi(){
+  if(!cfg.clientId)return;
+  const st=document.getElementById('authStatus'); if(st)st.textContent='Loading Google API...';
+  if(!window.gapi){const s=document.createElement('script');s.src='https://apis.google.com/js/api.js';s.onload=()=>gapi.load('client',initGapiClient);s.onerror=()=>{toast('Failed to load Google API','err');updateConnStatus();};document.head.appendChild(s);}else gapi.load('client',initGapiClient);
+  if(!window.google?.accounts){const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.onload=initTokenClient;s.onerror=()=>{toast('Failed to load Google Auth','err');updateConnStatus();};document.head.appendChild(s);}else initTokenClient();
+}
+async function initGapiClient(){try{await gapi.client.init({});await gapi.client.load('https://sheets.googleapis.com/$discovery/rest?version=v4');gapiReady=true;if(accessToken)gapi.client.setToken({access_token:accessToken});}catch(e){toast('Sheets API init failed','err');}}
+function initTokenClient(){
+  if(!cfg.clientId)return;
+  try{tokenClient=google.accounts.oauth2.initTokenClient({client_id:cfg.clientId,scope:'https://www.googleapis.com/auth/spreadsheets',callback:handleTokenResponse});
+  try{tokenClient.requestAccessToken({prompt:''});}catch(e){showSignInButton();}}catch(e){showSignInButton();}
+}
+function handleTokenResponse(r){if(r.error){showSignInButton();updateConnStatus();return;}accessToken=r.access_token;if(gapiReady)gapi.client.setToken({access_token:accessToken});onSignIn(true);}
+function showSignInButton(){const b=document.getElementById('signInBtn');if(b)b.style.display='';updateConnStatus();}
+function doSignIn(){if(!tokenClient){toast('Google API not loaded','err');return;}try{tokenClient.requestAccessToken({prompt:'consent'});}catch(e){toast('Sign-in failed','err');}}
+function onSignIn(ok){
+  signedIn=ok;if(ok){const s=document.getElementById('authStatus');if(s){s.textContent='✓ Connected';s.style.color='var(--dev)';}document.getElementById('signInBtn').style.display='none';
+  cfg.sheets.forEach(s=>ensureHeaders(s));syncAllPending().then(()=>initialFetchFromSheets());if(cfg.autoSync)startPolling();const h=document.getElementById('histPullBtn');if(h)h.style.display='';}
+  renderSwitcher();updateLogBar();updateConnStatus();
 }
 
-// ─── GAPI — FIXED AUTH FLOW ──────────────────────────────────
-function loadGapi() {
-  if (!cfg.clientId) return;
-  const authStatus = document.getElementById('authStatus');
-  if (authStatus) authStatus.textContent = 'Loading Google API...';
-
-  // Load GAPI client
-  if (!window.gapi) {
-    const sc = document.createElement('script');
-    sc.src = 'https://apis.google.com/js/api.js';
-    sc.onload = () => gapi.load('client', initGapiClient);
-    sc.onerror = () => {
-      toast('Failed to load Google API — check your internet connection', 'err');
-      if (authStatus) authStatus.textContent = '✕ Google API failed to load';
-      updateConnStatus();
-    };
-    document.head.appendChild(sc);
-  } else {
-    gapi.load('client', initGapiClient);
-  }
-
-  // Load Google Identity Services
-  if (!window.google?.accounts) {
-    const sc2 = document.createElement('script');
-    sc2.src = 'https://accounts.google.com/gsi/client';
-    sc2.onload = initTokenClient;
-    sc2.onerror = () => {
-      toast('Failed to load Google Identity Services', 'err');
-      if (authStatus) authStatus.textContent = '✕ Google Auth failed to load';
-      updateConnStatus();
-    };
-    document.head.appendChild(sc2);
-  } else {
-    initTokenClient();
-  }
+async function initialFetchFromSheets(){
+  if(!signedIn)return;const sheets=cfg.sheets.filter(s=>s.sheetId);if(!sheets.length)return;
+  toast('Fetching from Google Sheets...','info');let imported=0;
+  for(const sh of sheets){try{const res=await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:sh.sheetId,range:(sh.tab||'Sheet1')+'!A2:K'});
+  const rows=(res.result.values||[]).filter(r=>r&&r[1]);
+  for(const row of rows){const rawId=(row[8]||'').toString().trim(),title=(row[1]||'').trim(),date=(row[0]||'').trim();if(!title||!date)continue;
+  let exists=false;if(rawId&&!isNaN(rawId))exists=entries.some(e=>String(e.id)===rawId&&e.sheetId===sh.id);
+  if(!exists)exists=entries.some(e=>e.sheetId===sh.id&&e.date===date&&e.title.toLowerCase()===title.toLowerCase());
+  if(exists)continue;const ne=rowToEntry(row,sh);if(!ne.id)ne.id=Date.now()+Math.floor(Math.random()*9999);
+  entries.unshift(ne);imported++;}}catch(e){console.warn('Fetch err:',sh.name,e);}}
+  if(imported>0)save();updateLogBar();renderHistory();lastPollTime=Date.now();updateLastSyncLabel();
+  toast(imported?imported+' entries imported':'All synced','ok');
 }
+async function ensureHeaders(sh){if(!signedIn||!sh?.sheetId)return;try{const r=await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:sh.sheetId,range:(sh.tab||'Sheet1')+'!A1'});if(!r.result.values||r.result.values[0][0]!=='Date')await gapi.client.sheets.spreadsheets.values.update({spreadsheetId:sh.sheetId,range:(sh.tab||'Sheet1')+'!A1',valueInputOption:'RAW',resource:{values:[['Date','Title','Description','Categories','Impact','Outcome','Effort (hrs)','Month','ID','Created','Sheet Name']]}});}catch(e){}}
+async function pushEntry(entry){if(!signedIn)return false;const sh=sheetById(entry.sheetId);if(!sh?.sheetId)return false;try{await gapi.client.sheets.spreadsheets.values.append({spreadsheetId:sh.sheetId,range:(sh.tab||'Sheet1')+'!A:K',valueInputOption:'RAW',insertDataOption:'INSERT_ROWS',resource:{values:[[entry.date,entry.title,entry.desc||'',(entry.cats||[]).join(', '),entry.impact||'',entry.outcome||'',entry.effort||'',entry.month,String(entry.id),entry.created||'',sh.name]]}});return true;}catch(e){return false;}}
+async function updateEntryInSheet(entry){if(!signedIn||!entry?.sheetId)return false;const sh=sheetById(entry.sheetId);if(!sh?.sheetId)return false;try{const res=await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:sh.sheetId,range:(sh.tab||'Sheet1')+'!I:I'});const rows=res.result.values||[];const ri=rows.findIndex(r=>r[0]===String(entry.id));if(ri===-1)return await pushEntry(entry);await gapi.client.sheets.spreadsheets.values.update({spreadsheetId:sh.sheetId,range:(sh.tab||'Sheet1')+'!A'+( ri+1)+':K'+(ri+1),valueInputOption:'RAW',resource:{values:[[entry.date,entry.title,entry.desc||'',(entry.cats||[]).join(', '),entry.impact||'',entry.outcome||'',entry.effort||'',entry.month,String(entry.id),entry.created||'',sh.name]]}});return true;}catch(e){return false;}}
+async function syncAllPending(){const p=entries.filter(e=>!e.synced&&e.sheetId);if(!p.length)return;let n=0;for(const e of p){if(await pushEntry(e)){e.synced=true;n++;}}if(n){save();updateLogBar();renderHistory();toast(n+' synced','ok');}}
 
-async function initGapiClient() {
-  try {
-    await gapi.client.init({});
-    await gapi.client.load('https://sheets.googleapis.com/$discovery/rest?version=v4');
-    gapiReady = true;
-    if (accessToken) gapi.client.setToken({ access_token: accessToken });
-    console.log('[Footprint] Google Sheets API client ready');
-  } catch(e) {
-    console.error('[Footprint] GAPI init error:', e);
-    toast('Failed to init Google Sheets client', 'err');
-    document.getElementById('authStatus').textContent = '✕ Sheets API init failed';
-  }
+function startPolling(){stopPolling();if(!cfg.autoSync||!signedIn)return;pollTimer=setInterval(()=>checkSheetChanges(false),cfg.pollInterval);checkSheetChanges(false);}
+function stopPolling(){if(pollTimer){clearInterval(pollTimer);pollTimer=null;}}
+
+async function checkSheetChanges(manual){
+  if(!signedIn){if(manual)toast('Connect first','err');return;}
+  const sheets=cfg.sheets.filter(s=>s.sheetId);if(!sheets.length){if(manual)toast('No sheets','err');return;}
+  if(manual)toast('Checking...','info');let newRows=[],modifiedRows=[];
+  for(const sh of sheets){try{const res=await gapi.client.sheets.spreadsheets.values.get({spreadsheetId:sh.sheetId,range:(sh.tab||'Sheet1')+'!A2:K'});
+  const rows=(res.result.values||[]).filter(r=>r[1]);
+  for(const row of rows){const rawId=(row[8]||'').toString().trim(),title=(row[1]||'').trim(),date=(row[0]||'').trim();if(!title||!date)continue;
+  if(rawId&&!isNaN(rawId)){const le=entries.find(e=>String(e.id)===rawId&&e.sheetId===sh.id);if(le){if(hasSheetModified(le,row))modifiedRows.push({row,sh,localEntry:le});}else newRows.push({row,sh});}
+  else{if(!entries.find(e=>e.sheetId===sh.id&&e.date===date&&e.title.toLowerCase()===title.toLowerCase()))newRows.push({row,sh});}}}catch(e){}}
+  lastPollTime=Date.now();updateLastSyncLabel();
+  if(!newRows.length&&!modifiedRows.length){if(manual)toast('Up to date','ok');hideSyncBanner();return;}
+  pendingSheetChanges={newRows,modifiedRows};showSyncBanner(newRows.length,modifiedRows.length);
 }
+function hasSheetModified(le,row){return le.title!==(row[1]||'').trim()||(le.desc||'')!==(row[2]||'').trim()||(le.cats||[]).slice().sort().join(',')!==(row[3]||'').split(',').map(s=>s.trim()).filter(Boolean).sort().join(',')||(le.impact||'medium')!==(row[4]||'medium').trim().toLowerCase()||(le.outcome||'')!==(row[5]||'').trim()||String(le.effort||'')!==(row[6]||'').trim();}
+function showSyncBanner(n,m){const b=document.getElementById('syncBanner');const p=[];if(n)p.push(n+' new');if(m)p.push(m+' edited');document.getElementById('syncBannerTitle').textContent='Changes in Google Sheet';document.getElementById('syncBannerSub').textContent=p.join(' · ');b.classList.add('visible');}
+function hideSyncBanner(){document.getElementById('syncBanner').classList.remove('visible');}
+function dismissSyncBanner(){pendingSheetChanges=[];hideSyncBanner();}
+async function applySheetChanges(){if(!pendingSheetChanges?.newRows?.length&&!pendingSheetChanges?.modifiedRows?.length){hideSyncBanner();return;}hideSyncBanner();const{newRows,modifiedRows}=pendingSheetChanges;pendingSheetChanges=[];let imp=0,upd=0;
+for(const{row,sh}of newRows){const ne=rowToEntry(row,sh);if(!ne.id)ne.id=Date.now()+Math.floor(Math.random()*9999);entries.unshift(ne);imp++;}
+const autoSheet=cfg.syncConflict==='sheet',autoLocal=cfg.syncConflict==='local';conflictQueue=[];
+for(const{row,sh,localEntry}of modifiedRows){if(autoSheet){const sd=rowToEntry(row,sh);const i=entries.findIndex(e=>e.id===localEntry.id);if(i!==-1)entries[i]={...sd,id:localEntry.id,sheetId:localEntry.sheetId,synced:true,fromSheet:true};upd++;}else if(autoLocal){}else conflictQueue.push({row,sh,localEntry});}
+save();updateLogBar();renderHistory();toast((imp?imp+' new':'')+(upd?' '+upd+' updated':''),'ok');if(conflictQueue.length)processNextConflict();}
+function processNextConflict(){if(!conflictQueue.length){updateLogBar();renderHistory();return;}currentConflict=conflictQueue.shift();const{row,sh,localEntry}=currentConflict;const se=rowToEntry(row,sh);
+document.getElementById('conflictCompare').innerHTML='<div class="conflict-side local"><div class="conflict-label l">LOCAL</div><div class="conflict-val">'+esc(localEntry.title)+'</div><div class="conflict-field">'+esc(localEntry.desc||'—')+'</div></div><div class="conflict-side remote"><div class="conflict-label r">SHEET</div><div class="conflict-val">'+esc(se.title)+'</div><div class="conflict-field">'+esc(se.desc||'—')+'</div></div>';
+document.getElementById('conflictModal').classList.add('open');}
+function resolveConflict(c){document.getElementById('conflictModal').classList.remove('open');if(!currentConflict){processNextConflict();return;}const{row,sh,localEntry}=currentConflict;if(c==='sheet'){const sd=rowToEntry(row,sh);const i=entries.findIndex(e=>e.id===localEntry.id);if(i!==-1)entries[i]={...sd,id:localEntry.id,sheetId:localEntry.sheetId,synced:true,fromSheet:true};save();renderHistory();}currentConflict=null;setTimeout(processNextConflict,300);}
 
-function initTokenClient() {
-  if (!cfg.clientId) return;
-  try {
-    tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: cfg.clientId,
-      scope: 'https://www.googleapis.com/auth/spreadsheets',
-      callback: handleTokenResponse,
-    });
-    console.log('[Footprint] Token client initialized');
-
-    // FIX: Try silent auth first, but with proper error handling
-    // Use prompt: '' for silent/cached, which only works if user previously consented
-    try {
-      tokenClient.requestAccessToken({ prompt: '' });
-    } catch(e) {
-      // Silent auth failed — show sign-in button instead
-      console.log('[Footprint] Silent auth not available — user needs to sign in');
-      showSignInButton();
-    }
-  } catch(e) {
-    console.error('[Footprint] Token client init error:', e);
-    document.getElementById('authStatus').textContent = '✕ OAuth setup failed — check Client ID';
-    showSignInButton();
-  }
+// ─── ADD / EDIT / DELETE ──────────────────────────────────────
+async function addEntry(){
+  const date=document.getElementById('fDate').value,title=document.getElementById('fTitle').value.trim();
+  if(!date){toast('Select a date','err');return;}if(!title){toast('Enter a title','err');return;}
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){toast('Invalid date','err');return;}
+  const effort=document.getElementById('fEffort').value;if(effort&&(parseFloat(effort)<0||parseFloat(effort)>24)){toast('Effort: 0-24','err');return;}
+  const as=activeSheet(),btn=document.getElementById('addEntryBtn');btn.disabled=true;
+  const entry={id:Date.now(),date,title,desc:document.getElementById('fDesc').value.trim(),cats:getSelCats('logCats'),impact:document.getElementById('fImpact').value,outcome:document.getElementById('fOutcome').value.trim(),effort,month:date.slice(0,7),synced:false,created:new Date().toISOString(),sheetId:as?.id||null,sheetName:as?.name||null};
+  entries.unshift(entry);save();document.getElementById('saveHint').textContent='Saving...';
+  let ok=false;if(signedIn){ok=await pushEntry(entry);entry.synced=ok;save();}
+  updateLogBar();document.getElementById('saveHint').textContent=ok?'✓ Synced':'○ Local';
+  setTimeout(()=>document.getElementById('saveHint').textContent='',4000);clearForm();btn.disabled=false;toast(ok?'Saved & synced!':'Saved locally','ok');
 }
-
-function handleTokenResponse(tokenResponse) {
-  if (tokenResponse.error) {
-    console.warn('[Footprint] Token error:', tokenResponse.error);
-    if (tokenResponse.error === 'access_denied' || tokenResponse.error === 'popup_closed_by_user') {
-      document.getElementById('authStatus').textContent = 'Sign-in cancelled';
-    } else {
-      document.getElementById('authStatus').textContent = '✕ Auth failed — check Client ID & origins';
-    }
-    showSignInButton();
-    updateConnStatus();
-    return;
-  }
-  accessToken = tokenResponse.access_token;
-  if (gapiReady) gapi.client.setToken({ access_token: accessToken });
-  onSignIn(true);
-}
-
-function showSignInButton() {
-  const btn = document.getElementById('signInBtn');
-  if (btn) btn.style.display = '';
-  const status = document.getElementById('authStatus');
-  if (status && !status.textContent.includes('✕')) {
-    status.textContent = 'Click "Sign In to Google" to connect';
-  }
-  updateConnStatus();
-}
-
-// FIX: Explicit sign-in button that user clicks (fixes silent auth failure)
-function doSignIn() {
-  if (!tokenClient) {
-    toast('Google API not loaded yet — please wait', 'err');
-    return;
-  }
-  try {
-    // prompt: 'consent' forces the Google sign-in popup
-    tokenClient.requestAccessToken({ prompt: 'consent' });
-    document.getElementById('authStatus').textContent = 'Waiting for Google sign-in...';
-  } catch(e) {
-    toast('Failed to open Google sign-in', 'err');
-    console.error('[Footprint] Sign-in error:', e);
-  }
-}
-
-function onSignIn(ok) {
-  signedIn = ok;
-  if (ok) {
-    const status = document.getElementById('authStatus');
-    if (status) { status.textContent = '✓ Connected'; status.style.color = 'var(--dev)'; }
-    document.getElementById('signInBtn').style.display = 'none';
-    cfg.sheets.forEach(s => ensureHeaders(s));
-    // First push any local pending entries, then pull everything from sheets
-    syncAllPending().then(() => initialFetchFromSheets());
-    if (cfg.autoSync) startPolling();
-    const histPullBtn = document.getElementById('histPullBtn');
-    if (histPullBtn) histPullBtn.style.display = '';
-  }
-  renderSwitcher(); updateLogBar(); updateConnStatus();
-}
-
-// ─── INITIAL FETCH — pulls ALL existing rows from connected sheets ──────────
-async function initialFetchFromSheets() {
-  if (!signedIn) return;
-  const sheetsToFetch = cfg.sheets.filter(s => s.sheetId);
-  if (!sheetsToFetch.length) return;
-
-  toast('Fetching data from Google Sheets...', 'info');
-  let totalImported = 0;
-  let totalSkipped = 0;
-  let errors = [];
-
-  for (const sh of sheetsToFetch) {
-    try {
-      const res = await gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: sh.sheetId,
-        range: (sh.tab || 'Sheet1') + '!A2:K'
-      });
-      const rows = (res.result.values || []).filter(r => r && r[1]);
-
-      for (const row of rows) {
-        const rawId = (row[8] || '').toString().trim();
-        const title = (row[1] || '').trim();
-        const date  = (row[0] || '').trim();
-        if (!title || !date) continue;
-
-        // Check if this row already exists locally
-        let alreadyExists = false;
-
-        if (rawId && !isNaN(rawId)) {
-          // Row has a numeric app ID — check by ID
-          alreadyExists = entries.some(e => String(e.id) === rawId && e.sheetId === sh.id);
-        }
-
-        if (!alreadyExists) {
-          // Also check by title+date+sheet combo (catches duplicates without ID match)
-          alreadyExists = entries.some(e =>
-            e.sheetId === sh.id &&
-            e.date === date &&
-            e.title.toLowerCase() === title.toLowerCase()
-          );
-        }
-
-        if (alreadyExists) {
-          totalSkipped++;
-          continue;
-        }
-
-        // Import this row
-        const newEntry = rowToEntry(row, sh);
-        if (!newEntry.id) {
-          newEntry.id = Date.now() + Math.floor(Math.random() * 9999);
-          // Write the generated ID back to the sheet so future syncs can match
-          try {
-            const allRows = await gapi.client.sheets.spreadsheets.values.get({
-              spreadsheetId: sh.sheetId, range: (sh.tab || 'Sheet1') + '!A:B'
-            });
-            const sheetRows = allRows.result.values || [];
-            const rowIdx = sheetRows.findIndex((r, i) => i > 0 && r[0] === newEntry.date && r[1] === newEntry.title);
-            if (rowIdx > 0) {
-              await gapi.client.sheets.spreadsheets.values.update({
-                spreadsheetId: sh.sheetId,
-                range: (sh.tab || 'Sheet1') + '!I' + (rowIdx + 1),
-                valueInputOption: 'RAW',
-                resource: { values: [[String(newEntry.id)]] }
-              });
-            }
-          } catch (writeErr) {
-            console.warn('[Footprint] Could not write ID back to sheet row:', writeErr);
-          }
-        }
-
-        entries.unshift(newEntry);
-        totalImported++;
-      }
-    } catch (e) {
-      console.error('[Footprint] Fetch error for sheet "' + sh.name + '":', e);
-      const code = e?.result?.error?.code;
-      if (code === 404) {
-        errors.push('"' + sh.name + '" — Sheet ID not found');
-      } else if (code === 403) {
-        errors.push('"' + sh.name + '" — No permission (share sheet with your Google account)');
-      } else {
-        errors.push('"' + sh.name + '" — ' + (e?.result?.error?.message || 'Unknown error'));
-      }
-    }
-  }
-
-  // Save and render
-  if (totalImported > 0) {
-    save();
-    // If imported entries don't match the current month filter, auto-clear it
-    const currentMonthFilter = document.getElementById('fMonth').value;
-    if (currentMonthFilter) {
-      const importedInCurrentMonth = entries.filter(e => e.month === currentMonthFilter).length;
-      if (importedInCurrentMonth === 0) {
-        // Entries exist but not in the filtered month — clear filter to show them
-        document.getElementById('fMonth').value = '';
-      }
-    }
-  }
-  updateLogBar();
-  renderHistory();
-  lastPollTime = Date.now();
-  updateLastSyncLabel();
-
-  // Show result
-  if (errors.length) {
-    toast('Sheet errors: ' + errors.join('; '), 'err');
-  } else if (totalImported > 0) {
-    toast('Imported ' + totalImported + ' entries from Google Sheets', 'ok');
-  } else if (totalSkipped > 0) {
-    toast('All ' + totalSkipped + ' sheet entries already synced', 'ok');
-  } else {
-    toast('Connected — no entries found in sheets yet', 'ok');
-  }
-}
-
-async function ensureHeaders(sh) {
-  if (!signedIn || !sh?.sheetId) return;
-  try {
-    const r = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A1'
-    });
-    if (!r.result.values || r.result.values[0][0] !== 'Date') {
-      await gapi.client.sheets.spreadsheets.values.update({
-        spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A1', valueInputOption: 'RAW',
-        resource: { values: [['Date','Title','Description','Categories','Impact','Outcome','Effort (hrs)','Month','ID','Created','Sheet Name']] }
-      });
-    }
-  } catch(e) {
-    console.warn('[Footprint] Header check failed for', sh.name, e);
-    if (e?.result?.error?.code === 403 || e?.result?.error?.code === 404) {
-      toast('Cannot access sheet "'+sh.name+'" — check Sheet ID & permissions', 'err');
-    }
-  }
-}
-
-async function pushEntry(entry) {
-  if (!signedIn) return false;
-  const sh = sheetById(entry.sheetId);
-  if (!sh?.sheetId) return false;
-  try {
-    await gapi.client.sheets.spreadsheets.values.append({
-      spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A:K',
-      valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS',
-      resource: { values: [[ entry.date, entry.title, entry.desc||'', (entry.cats||[]).join(', '),
-        entry.impact||'', entry.outcome||'', entry.effort||'',
-        entry.month, String(entry.id), entry.created||'', sh.name ]] }
-    });
-    return true;
-  } catch(e) {
-    console.error('[Footprint] Push failed:', e);
-    return false;
-  }
-}
-
-async function updateEntryInSheet(entry) {
-  if (!signedIn || !entry?.sheetId) return false;
-  const sh = sheetById(entry.sheetId);
-  if (!sh?.sheetId) return false;
-  try {
-    const res = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!I:I'
-    });
-    const rows = res.result.values || [];
-    const rowIndex = rows.findIndex(r => r[0] === String(entry.id));
-    if (rowIndex === -1) return await pushEntry(entry);
-    const rowNum = rowIndex + 1;
-    await gapi.client.sheets.spreadsheets.values.update({
-      spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A'+rowNum+':K'+rowNum,
-      valueInputOption: 'RAW',
-      resource: { values: [[ entry.date, entry.title, entry.desc||'', (entry.cats||[]).join(', '),
-        entry.impact||'', entry.outcome||'', entry.effort||'',
-        entry.month, String(entry.id), entry.created||'', sh.name ]] }
-    });
-    return true;
-  } catch(e) { console.error('[Footprint] Update failed:', e); return false; }
-}
-
-async function syncAllPending() {
-  const pending = entries.filter(e => !e.synced && e.sheetId);
-  if (!pending.length) return;
-  let n = 0;
-  for (const e of pending) {
-    const ok = await pushEntry(e);
-    if (ok) { e.synced = true; n++; }
-  }
-  if (n) {
-    save(); updateLogBar();
-    if (document.getElementById('panel-history').classList.contains('active')) renderHistory();
-    toast(n + ' pending ' + (n===1?'entry':'entries') + ' synced', 'ok');
-  }
-}
-
-// ─── POLLING ──────────────────────────────────────────────────
-function startPolling() {
-  stopPolling();
-  if (!cfg.autoSync || !signedIn) return;
-  pollTimer = setInterval(() => checkSheetChanges(false), cfg.pollInterval);
-  checkSheetChanges(false);
-}
-function stopPolling() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
-
-// ─── CHECK SHEET FOR CHANGES (PULL) ──────────────────────────
-async function checkSheetChanges(manual) {
-  if (!signedIn) {
-    if (manual) toast('Connect to Google Sheets first', 'err');
-    return;
-  }
-  const sheetsToCheck = cfg.sheets.filter(s => s.sheetId);
-  if (!sheetsToCheck.length) {
-    if (manual) toast('No Google Sheet connected', 'err');
-    return;
-  }
-  if (manual) toast('Checking for sheet changes...', 'info');
-
-  let newRows = [], modifiedRows = [];
-
-  for (const sh of sheetsToCheck) {
-    try {
-      const res = await gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A2:K'
-      });
-      const rows = (res.result.values || []).filter(r => r[1]);
-      for (const row of rows) {
-        const rawId = (row[8]||'').toString().trim();
-        const title = (row[1]||'').trim();
-        const date  = (row[0]||'').trim();
-        if (!title || !date) continue;
-
-        if (rawId && !isNaN(rawId)) {
-          const localEntry = entries.find(e => String(e.id) === rawId && e.sheetId === sh.id);
-          if (localEntry) {
-            if (hasSheetModified(localEntry, row)) {
-              modifiedRows.push({ row, sh, localEntry });
-            }
-          } else {
-            newRows.push({ row, sh });
-          }
-        } else {
-          const alreadyImported = entries.find(e =>
-            e.sheetId === sh.id && e.date === date &&
-            e.title.toLowerCase() === title.toLowerCase()
-          );
-          if (!alreadyImported) newRows.push({ row, sh });
-        }
-      }
-    } catch(e) { console.warn('[Footprint] Sheet check error for', sh.name, e); }
-  }
-
-  lastPollTime = Date.now();
-  updateLastSyncLabel();
-
-  if (newRows.length + modifiedRows.length === 0) {
-    if (manual) toast('App is up to date with your sheets', 'ok');
-    hideSyncBanner();
-    return;
-  }
-
-  pendingSheetChanges = { newRows, modifiedRows };
-  showSyncBanner(newRows.length, modifiedRows.length);
-}
-
-function hasSheetModified(localEntry, row) {
-  const shTitle   = (row[1]||'').trim();
-  const shDesc    = (row[2]||'').trim();
-  const shCats    = (row[3]||'').split(',').map(s=>s.trim()).filter(Boolean).sort().join(',');
-  const shImpact  = (row[4]||'medium').trim().toLowerCase();
-  const shOutcome = (row[5]||'').trim();
-  const shEffort  = (row[6]||'').trim();
-  const lcCats    = (localEntry.cats||[]).slice().sort().join(',');
-  return localEntry.title !== shTitle || (localEntry.desc||'') !== shDesc ||
-    lcCats !== shCats || (localEntry.impact||'medium') !== shImpact ||
-    (localEntry.outcome||'') !== shOutcome || String(localEntry.effort||'') !== shEffort;
-}
-
-function showSyncBanner(nNew, nMod) {
-  const banner = document.getElementById('syncBanner');
-  const parts = [];
-  if (nNew) parts.push(nNew+' new row'+(nNew>1?'s':'')+' added');
-  if (nMod) parts.push(nMod+' row'+(nMod>1?'s':'')+' edited');
-  document.getElementById('syncBannerTitle').textContent = 'Changes detected in Google Sheet';
-  document.getElementById('syncBannerSub').textContent = parts.join(' · ');
-  banner.classList.add('visible');
-}
-function hideSyncBanner() { document.getElementById('syncBanner').classList.remove('visible'); }
-function dismissSyncBanner() { pendingSheetChanges = []; hideSyncBanner(); }
-
-// ─── APPLY PULLED CHANGES ─────────────────────────────────────
-async function applySheetChanges() {
-  if (!pendingSheetChanges?.newRows?.length && !pendingSheetChanges?.modifiedRows?.length) {
-    hideSyncBanner(); return;
-  }
-  hideSyncBanner();
-  const { newRows, modifiedRows } = pendingSheetChanges;
-  pendingSheetChanges = [];
-  let imported = 0, updated = 0, skipped = 0;
-
-  for (const { row, sh } of newRows) {
-    const newEntry = rowToEntry(row, sh);
-    if (!newEntry.id) {
-      newEntry.id = Date.now() + Math.floor(Math.random() * 9999);
-      try {
-        const idRes = await gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!A:B'
-        });
-        const shRows = idRes.result.values || [];
-        const rowIdx = shRows.findIndex((r, i) => i > 0 && r[0] === newEntry.date && r[1] === newEntry.title);
-        if (rowIdx > 0) {
-          await gapi.client.sheets.spreadsheets.values.update({
-            spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!I'+(rowIdx+1),
-            valueInputOption: 'RAW', resource: { values: [[String(newEntry.id)]] }
-          });
-        }
-      } catch(e) {}
-    }
-    entries.unshift(newEntry);
-    imported++;
-  }
-
-  const autoKeepSheet = cfg.syncConflict === 'sheet';
-  const autoKeepLocal = cfg.syncConflict === 'local';
-  conflictQueue = [];
-
-  for (const { row, sh, localEntry } of modifiedRows) {
-    if (autoKeepSheet) {
-      const sheetData = rowToEntry(row, sh);
-      const idx = entries.findIndex(e => e.id === localEntry.id);
-      if (idx !== -1) {
-        entries[idx] = { ...sheetData, id: localEntry.id, sheetId: localEntry.sheetId, sheetName: localEntry.sheetName, synced: true, fromSheet: true };
-      }
-      updated++;
-    } else if (autoKeepLocal) {
-      skipped++;
-    } else {
-      conflictQueue.push({ row, sh, localEntry });
-    }
-  }
-
-  save(); updateLogBar(); renderHistory();
-  const parts = [];
-  if (imported) parts.push(imported+' new');
-  if (updated)  parts.push(updated+' updated');
-  if (skipped)  parts.push(skipped+' skipped');
-  if (parts.length) toast('Sheet sync: '+parts.join(', '), 'ok');
-  if (conflictQueue.length) processNextConflict();
-}
-
-// ─── CONFLICT RESOLUTION ──────────────────────────────────────
-function processNextConflict() {
-  if (!conflictQueue.length) { updateLogBar(); renderHistory(); return; }
-  currentConflict = conflictQueue.shift();
-  const { row, sh, localEntry } = currentConflict;
-  const sheetEntry = rowToEntry(row, sh);
-  document.getElementById('conflictCompare').innerHTML =
-    '<div class="conflict-side local">' +
-      '<div class="conflict-label l">LOCAL (APP)</div>' +
-      '<div class="conflict-field">Title</div><div class="conflict-val">'+esc(localEntry.title)+'</div>' +
-      '<div class="conflict-field" style="margin-top:6px">Desc</div><div class="conflict-val">'+esc(localEntry.desc||'—')+'</div>' +
-      '<div class="conflict-field" style="margin-top:6px">Impact / Effort</div><div class="conflict-val">'+esc(localEntry.impact||'medium')+' · '+esc(localEntry.effort||'?')+'h</div>' +
-    '</div>' +
-    '<div class="conflict-side remote">' +
-      '<div class="conflict-label r">SHEET (REMOTE)</div>' +
-      '<div class="conflict-field">Title</div><div class="conflict-val">'+esc(sheetEntry.title)+'</div>' +
-      '<div class="conflict-field" style="margin-top:6px">Desc</div><div class="conflict-val">'+esc(sheetEntry.desc||'—')+'</div>' +
-      '<div class="conflict-field" style="margin-top:6px">Impact / Effort</div><div class="conflict-val">'+esc(sheetEntry.impact||'medium')+' · '+esc(sheetEntry.effort||'?')+'h</div>' +
-    '</div>';
-  document.getElementById('conflictModal').classList.add('open');
-}
-
-function resolveConflict(choice) {
-  document.getElementById('conflictModal').classList.remove('open');
-  if (!currentConflict) { processNextConflict(); return; }
-  const { row, sh, localEntry } = currentConflict;
-  if (choice === 'sheet') {
-    const sheetData = rowToEntry(row, sh);
-    const idx = entries.findIndex(e => e.id === localEntry.id);
-    if (idx !== -1) {
-      entries[idx] = { ...sheetData, id: localEntry.id, sheetId: localEntry.sheetId, sheetName: localEntry.sheetName, synced: true, fromSheet: true };
-    }
-    save(); renderHistory(); toast('Sheet version applied', 'ok');
-  } else if (choice === 'local') {
-    toast('Local version kept', 'ok');
-  } else {
-    toast('Skipped — will ask again next sync');
-  }
-  currentConflict = null;
-  setTimeout(processNextConflict, 300);
-}
-
-// ─── ADD ENTRY ────────────────────────────────────────────────
-async function addEntry() {
-  const date  = document.getElementById('fDate').value;
-  const title = document.getElementById('fTitle').value.trim();
-  if (!date)  { toast('Please select a date', 'err'); return; }
-  if (!title) { toast('Please enter a task title', 'err'); return; }
-
-  // Validate date format
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) { toast('Invalid date format', 'err'); return; }
-
-  const effort = document.getElementById('fEffort').value;
-  if (effort && (parseFloat(effort) < 0 || parseFloat(effort) > 24)) {
-    toast('Effort must be between 0 and 24 hours', 'err'); return;
-  }
-
-  const as = activeSheet();
-  const btn = document.getElementById('addEntryBtn');
-  btn.disabled = true;
-
-  const entry = {
-    id: Date.now(), date, title,
-    desc: document.getElementById('fDesc').value.trim(),
-    cats: getSelCats('logCats'),
-    impact: document.getElementById('fImpact').value,
-    outcome: document.getElementById('fOutcome').value.trim(),
-    effort: effort,
-    month: date.slice(0,7), synced: false, created: new Date().toISOString(),
-    sheetId: as?.id||null, sheetName: as?.name||null
-  };
-  entries.unshift(entry); save();
-  document.getElementById('saveHint').textContent = 'Saving...';
-
-  let ok = false;
-  if (signedIn) {
-    ok = await pushEntry(entry);
-    entry.synced = ok; save();
-  }
-  updateLogBar();
-  document.getElementById('saveHint').textContent = ok ? '✓ Synced to Sheet' : '○ Saved locally';
-  setTimeout(() => document.getElementById('saveHint').textContent = '', 4000);
-  clearForm();
-  btn.disabled = false;
-  toast(ok ? 'Entry saved & synced!' : 'Saved locally', 'ok');
-}
-
-function clearForm() {
-  ['fTitle','fDesc','fOutcome','fEffort'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('fImpact').value = 'medium';
-  // FIX: Always reset to today's local date
-  document.getElementById('fDate').value = localDateStr();
-  setSelCats('logCats', []);
-}
-
-async function deleteEntry(id) {
-  if (!confirm('Delete this entry?')) return;
-  const entry = entries.find(e => e.id === id);
-  entries = entries.filter(e => e.id !== id);
-  save(); updateLogBar(); renderHistory(); toast('Entry deleted');
-  if (signedIn && entry?.synced && entry?.sheetId) {
-    const sh = sheetById(entry.sheetId);
-    if (!sh?.sheetId) return;
-    try {
-      const res = await gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: sh.sheetId, range: (sh.tab||'Sheet1')+'!I:I'
-      });
-      const rows = res.result.values || [];
-      const rowIndex = rows.findIndex(r => r[0] === String(entry.id));
-      if (rowIndex === -1) return;
-      const meta = await gapi.client.sheets.spreadsheets.get({ spreadsheetId: sh.sheetId });
-      const sheetMeta = meta.result.sheets.find(s => s.properties.title === (sh.tab||'Sheet1'));
-      if (!sheetMeta) return;
-      await gapi.client.sheets.spreadsheets.batchUpdate({
-        spreadsheetId: sh.sheetId,
-        resource: { requests: [{ deleteDimension: { range: { sheetId: sheetMeta.properties.sheetId, dimension: 'ROWS', startIndex: rowIndex, endIndex: rowIndex+1 } } }] }
-      });
-      toast('Deleted from Google Sheet', 'ok');
-    } catch(e) { toast('Deleted locally — sheet row removal failed', 'err'); }
-  }
-}
-
-// ─── EDIT MODAL ───────────────────────────────────────────────
-function openEdit(id) {
-  const e = entries.find(e=>e.id===id); if (!e) return;
-  editingId = id;
-  document.getElementById('mDate').value    = e.date;
-  document.getElementById('mTitle').value   = e.title;
-  document.getElementById('mDesc').value    = e.desc||'';
-  document.getElementById('mImpact').value  = e.impact||'medium';
-  document.getElementById('mOutcome').value = e.outcome||'';
-  document.getElementById('mEffort').value  = e.effort||'';
-  setSelCats('modalCats', e.cats||[]);
-  document.getElementById('editModal').classList.add('open');
-}
-
-async function saveEdit() {
-  const e = entries.find(e=>e.id===editingId); if (!e) return;
-  const title = document.getElementById('mTitle').value.trim();
-  if (!title) { toast('Title is required', 'err'); return; }
-  e.date    = document.getElementById('mDate').value;
-  e.title   = title;
-  e.desc    = document.getElementById('mDesc').value.trim();
-  e.cats    = getSelCats('modalCats');
-  e.impact  = document.getElementById('mImpact').value;
-  e.outcome = document.getElementById('mOutcome').value.trim();
-  e.effort  = document.getElementById('mEffort').value;
-  e.month   = e.date.slice(0,7);
-  e.synced  = false;
-  save(); closeEditModal(); renderHistory(); toast('Updated', 'ok');
-  if (signedIn) {
-    const ok = await updateEntryInSheet(e);
-    if (ok) { e.synced=true; save(); renderHistory(); toast('Synced to Sheet', 'ok'); }
-  }
-}
-
-function closeEditModal() { document.getElementById('editModal').classList.remove('open'); editingId=null; }
-function closeBgEdit(e)   { if (e.target===document.getElementById('editModal')) closeEditModal(); }
+function clearForm(){['fTitle','fDesc','fOutcome','fEffort'].forEach(id=>document.getElementById(id).value='');document.getElementById('fImpact').value='medium';document.getElementById('fDate').value=localDateStr();setSelCats('logCats',[]);}
+async function deleteEntry(id){if(!confirm('Delete this entry?'))return;const e=entries.find(e=>e.id===id);entries=entries.filter(e=>e.id!==id);save();updateLogBar();renderHistory();toast('Deleted');}
+function openEdit(id){const e=entries.find(e=>e.id===id);if(!e)return;editingId=id;document.getElementById('mDate').value=e.date;document.getElementById('mTitle').value=e.title;document.getElementById('mDesc').value=e.desc||'';document.getElementById('mImpact').value=e.impact||'medium';document.getElementById('mOutcome').value=e.outcome||'';document.getElementById('mEffort').value=e.effort||'';setSelCats('modalCats',e.cats||[]);document.getElementById('editModal').classList.add('open');}
+async function saveEdit(){const e=entries.find(e=>e.id===editingId);if(!e)return;const t=document.getElementById('mTitle').value.trim();if(!t){toast('Title required','err');return;}e.date=document.getElementById('mDate').value;e.title=t;e.desc=document.getElementById('mDesc').value.trim();e.cats=getSelCats('modalCats');e.impact=document.getElementById('mImpact').value;e.outcome=document.getElementById('mOutcome').value.trim();e.effort=document.getElementById('mEffort').value;e.month=e.date.slice(0,7);e.synced=false;save();closeEditModal();renderHistory();toast('Updated','ok');if(signedIn){const ok=await updateEntryInSheet(e);if(ok){e.synced=true;save();renderHistory();}}}
+function closeEditModal(){document.getElementById('editModal').classList.remove('open');editingId=null;}
+function closeBgEdit(e){if(e.target===document.getElementById('editModal'))closeEditModal();}
 
 // ─── MANAGE SHEETS MODAL ─────────────────────────────────────
-function openMgModal() {
-  renderSheetList(); applySyncSettingsUI();
-  if (cfg.clientId) document.getElementById('cfgClientId').value = cfg.clientId;
-  document.getElementById('authStatus').textContent = signedIn ? '✓ Connected' : cfg.clientId ? 'Not signed in' : '';
-  if (cfg.anthropicKey) {
-    document.getElementById('cfgAnthropicKey').value = cfg.anthropicKey;
-    document.getElementById('aiKeyStatus').textContent = '✓ Key saved';
-    document.getElementById('aiKeyStatus').style.color = 'var(--dev)';
-  }
-  document.getElementById('mgModal').classList.add('open');
-}
-function closeMgModal() { document.getElementById('mgModal').classList.remove('open'); }
-function closeBgMg(e)   { if (e.target===document.getElementById('mgModal')) closeMgModal(); }
-
-function renderSheetList() {
-  const el = document.getElementById('sheetListEl');
-  if (!cfg.sheets.length) {
-    el.innerHTML = '<p style="font-size:13px;color:var(--muted);margin-bottom:16px">No sheets connected yet. Add one below.</p>';
-    return;
-  }
-  el.innerHTML = cfg.sheets.map(s => {
-    const count = entries.filter(e => e.sheetId===s.id).length;
-    const isActive = s.id === cfg.activeSheetId;
-    return '<div class="sheet-list-item '+(isActive?'is-active':'')+'">' +
-      '<span class="sh-cdot" style="background:'+(s.color||'#1a4d3e')+';width:14px;height:14px;flex-shrink:0"></span>' +
-      '<div style="flex:1;min-width:0">' +
-        '<div class="sli-name">'+esc(s.name)+' '+(isActive?'<span class="active-badge">Active</span>':'')+'</div>' +
-        '<div class="sli-id" style="margin-top:2px">'+(s.sheetId ? 'ID: '+esc(s.sheetId.slice(0,30))+'...' : 'No Sheet ID set')+'</div>' +
-      '</div>' +
-      '<div class="sli-count">'+count+' entries</div>' +
-      '<div class="sli-actions">' +
-        (!isActive?'<button class="btn btn-outline btn-sm" onclick="setActive(\''+esc(s.id)+'\');renderSheetList()">Set Active</button>':'') +
-        '<button class="btn btn-danger btn-sm" onclick="removeSheet(\''+esc(s.id)+'\')">Remove</button>' +
-      '</div></div>';
-  }).join('');
-}
-
-function applySyncSettingsUI() {
-  const autoBtn = document.getElementById('autoSyncToggle');
-  if (autoBtn) { autoBtn.textContent = cfg.autoSync ? 'ON' : 'OFF'; autoBtn.classList.toggle('on', cfg.autoSync); }
-  const intRow = document.getElementById('intervalRow');
-  if (intRow) intRow.style.display = cfg.autoSync ? 'flex' : 'none';
-  const intEl = document.getElementById('pollInterval');
-  if (intEl) intEl.value = String(cfg.pollInterval || 60000);
-  ['conflictLocal','conflictSheet','conflictAsk'].forEach(id => {
-    const b = document.getElementById(id); if(!b) return;
-    const s = {conflictLocal:'local',conflictSheet:'sheet',conflictAsk:'ask'}[id];
-    b.classList.toggle('on', cfg.syncConflict === s);
-  });
-}
-
-function toggleAutoSync() { cfg.autoSync = !cfg.autoSync; saveCfg(); applySyncSettingsUI(); if (cfg.autoSync && signedIn) startPolling(); else stopPolling(); }
-function saveSyncSettings() { cfg.pollInterval = parseInt(document.getElementById('pollInterval').value) || 60000; saveCfg(); if (cfg.autoSync && signedIn) { stopPolling(); startPolling(); } }
-function setConflict(s) { cfg.syncConflict = s; saveCfg(); applySyncSettingsUI(); }
-
-function pickColor(el) {
-  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('sel'));
-  el.classList.add('sel'); newColor = el.dataset.color;
-}
-
-function addNewSheet() {
-  const name    = document.getElementById('nsName').value.trim();
-  const sheetId = document.getElementById('nsSheetId').value.trim();
-  if (!name)    { toast('Enter a sheet name', 'err'); return; }
-  if (!sheetId) { toast('Enter a Google Sheet ID', 'err'); return; }
-  // Basic Sheet ID validation
-  if (sheetId.length < 10 || /\s/.test(sheetId)) { toast('Invalid Google Sheet ID format', 'err'); return; }
-  const sheet = { id: uid(), name, sheetId, color: newColor, tab: 'Sheet1' };
-  cfg.sheets.push(sheet);
-  if (!cfg.activeSheetId) cfg.activeSheetId = sheet.id;
-  saveCfg();
-  document.getElementById('nsName').value = '';
-  document.getElementById('nsSheetId').value = '';
-  renderSheetList(); renderSwitcher(); renderDropdowns(); updateLogBar();
-  if (signedIn) {
-    ensureHeaders(sheet);
-    // Auto-fetch existing data from this newly connected sheet
-    setTimeout(() => initialFetchFromSheets(), 500);
-  }
-  toast('"'+name+'" connected!', 'ok');
-}
-
-function removeSheet(id) {
-  const s = sheetById(id); if (!s) return;
-  const n = entries.filter(e=>e.sheetId===id).length;
-  if (!confirm('Remove sheet "'+s.name+'"?\n\n'+(n>0?n+' entries will keep their local data but won\'t sync.\n\n':'')+'The Google Sheet itself will NOT be deleted.')) return;
-  cfg.sheets = cfg.sheets.filter(sh => sh.id !== id);
-  if (cfg.activeSheetId === id) cfg.activeSheetId = cfg.sheets[0]?.id || null;
-  saveCfg();
-  renderSheetList(); renderSwitcher(); renderDropdowns(); updateLogBar();
-  toast('"'+s.name+'" removed');
-}
-
-function saveClientId() {
-  const cid = document.getElementById('cfgClientId').value.trim();
-  if (!cid) { toast('Enter your Client ID', 'err'); return; }
-  if (!cid.includes('.apps.googleusercontent.com')) { toast('Client ID should end with .apps.googleusercontent.com', 'err'); return; }
-  cfg.clientId = cid; saveCfg();
-  document.getElementById('authStatus').textContent = 'Loading...';
-  tokenClient = null; accessToken = null; gapiReady = false; signedIn = false;
-  updateConnStatus();
-  loadGapi();
-}
-
-function saveAnthropicKey() {
-  const key = document.getElementById('cfgAnthropicKey').value.trim();
-  if (!key) { toast('Enter your Groq API key', 'err'); return; }
-  if (!key.startsWith('gsk_')) { toast('Groq keys start with gsk_', 'err'); return; }
-  cfg.anthropicKey = key; saveCfg();
-  document.getElementById('aiKeyStatus').textContent = '✓ Groq key saved';
-  document.getElementById('aiKeyStatus').style.color = 'var(--dev)';
-  toast('Groq API key saved!', 'ok');
-}
+function openMgModal(){renderSheetList();applySyncSettingsUI();if(cfg.clientId)document.getElementById('cfgClientId').value=cfg.clientId;if(cfg.anthropicKey){document.getElementById('cfgAnthropicKey').value=cfg.anthropicKey;document.getElementById('aiKeyStatus').textContent='✓ Key saved';}document.getElementById('mgModal').classList.add('open');}
+function closeMgModal(){document.getElementById('mgModal').classList.remove('open');}
+function closeBgMg(e){if(e.target===document.getElementById('mgModal'))closeMgModal();}
+function renderSheetList(){const el=document.getElementById('sheetListEl');if(!cfg.sheets.length){el.innerHTML='<p style="font-size:13px;color:var(--muted);margin-bottom:16px">No sheets yet. Add one below.</p>';return;}
+el.innerHTML=cfg.sheets.map(s=>{const c=entries.filter(e=>e.sheetId===s.id).length,a=s.id===cfg.activeSheetId;return'<div class="sheet-list-item '+(a?'is-active':'')+'"><span class="sh-cdot" style="background:'+(s.color||'#1a4d3e')+';width:14px;height:14px"></span><div style="flex:1"><div class="sli-name">'+esc(s.name)+' '+(a?'<span class="active-badge">Active</span>':'')+'</div><div class="sli-id" style="margin-top:2px">'+(s.sheetId?'ID: '+esc(s.sheetId.slice(0,30))+'...':'No Sheet ID')+'</div></div><div class="sli-count">'+c+' entries</div><div class="sli-actions">'+(!a?'<button class="btn btn-outline btn-sm" onclick="setActive(\''+esc(s.id)+'\');renderSheetList()">Set Active</button>':'')+'<button class="btn btn-danger btn-sm" onclick="removeSheet(\''+esc(s.id)+'\')">Remove</button></div></div>';}).join('');}
+function applySyncSettingsUI(){const a=document.getElementById('autoSyncToggle');if(a){a.textContent=cfg.autoSync?'ON':'OFF';a.classList.toggle('on',cfg.autoSync);}document.getElementById('intervalRow').style.display=cfg.autoSync?'flex':'none';const i=document.getElementById('pollInterval');if(i)i.value=String(cfg.pollInterval||60000);['conflictLocal','conflictSheet','conflictAsk'].forEach(id=>{const b=document.getElementById(id);if(!b)return;const s={conflictLocal:'local',conflictSheet:'sheet',conflictAsk:'ask'}[id];b.classList.toggle('on',cfg.syncConflict===s);});}
+function toggleAutoSync(){cfg.autoSync=!cfg.autoSync;saveCfg();applySyncSettingsUI();if(cfg.autoSync&&signedIn)startPolling();else stopPolling();}
+function saveSyncSettings(){cfg.pollInterval=parseInt(document.getElementById('pollInterval').value)||60000;saveCfg();if(cfg.autoSync&&signedIn){stopPolling();startPolling();}}
+function setConflict(s){cfg.syncConflict=s;saveCfg();applySyncSettingsUI();}
+function pickColor(el){document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');newColor=el.dataset.color;}
+function addNewSheet(){const name=document.getElementById('nsName').value.trim(),sheetId=document.getElementById('nsSheetId').value.trim();if(!name){toast('Enter name','err');return;}if(!sheetId){toast('Enter Sheet ID','err');return;}if(sheetId.length<10){toast('Invalid Sheet ID','err');return;}const sheet={id:uid(),name,sheetId,color:newColor,tab:'Sheet1'};cfg.sheets.push(sheet);if(!cfg.activeSheetId)cfg.activeSheetId=sheet.id;saveCfg();document.getElementById('nsName').value='';document.getElementById('nsSheetId').value='';renderSheetList();renderSwitcher();renderDropdowns();updateLogBar();if(signedIn){ensureHeaders(sheet);setTimeout(()=>initialFetchFromSheets(),500);}toast('"'+name+'" connected!','ok');}
+function removeSheet(id){const s=sheetById(id);if(!s)return;if(!confirm('Remove "'+s.name+'"?'))return;cfg.sheets=cfg.sheets.filter(sh=>sh.id!==id);if(cfg.activeSheetId===id)cfg.activeSheetId=cfg.sheets[0]?.id||null;saveCfg();renderSheetList();renderSwitcher();renderDropdowns();updateLogBar();toast('Removed');}
+function saveClientId(){const c=document.getElementById('cfgClientId').value.trim();if(!c||!c.includes('.apps.googleusercontent.com')){toast('Invalid Client ID','err');return;}cfg.clientId=c;saveCfg();tokenClient=null;accessToken=null;gapiReady=false;signedIn=false;updateConnStatus();loadGapi();}
+function saveAnthropicKey(){const k=document.getElementById('cfgAnthropicKey').value.trim();if(!k||!k.startsWith('gsk_')){toast('Groq keys start with gsk_','err');return;}cfg.anthropicKey=k;saveCfg();document.getElementById('aiKeyStatus').textContent='✓ Saved';toast('API key saved!','ok');}
 
 // ─── HISTORY ──────────────────────────────────────────────────
-function renderHistory() {
-  const fm  = document.getElementById('fMonth').value;
-  const fsh = document.getElementById('fSheetH').value;
-  const fc  = document.getElementById('fCat').value;
-  const fi  = document.getElementById('fImpH').value;
-  let list = [...entries];
-  const totalBeforeFilter = list.length;
-  if (fm)  list = list.filter(e=>e.month===fm);
-  if (fsh) list = list.filter(e=>e.sheetId===fsh);
-  if (fc)  list = list.filter(e=>(e.cats||[]).includes(fc));
-  if (fi)  list = list.filter(e=>e.impact===fi);
+function renderHistory(){
+  const fm=document.getElementById('fMonth').value,fsh=document.getElementById('fSheetH').value,fc=document.getElementById('fCat').value,fi=document.getElementById('fImpH').value;
+  let list=[...entries];const total=list.length;
+  if(fm)list=list.filter(e=>e.month===fm);if(fsh)list=list.filter(e=>e.sheetId===fsh);if(fc)list=list.filter(e=>(e.cats||[]).includes(fc));if(fi)list=list.filter(e=>e.impact===fi);
+  document.getElementById('histCount').textContent=list.length+' entries'+(total!==list.length?' (of '+total+')':'');
+  document.getElementById('syncBtn').style.display=(list.some(e=>!e.synced)&&cfg.sheets.length)?'':'none';
+  const hp=document.getElementById('histPullBtn');if(hp)hp.style.display=signedIn&&cfg.sheets.length?'':'none';
+  const el=document.getElementById('histList');
+  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">&#128211;</div><h3>No entries</h3><p>Log tasks or fetch from sheets.</p>'+(total>0?'<button class="btn btn-outline" style="margin-top:12px" onclick="clearHistoryFilters()">Clear Filters</button>':'')+'</div>';return;}
+  const groups={};list.forEach(e=>{if(!groups[e.date])groups[e.date]=[];groups[e.date].push(e);});
+  el.innerHTML=Object.keys(groups).sort((a,b)=>b.localeCompare(a)).map(date=>{
+    const de=groups[date],dayHrs=de.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
+    const dtLbl=new Date(date+'T12:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    const dow=new Date(date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
+    const mainCat=e=>{const c=e.cats||[];if(c.includes('dev'))return't-dev';if(c.includes('pm'))return't-pm';if(c.includes('learn'))return't-learn';return'';};
+    return'<div class="day-group"><div class="day-header"><div><div class="day-date-label">'+esc(dtLbl)+'</div><div class="day-dow">'+esc(dow)+'</div></div>'+(dayHrs>0?'<div class="day-hrs">'+dayHrs.toFixed(1)+'h</div>':'')+'</div>'+
+    de.map(e=>{const sh=sheetById(e.sheetId),impCls=e.impact==='high'?'chip-hi':e.impact==='medium'?'chip-med':'chip-lo';
+    return'<div class="entry '+mainCat(e)+'"><div class="entry-row"><div style="flex:1;min-width:0"><div class="entry-title">'+esc(e.title)+'</div>'+(e.desc?'<div class="entry-desc">'+esc(e.desc)+'</div>':'')+'<div class="entry-chips">'+(e.cats||[]).map(c=>'<span class="chip chip-'+(['dev','pm','learn'].includes(c)?c:'other')+'">'+esc(c)+'</span>').join('')+'<span class="chip '+impCls+'">'+esc(e.impact||'medium')+'</span>'+(e.effort?'<span class="chip chip-other">'+esc(e.effort)+'h</span>':'')+(sh?'<span class="chip" style="background:'+esc(sh.color)+'18;color:'+esc(sh.color)+'">'+esc(sh.name)+'</span>':'')+'<span class="sync-dot '+(e.synced?'ok':'pend')+'"></span></div>'+(e.outcome?'<div class="entry-outcome">'+esc(e.outcome)+'</div>':'')+'</div><div class="entry-actions"><button class="btn btn-edit" onclick="openEdit('+e.id+')">&#x270E;</button><button class="btn btn-danger btn-sm" onclick="deleteEntry('+e.id+')">&#x2715;</button></div></div></div>';}).join('')+'</div>';}).join('');
+}
+function clearHistoryFilters(){['fMonth','fSheetH','fCat','fImpH'].forEach(id=>document.getElementById(id).value='');renderHistory();}
 
-  document.getElementById('histCount').textContent = list.length+' entries' + (totalBeforeFilter !== list.length ? ' (of '+totalBeforeFilter+' total)' : '');
-  document.getElementById('syncBtn').style.display = (list.some(e=>!e.synced) && cfg.sheets.length) ? '' : 'none';
-  const histPullBtn = document.getElementById('histPullBtn');
-  if (histPullBtn) histPullBtn.style.display = signedIn && cfg.sheets.length ? '' : 'none';
+// ═══════════════════════════════════════════════════════════════
+// KRA SHEET GENERATION
+// ═══════════════════════════════════════════════════════════════
+async function generateKRA(){
+  const fromMonth=document.getElementById('kraFromMonth').value;
+  const toMonth=document.getElementById('kraToMonth').value;
+  const fsh=document.getElementById('fSheetKRA').value;
+  const userName=document.getElementById('kraName').value.trim();
+  const userRole=document.getElementById('kraRole').value.trim();
+  if(!fromMonth||!toMonth){toast('Select both months','err');return;}
+  // Save name/role for next time
+  Storage.set('fp_kra_name', userName);
+  Storage.set('fp_kra_role', userRole);
 
-  const el = document.getElementById('histList');
-  if (!list.length) {
-    // Check if entries exist but are being filtered out
-    const hasAnyEntries = totalBeforeFilter > 0;
-    if (hasAnyEntries) {
-      el.innerHTML = '<div class="empty"><div class="empty-icon">&#128269;</div><h3>No entries match current filters</h3>' +
-        '<p>You have '+totalBeforeFilter+' total entries. Try changing the month or clearing filters.</p>' +
-        '<button class="btn btn-outline" style="margin-top:12px" onclick="clearHistoryFilters()">Clear All Filters</button></div>';
-    } else {
-      const sheetHint = cfg.sheets.length && signedIn
-        ? '<button class="btn btn-sync-now" style="margin-top:12px" onclick="initialFetchFromSheets()">&#8595; Fetch from Google Sheets</button>'
-        : cfg.sheets.length
-          ? '<p style="margin-top:8px;font-size:12px">Sign in to Google to pull entries from your sheets.</p>'
-          : '<p style="margin-top:8px;font-size:12px">Connect a Google Sheet in &#9881; Manage to get started.</p>';
-      el.innerHTML = '<div class="empty"><div class="empty-icon">&#128211;</div><h3>No entries found</h3><p>Log a task or fetch from your Google Sheet.</p>'+sheetHint+'</div>';
+  let me=entries.filter(e=>{const m=e.month;return m>=fromMonth&&m<=toMonth;});
+  if(fsh) me=me.filter(e=>e.sheetId===fsh);
+  const out=document.getElementById('kraOut');
+  if(!me.length){out.innerHTML='<div class="empty"><div class="empty-icon">&#127919;</div><h3>No entries for this period</h3><p>Log tasks first.</p></div>';return;}
+
+  const apiKey=cfg.anthropicKey||'';
+  if(!apiKey){out.innerHTML='<div class="empty"><div class="empty-icon">&#128273;</div><h3>Free Groq API Key Required</h3><p>Go to <strong>&#9881; Manage &rarr; AI Settings</strong> to set your free Groq key.</p><button class="btn btn-primary" style="margin-top:12px" onclick="openMgModal()">Open Settings</button></div>';return;}
+
+  const btn=document.getElementById('genKraBtn');btn.disabled=true;
+  out.innerHTML='<div class="loading-wrap"><div class="spin"></div><div class="loading-txt">Analysing tasks & building KRA mapping</div></div>';
+
+  const totalHrs=me.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
+  const catCounts={};me.forEach(e=>(e.cats||[]).forEach(c=>{catCounts[c]=(catCounts[c]||0)+1;}));
+  const highCount=me.filter(e=>e.impact==='high').length;
+  const allLog=me.sort((a,b)=>a.date.localeCompare(b.date)).map(e=>'['+e.date+'] ['+e.impact+'] ['+(e.cats||[]).join('+')+'] '+e.title+' ('+(e.effort||'?')+'h) | outcome: '+(e.outcome||'—')+' | notes: '+(e.desc||'—')).join('\n');
+
+  const prompt=`You are an HR and performance management expert. Analyse the following developer/PM work log and create a structured KRA (Key Result Area) sheet for performance appraisal.
+
+Period: ${fromMonth} to ${toMonth}
+Employee: ${userName||'Not specified'}
+Role: ${userRole||'Not specified'}
+Total entries: ${me.length} | Hours: ${totalHrs.toFixed(1)} | High-impact: ${highCount}
+Categories: ${Object.entries(catCounts).map(([c,n])=>c+':'+n).join(', ')}
+
+== COMPLETE WORK LOG ==
+${allLog}
+
+Create 4-6 KRA areas that naturally fit this person's work. For each KRA area, assign a weightage (all must sum to 100), rate achievement 1-5, list the specific tasks as evidence, and write a brief assessment.
+
+Respond with ONLY valid JSON (no markdown):
+{
+  "kraAreas": [
+    {
+      "name": "KRA area name",
+      "icon": "emoji",
+      "weightage": 25,
+      "rating": 4,
+      "maxRating": 5,
+      "description": "What this KRA measures",
+      "assessment": "2-3 sentence honest assessment based on evidence",
+      "tasks": [
+        {"date":"2025-01","title":"task name","impact":"high","outcome":"what was achieved"}
+      ],
+      "color": "#1a4d3e"
     }
-    return;
-  }
-
-  const groups = {};
-  list.forEach(e => { if (!groups[e.date]) groups[e.date]=[]; groups[e.date].push(e); });
-
-  el.innerHTML = Object.keys(groups).sort((a,b)=>b.localeCompare(a)).map(date => {
-    const de = groups[date];
-    const dayCats = [...new Set(de.flatMap(e=>e.cats||[]))];
-    const dayHrs  = de.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
-    const dow = new Date(date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
-    const dtLbl = new Date(date+'T12:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
-    const mainCat = e => {
-      const c=e.cats||[];
-      if(c.includes('dev')&&c.includes('pm')) return 't-both';
-      if(c.includes('dev')) return 't-dev';
-      if(c.includes('pm'))  return 't-pm';
-      if(c.includes('learn')) return 't-learn';
-      return '';
-    };
-    return '<div class="day-group">' +
-      '<div class="day-header"><div><div class="day-date-label">'+esc(dtLbl)+'</div><div class="day-dow">'+esc(dow)+'</div></div>' +
-      '<div class="day-cat-pills">'+dayCats.map(c=>'<span class="day-pill pill-'+esc(c)+'">'+esc(c)+'</span>').join('')+'</div>' +
-      (dayHrs>0?'<div class="day-hrs">'+dayHrs.toFixed(1)+'h</div>':'') +
-      '</div>' +
-      de.map(e => {
-        const sh = sheetById(e.sheetId);
-        const impCls = e.impact==='high'?'chip-hi':e.impact==='medium'?'chip-med':'chip-lo';
-        const sheetChip = sh ? '<span class="chip" style="background:'+esc(sh.color)+'18;color:'+esc(sh.color)+';border:1px solid '+esc(sh.color)+'40">'+esc(sh.name)+'</span>' : '';
-        const fromSheetChip = e.fromSheet ? '<span class="chip chip-sheet-src">from sheet</span>' : '';
-        const syncDotCls = e.fromSheet ? 'sheet' : (e.synced ? 'ok' : 'pend');
-        const syncDotTitle = e.fromSheet ? 'Imported from Sheet' : (e.synced ? 'Synced' : 'Pending sync');
-        return '<div class="entry '+mainCat(e)+(e.fromSheet?' t-sheet-modified':'')+'">' +
-          '<div class="entry-row"><div style="flex:1;min-width:0">' +
-            '<div class="entry-title">'+esc(e.title)+'</div>' +
-            (e.desc?'<div class="entry-desc">'+esc(e.desc)+'</div>':'') +
-            '<div class="entry-chips">' +
-              (e.cats||[]).map(c=>'<span class="chip chip-'+(['dev','pm','learn'].includes(c)?c:'other')+'">'+esc(c)+'</span>').join('') +
-              '<span class="chip '+impCls+'">'+esc(e.impact||'medium')+'</span>' +
-              (e.effort?'<span class="chip chip-other">'+esc(e.effort)+'h</span>':'') +
-              sheetChip + fromSheetChip +
-              '<span class="sync-dot '+syncDotCls+'" title="'+syncDotTitle+'"></span>' +
-            '</div>' +
-            (e.outcome?'<div class="entry-outcome">'+esc(e.outcome)+'</div>':'') +
-          '</div>' +
-          '<div class="entry-actions">' +
-            '<button class="btn btn-edit" onclick="openEdit('+e.id+')">&#x270E;</button>' +
-            '<button class="btn btn-danger btn-sm" onclick="deleteEntry('+e.id+')">&#x2715;</button>' +
-          '</div></div></div>';
-      }).join('') +
-    '</div>';
-  }).join('');
+  ],
+  "overallRating": 3.8,
+  "overallAssessment": "3-4 sentence overall performance summary",
+  "strengths": ["s1","s2","s3"],
+  "areasOfDevelopment": ["a1","a2","a3"],
+  "recommendations": ["r1","r2","r3"],
+  "quarterlyGoals": ["g1","g2","g3"]
 }
 
-function clearHistoryFilters() {
-  document.getElementById('fMonth').value = '';
-  document.getElementById('fSheetH').value = '';
-  document.getElementById('fCat').value = '';
-  document.getElementById('fImpH').value = '';
-  renderHistory();
-}
-
-// ─── REPORT ───────────────────────────────────────────────────
-async function generateReport() {
-  const month = document.getElementById('rMonth').value;
-  const fsh   = document.getElementById('fSheetR').value;
-  if (!month) { toast('Select a month', 'err'); return; }
-  let me = entries.filter(e=>e.month===month);
-  if (fsh) me = me.filter(e=>e.sheetId===fsh);
-
-  const out = document.getElementById('reportOut');
-  if (!me.length) {
-    out.innerHTML = '<div class="empty"><div class="empty-icon">&#128202;</div><h3>No entries for this period</h3><p>Log tasks first then generate your report.</p></div>';
-    return;
-  }
-
-  const apiKey = cfg.anthropicKey || '';
-  if (!apiKey) {
-    out.innerHTML = '<div class="empty"><div class="empty-icon">&#128273;</div>' +
-      '<h3>Free API Key Required</h3>' +
-      '<p style="margin-bottom:12px">This uses <strong>Groq</strong> &mdash; a free AI service. No credit card needed.</p>' +
-      '<p style="margin-bottom:6px;font-size:13px">1. Go to <strong>console.groq.com</strong> and sign up (free)</p>' +
-      '<p style="margin-bottom:6px;font-size:13px">2. Go to <strong>API Keys &rarr; Create API Key</strong></p>' +
-      '<p style="margin-bottom:16px;font-size:13px">3. Paste the key in <strong>&#9881; Manage &rarr; AI Settings</strong></p>' +
-      '<button class="btn btn-primary" onclick="openMgModal()">&#9881; Open Settings</button></div>';
-    return;
-  }
-
-  const genBtn = document.getElementById('genRptBtn');
-  genBtn.disabled = true;
-  out.innerHTML = '<div class="loading-wrap"><div class="spin"></div><div class="loading-txt">Analysing entries with AI</div></div>';
-
-  // Build stats
-  const totalHrs   = me.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
-  const daysActive = [...new Set(me.map(e=>e.date))].length;
-  const highCount  = me.filter(e=>e.impact==='high').length;
-  const medCount   = me.filter(e=>e.impact==='medium').length;
-  const lowCount   = me.filter(e=>e.impact==='low').length;
-  const catCounts  = {};
-  me.forEach(e=>(e.cats||[]).forEach(c=>{ catCounts[c]=(catCounts[c]||0)+1; }));
-  const catSummary = Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).map(([c,n])=>c+':'+n).join(', ');
-  const withOutcome= me.filter(e=>e.outcome).length;
-  const withDesc   = me.filter(e=>e.desc && e.desc.length>20).length;
-  const avgEffort  = me.filter(e=>e.effort).length ? (totalHrs / me.filter(e=>e.effort).length).toFixed(1) : '?';
-
-  const byWeek = {};
-  me.forEach(e=>{ const d=new Date(e.date+'T12:00'); const wk='W'+Math.ceil(d.getDate()/7); if(!byWeek[wk]) byWeek[wk]=[]; byWeek[wk].push(e); });
-  const weekSummary = Object.entries(byWeek).map(([w,es])=>w+': '+es.length+' tasks, '+es.reduce((s,e)=>s+(parseFloat(e.effort)||0),0).toFixed(1)+'h').join(' | ');
-
-  const highlights = me.filter(e=>e.impact==='high' || e.outcome).slice(0,12)
-    .map(e=>'  ['+e.date+'] "'+e.title+'" ('+(e.cats||[]).join('+')||'uncategorised'+', '+(e.effort||'?')+'h) -> '+(e.outcome||'no outcome')+' | '+(e.desc||'no description')).join('\n');
-
-  const allLog = me.sort((a,b)=>a.date.localeCompare(b.date))
-    .map(e=>'['+e.date+'] ['+e.impact+'] ['+(e.cats||[]).join('+')||'?'+'] '+e.title+' ('+(e.effort||'?')+'h) | outcome: '+(e.outcome||'—')+' | notes: '+(e.desc||'—')).join('\n');
-
-  const prompt = 'You are a senior engineering manager AND product lead conducting a deep monthly performance review.\nAnalyse this developer\'s complete work log for '+month+' and produce a thorough, honest, specific report.\n\n== STATISTICS ==\nTotal entries: '+me.length+' | Active days: '+daysActive+' | Total hours: '+totalHrs.toFixed(1)+'h | Avg effort/task: '+avgEffort+'h\nImpact: '+highCount+' high / '+medCount+' medium / '+lowCount+' low\nCategories: '+catSummary+'\nEntries with outcomes: '+withOutcome+'/'+me.length+' | With detail: '+withDesc+'/'+me.length+'\nWeek-by-week: '+weekSummary+'\n\n== HIGH-IMPACT ==\n'+(highlights||'None')+'\n\n== COMPLETE LOG ==\n'+allLog+'\n\nRespond with ONLY valid JSON (no markdown, no explanation):\n{"devGrade":"A/B/C/D","pmGrade":"A/B/C/D","overallGrade":"A/B/C/D","consistencyGrade":"A/B/C/D","devGradeReason":"sentence","pmGradeReason":"sentence","executiveSummary":"3-4 sentences","deepAnalysis":"4-6 sentences","oneThingToRemember":"one insight","devStrengths":["str1","str2","str3"],"devImprove":["imp1","imp2","imp3"],"pmStrengths":["str1","str2","str3"],"pmImprove":["imp1","imp2","imp3"],"topLearnings":["l1","l2","l3"],"blindSpots":["b1","b2"],"weeklyRhythm":"2-3 sentences","impactAnalysis":"2-3 sentences","careerInsight":"2-3 sentences","nextMonthGoals":["g1","g2","g3"],"keyMetrics":{"focusScore":50,"depthScore":50,"outcomeScore":50,"consistencyScore":50}}';
+Use these colors for variety: #1a4d3e, #5c1a00, #c8973a, #1565c0, #6a1b9a, #c62828
+Be specific and evidence-based. Every assessment should reference actual logged tasks.`;
 
   let r;
-  try {
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+apiKey },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile', max_tokens: 2500, temperature: 0.3,
-        messages: [
-          { role: 'system', content: 'You are a senior engineering manager and product lead. Respond ONLY with valid JSON.' },
-          { role: 'user', content: prompt }
-        ]
-      })
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message || 'Groq API error');
-    const raw = (data.choices?.[0]?.message?.content || '').replace(/```json|```/g, '').trim();
-    r = JSON.parse(raw);
-  } catch(e) {
-    console.error('[Footprint] AI report error:', e);
-    out.innerHTML = '<div class="empty"><div class="empty-icon">&#9888;&#65039;</div><h3>AI Generation Failed</h3><p style="margin-bottom:8px">'+esc(e.message||'Unknown error')+'</p><p style="font-size:12px;color:var(--muted)">Check your Groq API key in &#9881; Manage &rarr; AI Settings</p></div>';
-    genBtn.disabled = false;
-    return;
+  try{
+    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+    body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:3000,temperature:0.3,messages:[{role:'system',content:'You are an HR performance management expert. Respond ONLY with valid JSON.'},{role:'user',content:prompt}]})});
+    const data=await res.json();if(data.error)throw new Error(data.error.message);
+    const raw=(data.choices?.[0]?.message?.content||'').replace(/```json|```/g,'').trim();
+    r=JSON.parse(raw);
+  }catch(e){out.innerHTML='<div class="empty"><div class="empty-icon">&#9888;</div><h3>KRA Generation Failed</h3><p>'+esc(e.message)+'</p></div>';btn.disabled=false;return;}
+
+  renderKRA(r,me,fromMonth,toMonth,userName,userRole,fsh);
+  document.getElementById('exportKraPdfBtn').style.display='';
+  btn.disabled=false;
+}
+
+function renderKRA(r,me,fromMonth,toMonth,userName,userRole,fsh){
+  const fromLabel=new Date(fromMonth+'-02').toLocaleString('default',{month:'short',year:'numeric'});
+  const toLabel=new Date(toMonth+'-02').toLocaleString('default',{month:'short',year:'numeric'});
+  const periodLabel=fromLabel+(fromMonth===toMonth?'':' — '+toLabel);
+  const totalHrs=me.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
+  const sh=fsh?sheetById(fsh):null;
+  const colors=['#1a4d3e','#5c1a00','#c8973a','#1565c0','#6a1b9a','#c62828','#00695c','#4e342e'];
+
+  const ins=(arr,col)=>(arr||[]).map(s=>'<li class="kra-rec-list-item" style="display:flex;gap:8px;font-size:13px;line-height:1.7;margin-bottom:6px"><span class="kra-rec-dot" style="background:'+col+'"></span><span>'+esc(s)+'</span></li>').join('');
+
+  let html='<div class="kra-card" id="kraContent"><div class="kra-header"><div><div class="kra-title">KRA Performance Sheet</div><div class="kra-meta">'+esc(periodLabel)+' &middot; '+(userName?esc(userName)+' · ':'')+(userRole?esc(userRole)+' · ':'')+me.length+' tasks &middot; '+totalHrs.toFixed(1)+'h logged'+(sh?' &middot; <span style="color:'+esc(sh.color)+'">'+esc(sh.name)+'</span>':'')+'</div></div>';
+  html+='<div class="kra-overall-badge"><span class="kra-overall-label">OVERALL</span>'+Number(r.overallRating||0).toFixed(1)+'<span class="kra-overall-label">/ 5.0</span></div></div>';
+
+  // Overall assessment
+  html+='<div class="summary-box" style="margin-bottom:24px"><div class="ins-box-title" style="color:var(--dev);margin-bottom:8px">Overall Assessment <span class="badge badge-ai" style="margin-left:4px">AI</span></div><p style="font-size:14px;line-height:1.8">'+esc(r.overallAssessment)+'</p></div>';
+
+  // KRA Sections
+  (r.kraAreas||[]).forEach((kra,i)=>{
+    const col=kra.color||colors[i%colors.length];
+    const pct=Math.round((kra.rating/kra.maxRating)*100);
+    html+='<div class="kra-section"><div class="kra-section-hdr"><span class="kra-section-icon">'+esc(kra.icon||'📌')+'</span><span class="kra-section-title">'+esc(kra.name)+'</span><span class="kra-section-weight">Weight: '+kra.weightage+'%</span><span class="kra-section-score" style="color:'+col+'">'+kra.rating+'/'+kra.maxRating+'</span></div>';
+    html+='<div class="kra-bar-wrap"><div class="kra-bar" style="width:'+pct+'%;background:'+col+'"></div></div>';
+    html+='<p style="font-size:12px;color:var(--muted);margin-bottom:10px;font-style:italic">'+esc(kra.description||'')+'</p>';
+    html+='<p style="font-size:13px;line-height:1.7;margin-bottom:12px">'+esc(kra.assessment)+'</p>';
+    if(kra.tasks&&kra.tasks.length){
+      html+='<div style="font-family:DM Mono,monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Evidence — '+kra.tasks.length+' Tasks</div><ul class="kra-task-list">';
+      kra.tasks.forEach(t=>{
+        const impCls=t.impact==='high'?'chip-hi':t.impact==='medium'?'chip-med':'chip-lo';
+        html+='<li class="kra-task" style="border-left-color:'+col+'"><span class="t-date">'+esc(t.date||'')+'</span><div class="t-body"><span class="t-title">'+esc(t.title)+'</span><span class="t-impact '+impCls+'">'+esc(t.impact||'')+'</span>'+(t.outcome?'<div class="t-outcome">→ '+esc(t.outcome)+'</div>':'')+'</div></li>';
+      });
+      html+='</ul>';
+    }
+    html+='</div>';
+  });
+
+  // Strengths & Development
+  html+='<div class="ins-grid" style="margin-top:24px"><div class="ins-box" style="border-color:rgba(26,77,62,0.3)"><div class="ins-box-title" style="color:var(--dev)">Strengths</div><ul class="kra-rec-list">'+ins(r.strengths,'var(--dev)')+'</ul></div>';
+  html+='<div class="ins-box" style="border-color:rgba(192,57,43,0.3)"><div class="ins-box-title" style="color:var(--red)">Areas of Development</div><ul class="kra-rec-list">'+ins(r.areasOfDevelopment,'var(--red)')+'</ul></div></div>';
+
+  // Recommendations
+  html+='<div class="kra-summary-box"><div class="kra-summary-title">Recommendations for Next Period</div><ul class="kra-rec-list">'+ins(r.recommendations,'var(--gold)')+'</ul></div>';
+
+  // Goals
+  if(r.quarterlyGoals&&r.quarterlyGoals.length){
+    html+='<div class="ins-box" style="margin-top:16px"><div class="ins-box-title">Goals for Next Period</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px">';
+    r.quarterlyGoals.forEach((g,i)=>{html+='<div style="display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.6;padding:10px;background:var(--paper);border-radius:4px;border:1px solid var(--rule)"><span style="font-family:DM Mono,monospace;font-weight:700;color:var(--dev);min-width:22px;font-size:12px">0'+(i+1)+'</span><span>'+esc(g)+'</span></div>';});
+    html+='</div></div>';
   }
 
-  currentReport = r;
-  currentReportMonth = month + (fsh ? '::'+fsh : '');
-  currentRating = (reflections[currentReportMonth]||{}).rating||0;
-  renderReport(r, me, month, fsh);
-  ['saveReflBtn','exportRptBtn','deleteRptBtn'].forEach(id => document.getElementById(id).style.display='');
-  genBtn.disabled = false;
+  html+='<div style="margin-top:24px;padding-top:16px;border-top:2px dashed var(--rule);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">Generated on '+new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})+' &middot; Footprint Growth Portal</div><div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">Period: '+esc(periodLabel)+'</div></div>';
+
+  html+='</div>';
+  document.getElementById('kraOut').innerHTML=html;
 }
 
-function renderReport(r, me, month, fsh) {
-  const label = new Date(month+'-02').toLocaleString('default',{month:'long',year:'numeric'});
-  const dN = me.filter(e=>(e.cats||[]).includes('dev')).length;
-  const pN = me.filter(e=>(e.cats||[]).includes('pm')).length;
-  const hN = me.filter(e=>e.impact==='high').length;
-  const oN = me.filter(e=>e.outcome).length;
-  const hrs = me.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
-  const daysIn = new Date(month.split('-')[0], parseInt(month.split('-')[1]), 0).getDate();
-  const dayMap = {};
-  me.forEach(e=>{
-    const d=parseInt(e.date.split('-')[2]),c=e.cats||[];
-    if(c.includes('dev')&&c.includes('pm')) dayMap[d]='both';
-    else if(c.includes('dev')) dayMap[d]=dayMap[d]||'dev';
-    else if(c.includes('pm'))  dayMap[d]=dayMap[d]||'pm';
-    else if(c.includes('learn')) dayMap[d]=dayMap[d]||'learn';
-    else dayMap[d]=dayMap[d]||'dev';
-  });
-  const dots = Array.from({length:daysIn},(_,i)=>{
-    const t=dayMap[i+1];
-    return '<div class="act-dot '+(t?'a-'+t:'a-empty')+'" data-tip="Day '+(i+1)+(t?' — '+t:'')+'"></div>';
-  }).join('');
-  const ins = (arr,col) => (arr||[]).map(s=>'<div class="ins-item"><div class="ins-dot" style="background:'+col+'"></div><div>'+esc(s)+'</div></div>').join('');
-  const ref = reflections[currentReportMonth]||{};
-  const sh  = fsh ? sheetById(fsh) : null;
-  const km  = r.keyMetrics || {};
+// ═══════════════════════════════════════════════════════════════
+// PDF EXPORT (both KRA and Report)
+// ═══════════════════════════════════════════════════════════════
+function showPdfOverlay(){
+  const d=document.createElement('div');d.id='pdfOverlay';d.className='pdf-generating';
+  d.innerHTML='<div class="pdf-generating-inner"><div class="spin"></div><p>Generating PDF...</p></div>';
+  document.body.appendChild(d);
+}
+function hidePdfOverlay(){const d=document.getElementById('pdfOverlay');if(d)d.remove();}
 
-  const scoreBar = (val, col) => {
-    const v = parseInt(val)||0;
-    return '<div style="display:flex;align-items:center;gap:8px;margin-top:5px">' +
-      '<div style="flex:1;background:var(--rule);border-radius:3px;height:7px;overflow:hidden">' +
-        '<div style="width:'+v+'%;background:'+col+';height:100%;border-radius:3px;transition:width 0.6s ease"></div>' +
-      '</div>' +
-      '<span style="font-family:DM Mono,monospace;font-size:11px;font-weight:600;color:'+col+';min-width:32px">'+v+'</span>' +
-    '</div>';
-  };
-
-  document.getElementById('reportOut').innerHTML =
-    '<div class="report-card">' +
-    '<div class="rc-header"><div>' +
-      '<div class="rc-title">Monthly Report Card</div>' +
-      '<div class="rc-month">'+esc(label)+' &middot; '+(sh?'<span style="color:'+esc(sh.color)+'">'+esc(sh.name)+'</span>':'All Sheets')+' &middot; '+me.length+' entries</div>' +
-    '</div><div class="rc-stamp">'+esc(r.overallGrade)+'</div></div>' +
-
-    '<div class="grade-grid">' +
-      '<div class="grade-box"><div class="grade-letter grade-'+esc(r.devGrade)+'">'+esc(r.devGrade)+'</div><div class="grade-lbl">Dev Skills</div><div class="grade-sub">'+esc(r.devGradeReason)+'</div></div>' +
-      '<div class="grade-box"><div class="grade-letter grade-'+esc(r.pmGrade)+'">'+esc(r.pmGrade)+'</div><div class="grade-lbl">PM Thinking</div><div class="grade-sub">'+esc(r.pmGradeReason)+'</div></div>' +
-      '<div class="grade-box"><div class="grade-letter grade-'+esc(r.consistencyGrade)+'">'+esc(r.consistencyGrade)+'</div><div class="grade-lbl">Consistency</div><div class="grade-sub">'+Object.keys(dayMap).length+' active days</div></div>' +
-      '<div class="grade-box"><div class="grade-letter grade-'+esc(r.overallGrade)+'">'+esc(r.overallGrade)+'</div><div class="grade-lbl">Overall</div><div class="grade-sub">'+hN+' high-impact</div></div>' +
-    '</div>' +
-
-    '<div class="stat-strip">' +
-      '<div class="stat-item"><div class="stat-num">'+me.length+'</div><div class="stat-lbl">Entries</div></div>' +
-      '<div class="stat-item" style="border-left-color:var(--dev)"><div class="stat-num">'+dN+'</div><div class="stat-lbl">Dev</div></div>' +
-      '<div class="stat-item" style="border-left-color:var(--pm)"><div class="stat-num">'+pN+'</div><div class="stat-lbl">PM</div></div>' +
-      '<div class="stat-item" style="border-left-color:var(--red)"><div class="stat-num">'+hN+'</div><div class="stat-lbl">High Impact</div></div>' +
-      '<div class="stat-item"><div class="stat-num">'+oN+'</div><div class="stat-lbl">Outcomes</div></div>' +
-      '<div class="stat-item" style="border-left-color:var(--gold)"><div class="stat-num">'+(hrs>0?hrs.toFixed(1):'—')+'</div><div class="stat-lbl">Hours</div></div>' +
-    '</div>' +
-
-    (km.focusScore !== undefined ?
-    '<div class="ins-box" style="margin-bottom:20px"><div class="ins-box-title" style="margin-bottom:12px">Quality Scores</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">' +
-        '<div><div style="font-size:12px;font-weight:600">Focus</div>'+scoreBar(km.focusScore,'var(--dev)')+'</div>' +
-        '<div><div style="font-size:12px;font-weight:600">Depth</div>'+scoreBar(km.depthScore,'var(--sync-pull)')+'</div>' +
-        '<div><div style="font-size:12px;font-weight:600">Outcomes</div>'+scoreBar(km.outcomeScore,'var(--gold)')+'</div>' +
-        '<div><div style="font-size:12px;font-weight:600">Consistency</div>'+scoreBar(km.consistencyScore,'var(--pm)')+'</div>' +
-      '</div></div>' : '') +
-
-    '<div class="summary-box"><div class="ins-box-title" style="color:var(--dev);margin-bottom:7px">Executive Summary <span class="badge badge-ai" style="margin-left:4px">AI</span></div>' +
-      '<p style="font-size:14px;line-height:1.8">'+esc(r.executiveSummary)+'</p>' +
-      (r.oneThingToRemember?'<p style="margin-top:10px;font-size:13px;font-family:DM Mono,monospace;color:var(--dev);font-style:italic;border-top:1px solid rgba(26,77,62,0.15);padding-top:10px">"'+esc(r.oneThingToRemember)+'"</p>':'') +
-    '</div>' +
-
-    (r.deepAnalysis ?
-    '<div class="ins-box" style="margin-bottom:20px;border-color:rgba(21,101,192,0.25);background:var(--sync-pull-light)">' +
-      '<div class="ins-box-title" style="color:var(--sync-pull);margin-bottom:8px">Deep Analysis</div>' +
-      '<p style="font-size:13px;line-height:1.8;color:var(--text)">'+esc(r.deepAnalysis)+'</p></div>' : '') +
-
-    '<div style="margin-bottom:20px"><div class="ins-box-title" style="margin-bottom:9px">Activity Heatmap &mdash; '+esc(label)+'</div>' +
-      '<div class="act-dots">'+dots+'</div>' +
-      '<div style="display:flex;gap:14px;margin-top:6px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">' +
-        '<span><span style="display:inline-block;width:10px;height:10px;background:var(--dev);opacity:.7;border-radius:2px;margin-right:4px"></span>Dev</span>' +
-        '<span><span style="display:inline-block;width:10px;height:10px;background:var(--pm);opacity:.7;border-radius:2px;margin-right:4px"></span>PM</span>' +
-        '<span><span style="display:inline-block;width:10px;height:10px;background:var(--gold);opacity:.7;border-radius:2px;margin-right:4px"></span>Learn</span>' +
-      '</div></div>' +
-
-    (r.weeklyRhythm ? '<div class="ins-box" style="margin-bottom:20px"><div class="ins-box-title" style="margin-bottom:6px">Weekly Rhythm</div><p style="font-size:13px;line-height:1.75;color:var(--text)">'+esc(r.weeklyRhythm)+'</p></div>' : '') +
-
-    '<div class="ins-grid">' +
-      '<div class="ins-box"><div class="ins-box-title">Dev &mdash; Strengths</div>'+ins(r.devStrengths,'var(--dev)')+'</div>' +
-      '<div class="ins-box"><div class="ins-box-title">Dev &mdash; Improve</div>'+ins(r.devImprove,'var(--red)')+'</div>' +
-      '<div class="ins-box"><div class="ins-box-title">PM &mdash; Strengths</div>'+ins(r.pmStrengths,'var(--pm)')+'</div>' +
-      '<div class="ins-box"><div class="ins-box-title">PM &mdash; Improve</div>'+ins(r.pmImprove,'var(--red)')+'</div>' +
-      '<div class="ins-box"><div class="ins-box-title">Top Learnings</div>'+ins(r.topLearnings,'var(--gold)')+'</div>' +
-      '<div class="ins-box"><div class="ins-box-title">Blind Spots</div>'+ins(r.blindSpots,'var(--pm)')+'</div>' +
-    '</div>' +
-
-    (r.impactAnalysis ? '<div class="ins-box" style="margin-top:14px"><div class="ins-box-title" style="margin-bottom:6px">Impact Analysis</div><p style="font-size:13px;line-height:1.75">'+esc(r.impactAnalysis)+'</p></div>' : '') +
-    (r.careerInsight ? '<div class="ins-box" style="margin-top:14px;border-color:rgba(200,151,58,0.35);background:var(--gold-light)"><div class="ins-box-title" style="color:var(--gold);margin-bottom:6px">Career Insight</div><p style="font-size:13px;line-height:1.75">'+esc(r.careerInsight)+'</p></div>' : '') +
-
-    '<div class="ins-box" style="margin-top:14px"><div class="ins-box-title">Next Month Goals</div>' +
-      '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px">' +
-        (r.nextMonthGoals||[]).map((g,i)=>'<div style="display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.6;padding:10px;background:var(--paper);border-radius:4px;border:1px solid var(--rule)"><span style="font-family:DM Mono,monospace;font-weight:700;color:var(--dev);min-width:22px;font-size:12px">0'+(i+1)+'</span><span>'+esc(g)+'</span></div>').join('') +
-      '</div></div>' +
-
-    '<hr class="rc-divider">' +
-
-    '<div><div style="font-family:Playfair Display,serif;font-size:19px;font-weight:800;margin-bottom:14px">Self Reflections <span class="badge badge-self" style="font-size:9px;vertical-align:middle">Your Words</span></div>' +
-    '<div class="manual-grid">' +
-      '<div class="field"><label>What am I most proud of?</label><textarea id="rfl_proud" placeholder="Be specific...">'+esc(ref.proud||'')+'</textarea></div>' +
-      '<div class="field"><label>Biggest challenge this month</label><textarea id="rfl_challenge" placeholder="Be honest...">'+esc(ref.challenge||'')+'</textarea></div>' +
-      '<div class="field"><label>As a developer, I must focus on...</label><textarea id="rfl_dev" placeholder="Skill, habit, tool...">'+esc(ref.dev||'')+'</textarea></div>' +
-      '<div class="field"><label>As a PM thinker, I need to...</label><textarea id="rfl_pm" placeholder="User thinking, prioritization...">'+esc(ref.pm||'')+'</textarea></div>' +
-      '<div class="field manual-full"><label>Note to myself for next month</label><textarea id="rfl_note" style="min-height:60px" placeholder="Anything to remember...">'+esc(ref.note||'')+'</textarea></div>' +
-      '<div class="field"><label>Satisfaction this month</label><div class="star-row" id="starRow">'+[1,2,3,4,5].map(n=>'<button class="star-btn '+((ref.rating||0)>=n?'on':'')+'" onclick="setStar('+n+')">&#9733;</button>').join('')+'</div></div>' +
-      '<div class="field"><label>Would I share this report?</label><select id="rfl_share"><option value="">Choose...</option><option value="yes" '+(ref.share==='yes'?'selected':'')+'>Yes &mdash; I\'m proud of it</option><option value="maybe" '+(ref.share==='maybe'?'selected':'')+'>Maybe &mdash; if asked</option><option value="no" '+(ref.share==='no'?'selected':'')+'>Not yet &mdash; still growing</option></select></div>' +
-    '</div></div></div>';
+async function exportKraPDF(){
+  const el=document.getElementById('kraContent');
+  if(!el){toast('Generate KRA first','err');return;}
+  showPdfOverlay();
+  try{
+    const name=document.getElementById('kraName').value.trim()||'KRA';
+    const from=document.getElementById('kraFromMonth').value;
+    const to=document.getElementById('kraToMonth').value;
+    const filename='KRA_Sheet_'+name.replace(/\s+/g,'_')+'_'+from+'_to_'+to+'.pdf';
+    await html2pdf().set({
+      margin: [10,10,10,10],
+      filename: filename,
+      image: {type:'jpeg',quality:0.98},
+      html2canvas: {scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff'},
+      jsPDF: {unit:'mm',format:'a4',orientation:'portrait'},
+      pagebreak: {mode:['avoid-all','css','legacy']}
+    }).from(el).save();
+    toast('KRA PDF exported!','ok');
+  }catch(e){toast('PDF export failed: '+e.message,'err');}
+  hidePdfOverlay();
 }
 
-function setStar(n) {
-  currentRating = n;
-  document.querySelectorAll('.star-btn').forEach((b,i) => b.classList.toggle('on', i<n));
+async function exportReportPDF(){
+  const el=document.getElementById('reportContent');
+  if(!el){toast('Generate report first','err');return;}
+  showPdfOverlay();
+  try{
+    const month=document.getElementById('rMonth').value;
+    const filename='Monthly_Report_'+month+'.pdf';
+    await html2pdf().set({
+      margin: [10,10,10,10],
+      filename: filename,
+      image: {type:'jpeg',quality:0.98},
+      html2canvas: {scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff'},
+      jsPDF: {unit:'mm',format:'a4',orientation:'portrait'},
+      pagebreak: {mode:['avoid-all','css','legacy']}
+    }).from(el).save();
+    toast('Report PDF exported!','ok');
+  }catch(e){toast('PDF export failed: '+e.message,'err');}
+  hidePdfOverlay();
 }
 
-function saveReflections() {
-  const m = currentReportMonth; if(!m) return;
-  reflections[m] = {
-    proud: document.getElementById('rfl_proud')?.value||'',
-    challenge: document.getElementById('rfl_challenge')?.value||'',
-    dev: document.getElementById('rfl_dev')?.value||'',
-    pm: document.getElementById('rfl_pm')?.value||'',
-    note: document.getElementById('rfl_note')?.value||'',
-    rating: currentRating,
-    share: document.getElementById('rfl_share')?.value||'',
-    saved: new Date().toISOString()
-  };
-  saveReflStore(); toast('Reflections saved!', 'ok');
+// ═══════════════════════════════════════════════════════════════
+// MONTHLY REPORT (existing, with PDF wrapper)
+// ═══════════════════════════════════════════════════════════════
+async function generateReport(){
+  const month=document.getElementById('rMonth').value;
+  const fsh=document.getElementById('fSheetR').value;
+  if(!month){toast('Select a month','err');return;}
+  let me=entries.filter(e=>e.month===month);if(fsh)me=me.filter(e=>e.sheetId===fsh);
+  const out=document.getElementById('reportOut');
+  if(!me.length){out.innerHTML='<div class="empty"><div class="empty-icon">&#128202;</div><h3>No entries for this period</h3></div>';return;}
+  const apiKey=cfg.anthropicKey||'';
+  if(!apiKey){out.innerHTML='<div class="empty"><div class="empty-icon">&#128273;</div><h3>Free Groq API Key Required</h3><p>Set it in <strong>&#9881; Manage &rarr; AI Settings</strong></p><button class="btn btn-primary" style="margin-top:12px" onclick="openMgModal()">Open Settings</button></div>';return;}
+
+  const genBtn=document.getElementById('genRptBtn');genBtn.disabled=true;
+  out.innerHTML='<div class="loading-wrap"><div class="spin"></div><div class="loading-txt">Analysing entries with AI</div></div>';
+
+  const totalHrs=me.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
+  const daysActive=[...new Set(me.map(e=>e.date))].length;
+  const highCount=me.filter(e=>e.impact==='high').length,medCount=me.filter(e=>e.impact==='medium').length,lowCount=me.filter(e=>e.impact==='low').length;
+  const catCounts={};me.forEach(e=>(e.cats||[]).forEach(c=>{catCounts[c]=(catCounts[c]||0)+1;}));
+  const catSummary=Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).map(([c,n])=>c+':'+n).join(', ');
+  const withOutcome=me.filter(e=>e.outcome).length;
+  const avgEffort=me.filter(e=>e.effort).length?(totalHrs/me.filter(e=>e.effort).length).toFixed(1):'?';
+  const byWeek={};me.forEach(e=>{const d=new Date(e.date+'T12:00');const wk='W'+Math.ceil(d.getDate()/7);if(!byWeek[wk])byWeek[wk]=[];byWeek[wk].push(e);});
+  const weekSummary=Object.entries(byWeek).map(([w,es])=>w+': '+es.length+' tasks, '+es.reduce((s,e)=>s+(parseFloat(e.effort)||0),0).toFixed(1)+'h').join(' | ');
+  const highlights=me.filter(e=>e.impact==='high'||e.outcome).slice(0,12).map(e=>'  ['+e.date+'] "'+e.title+'" ('+(e.cats||[]).join('+')||'?'+', '+(e.effort||'?')+'h) -> '+(e.outcome||'none')).join('\n');
+  const allLog=me.sort((a,b)=>a.date.localeCompare(b.date)).map(e=>'['+e.date+'] ['+e.impact+'] ['+(e.cats||[]).join('+')+'] '+e.title+' ('+(e.effort||'?')+'h) | outcome: '+(e.outcome||'—')+' | notes: '+(e.desc||'—')).join('\n');
+
+  const prompt='You are a senior engineering manager conducting a monthly review.\nAnalyse this work log for '+month+'.\n\n== STATS ==\nEntries: '+me.length+' | Days: '+daysActive+' | Hours: '+totalHrs.toFixed(1)+'h | Avg: '+avgEffort+'h\nImpact: '+highCount+' high / '+medCount+' med / '+lowCount+' low\nCats: '+catSummary+'\nOutcomes: '+withOutcome+'/'+me.length+'\nWeeks: '+weekSummary+'\n\n== HIGHLIGHTS ==\n'+(highlights||'None')+'\n\n== FULL LOG ==\n'+allLog+'\n\nRespond ONLY valid JSON:\n{"devGrade":"A/B/C/D","pmGrade":"A/B/C/D","overallGrade":"A/B/C/D","consistencyGrade":"A/B/C/D","devGradeReason":"sentence","pmGradeReason":"sentence","executiveSummary":"3-4 sentences","deepAnalysis":"4-6 sentences","oneThingToRemember":"one insight","devStrengths":["s1","s2","s3"],"devImprove":["i1","i2","i3"],"pmStrengths":["s1","s2","s3"],"pmImprove":["i1","i2","i3"],"topLearnings":["l1","l2","l3"],"blindSpots":["b1","b2"],"weeklyRhythm":"2-3 sentences","impactAnalysis":"2-3 sentences","careerInsight":"2-3 sentences","nextMonthGoals":["g1","g2","g3"],"keyMetrics":{"focusScore":50,"depthScore":50,"outcomeScore":50,"consistencyScore":50}}';
+
+  let r;
+  try{const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:2500,temperature:0.3,messages:[{role:'system',content:'Senior engineering manager. Respond ONLY with valid JSON.'},{role:'user',content:prompt}]})});
+  const data=await res.json();if(data.error)throw new Error(data.error.message);
+  const raw=(data.choices?.[0]?.message?.content||'').replace(/```json|```/g,'').trim();r=JSON.parse(raw);}
+  catch(e){out.innerHTML='<div class="empty"><div class="empty-icon">&#9888;</div><h3>Failed</h3><p>'+esc(e.message)+'</p></div>';genBtn.disabled=false;return;}
+
+  currentReport=r;currentReportMonth=month+(fsh?'::'+fsh:'');currentRating=(reflections[currentReportMonth]||{}).rating||0;
+  renderReport(r,me,month,fsh);
+  ['saveReflBtn','exportRptPdfBtn','deleteRptBtn'].forEach(id=>document.getElementById(id).style.display='');
+  genBtn.disabled=false;
 }
 
-async function exportPDF() {
-  toast('PDF export coming soon — use browser Print (Ctrl+P) for now', 'info');
+function renderReport(r,me,month,fsh){
+  const label=new Date(month+'-02').toLocaleString('default',{month:'long',year:'numeric'});
+  const dN=me.filter(e=>(e.cats||[]).includes('dev')).length,pN=me.filter(e=>(e.cats||[]).includes('pm')).length;
+  const hN=me.filter(e=>e.impact==='high').length,oN=me.filter(e=>e.outcome).length;
+  const hrs=me.reduce((s,e)=>s+(parseFloat(e.effort)||0),0);
+  const daysIn=new Date(month.split('-')[0],parseInt(month.split('-')[1]),0).getDate();
+  const dayMap={};me.forEach(e=>{const d=parseInt(e.date.split('-')[2]),c=e.cats||[];if(c.includes('dev')&&c.includes('pm'))dayMap[d]='both';else if(c.includes('dev'))dayMap[d]=dayMap[d]||'dev';else if(c.includes('pm'))dayMap[d]=dayMap[d]||'pm';else if(c.includes('learn'))dayMap[d]=dayMap[d]||'learn';else dayMap[d]=dayMap[d]||'dev';});
+  const dots=Array.from({length:daysIn},(_,i)=>{const t=dayMap[i+1];return'<div class="act-dot '+(t?'a-'+t:'a-empty')+'" data-tip="Day '+(i+1)+(t?' — '+t:'')+'"></div>';}).join('');
+  const ins=(arr,col)=>(arr||[]).map(s=>'<div class="ins-item"><div class="ins-dot" style="background:'+col+'"></div><div>'+esc(s)+'</div></div>').join('');
+  const ref=reflections[currentReportMonth]||{};const sh=fsh?sheetById(fsh):null;const km=r.keyMetrics||{};
+  const scoreBar=(val,col)=>{const v=parseInt(val)||0;return'<div style="display:flex;align-items:center;gap:8px;margin-top:5px"><div style="flex:1;background:var(--rule);border-radius:3px;height:7px;overflow:hidden"><div style="width:'+v+'%;background:'+col+';height:100%;border-radius:3px"></div></div><span style="font-family:DM Mono,monospace;font-size:11px;font-weight:600;color:'+col+'">'+v+'</span></div>';};
+
+  document.getElementById('reportOut').innerHTML=
+  '<div class="report-card" id="reportContent">'+
+  '<div class="rc-header"><div><div class="rc-title">Monthly Report Card</div><div class="rc-month">'+esc(label)+' &middot; '+(sh?'<span style="color:'+esc(sh.color)+'">'+esc(sh.name)+'</span>':'All Sheets')+' &middot; '+me.length+' entries</div></div><div class="rc-stamp">'+esc(r.overallGrade)+'</div></div>'+
+
+  '<div class="grade-grid">'+
+  '<div class="grade-box"><div class="grade-letter grade-'+esc(r.devGrade)+'">'+esc(r.devGrade)+'</div><div class="grade-lbl">Dev Skills</div><div class="grade-sub">'+esc(r.devGradeReason)+'</div></div>'+
+  '<div class="grade-box"><div class="grade-letter grade-'+esc(r.pmGrade)+'">'+esc(r.pmGrade)+'</div><div class="grade-lbl">PM Thinking</div><div class="grade-sub">'+esc(r.pmGradeReason)+'</div></div>'+
+  '<div class="grade-box"><div class="grade-letter grade-'+esc(r.consistencyGrade)+'">'+esc(r.consistencyGrade)+'</div><div class="grade-lbl">Consistency</div><div class="grade-sub">'+Object.keys(dayMap).length+' active days</div></div>'+
+  '<div class="grade-box"><div class="grade-letter grade-'+esc(r.overallGrade)+'">'+esc(r.overallGrade)+'</div><div class="grade-lbl">Overall</div><div class="grade-sub">'+hN+' high-impact</div></div></div>'+
+
+  '<div class="stat-strip">'+
+  '<div class="stat-item"><div class="stat-num">'+me.length+'</div><div class="stat-lbl">Entries</div></div>'+
+  '<div class="stat-item" style="border-left-color:var(--dev)"><div class="stat-num">'+dN+'</div><div class="stat-lbl">Dev</div></div>'+
+  '<div class="stat-item" style="border-left-color:var(--pm)"><div class="stat-num">'+pN+'</div><div class="stat-lbl">PM</div></div>'+
+  '<div class="stat-item" style="border-left-color:var(--red)"><div class="stat-num">'+hN+'</div><div class="stat-lbl">High Impact</div></div>'+
+  '<div class="stat-item"><div class="stat-num">'+oN+'</div><div class="stat-lbl">Outcomes</div></div>'+
+  '<div class="stat-item" style="border-left-color:var(--gold)"><div class="stat-num">'+(hrs>0?hrs.toFixed(1):'—')+'</div><div class="stat-lbl">Hours</div></div></div>'+
+
+  (km.focusScore!==undefined?'<div class="ins-box" style="margin-bottom:20px"><div class="ins-box-title" style="margin-bottom:12px">Quality Scores</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><div><div style="font-size:12px;font-weight:600">Focus</div>'+scoreBar(km.focusScore,'var(--dev)')+'</div><div><div style="font-size:12px;font-weight:600">Depth</div>'+scoreBar(km.depthScore,'var(--sync-pull)')+'</div><div><div style="font-size:12px;font-weight:600">Outcomes</div>'+scoreBar(km.outcomeScore,'var(--gold)')+'</div><div><div style="font-size:12px;font-weight:600">Consistency</div>'+scoreBar(km.consistencyScore,'var(--pm)')+'</div></div></div>':'')+
+
+  '<div class="summary-box"><div class="ins-box-title" style="color:var(--dev);margin-bottom:7px">Executive Summary <span class="badge badge-ai">AI</span></div><p style="font-size:14px;line-height:1.8">'+esc(r.executiveSummary)+'</p>'+(r.oneThingToRemember?'<p style="margin-top:10px;font-size:13px;font-family:DM Mono,monospace;color:var(--dev);font-style:italic;border-top:1px solid rgba(26,77,62,0.15);padding-top:10px">"'+esc(r.oneThingToRemember)+'"</p>':'')+'</div>'+
+
+  (r.deepAnalysis?'<div class="ins-box" style="margin-bottom:20px;border-color:rgba(21,101,192,0.25);background:var(--sync-pull-light)"><div class="ins-box-title" style="color:var(--sync-pull);margin-bottom:8px">Deep Analysis</div><p style="font-size:13px;line-height:1.8">'+esc(r.deepAnalysis)+'</p></div>':'')+
+
+  '<div style="margin-bottom:20px"><div class="ins-box-title" style="margin-bottom:9px">Activity Heatmap — '+esc(label)+'</div><div class="act-dots">'+dots+'</div></div>'+
+
+  (r.weeklyRhythm?'<div class="ins-box" style="margin-bottom:20px"><div class="ins-box-title">Weekly Rhythm</div><p style="font-size:13px;line-height:1.75">'+esc(r.weeklyRhythm)+'</p></div>':'')+
+
+  '<div class="ins-grid">'+
+  '<div class="ins-box"><div class="ins-box-title">Dev — Strengths</div>'+ins(r.devStrengths,'var(--dev)')+'</div>'+
+  '<div class="ins-box"><div class="ins-box-title">Dev — Improve</div>'+ins(r.devImprove,'var(--red)')+'</div>'+
+  '<div class="ins-box"><div class="ins-box-title">PM — Strengths</div>'+ins(r.pmStrengths,'var(--pm)')+'</div>'+
+  '<div class="ins-box"><div class="ins-box-title">PM — Improve</div>'+ins(r.pmImprove,'var(--red)')+'</div>'+
+  '<div class="ins-box"><div class="ins-box-title">Top Learnings</div>'+ins(r.topLearnings,'var(--gold)')+'</div>'+
+  '<div class="ins-box"><div class="ins-box-title">Blind Spots</div>'+ins(r.blindSpots,'var(--pm)')+'</div></div>'+
+
+  (r.impactAnalysis?'<div class="ins-box" style="margin-top:14px"><div class="ins-box-title">Impact Analysis</div><p style="font-size:13px;line-height:1.75">'+esc(r.impactAnalysis)+'</p></div>':'')+
+  (r.careerInsight?'<div class="ins-box" style="margin-top:14px;border-color:rgba(200,151,58,0.35);background:var(--gold-light)"><div class="ins-box-title" style="color:var(--gold)">Career Insight</div><p style="font-size:13px;line-height:1.75">'+esc(r.careerInsight)+'</p></div>':'')+
+
+  '<div class="ins-box" style="margin-top:14px"><div class="ins-box-title">Next Month Goals</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px">'+(r.nextMonthGoals||[]).map((g,i)=>'<div style="display:flex;gap:9px;font-size:13px;line-height:1.6;padding:10px;background:var(--paper);border-radius:4px;border:1px solid var(--rule)"><span style="font-family:DM Mono,monospace;font-weight:700;color:var(--dev);font-size:12px">0'+(i+1)+'</span><span>'+esc(g)+'</span></div>').join('')+'</div></div>'+
+
+  '<hr class="rc-divider">'+
+  '<div><div style="font-family:Playfair Display,serif;font-size:19px;font-weight:800;margin-bottom:14px">Self Reflections <span class="badge badge-self">Your Words</span></div>'+
+  '<div class="manual-grid">'+
+  '<div class="field"><label>What am I most proud of?</label><textarea id="rfl_proud" placeholder="Be specific...">'+esc(ref.proud||'')+'</textarea></div>'+
+  '<div class="field"><label>Biggest challenge</label><textarea id="rfl_challenge" placeholder="Be honest...">'+esc(ref.challenge||'')+'</textarea></div>'+
+  '<div class="field"><label>Dev focus area</label><textarea id="rfl_dev" placeholder="Skill, habit, tool...">'+esc(ref.dev||'')+'</textarea></div>'+
+  '<div class="field"><label>PM growth area</label><textarea id="rfl_pm" placeholder="User thinking, prioritization...">'+esc(ref.pm||'')+'</textarea></div>'+
+  '<div class="field manual-full"><label>Note to myself</label><textarea id="rfl_note" style="min-height:60px" placeholder="Anything to remember...">'+esc(ref.note||'')+'</textarea></div>'+
+  '<div class="field"><label>Satisfaction</label><div class="star-row" id="starRow">'+[1,2,3,4,5].map(n=>'<button class="star-btn '+((ref.rating||0)>=n?'on':'')+'" onclick="setStar('+n+')">&#9733;</button>').join('')+'</div></div>'+
+  '</div></div>'+
+
+  '<div style="margin-top:20px;padding-top:14px;border-top:2px dashed var(--rule);font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">Generated on '+new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})+' · Footprint Growth Portal</div>'+
+  '</div>';
 }
 
-function deleteReport() {
-  const m = currentReportMonth; if(!m) return;
-  const label = new Date(m.split('::')[0]+'-02').toLocaleString('default',{month:'long',year:'numeric'});
-  if(!confirm('Delete the report & reflections for '+label+'?\n\nTask entries will NOT be deleted.')) return;
-  delete reflections[m]; saveReflStore();
-  currentReport=null; currentReportMonth=null; currentRating=0;
-  document.getElementById('reportOut').innerHTML='';
-  ['saveReflBtn','exportRptBtn','deleteRptBtn'].forEach(id=>document.getElementById(id).style.display='none');
-  toast('Report deleted', 'ok');
-}
+function setStar(n){currentRating=n;document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('on',i<n));}
+function saveReflections(){const m=currentReportMonth;if(!m)return;reflections[m]={proud:document.getElementById('rfl_proud')?.value||'',challenge:document.getElementById('rfl_challenge')?.value||'',dev:document.getElementById('rfl_dev')?.value||'',pm:document.getElementById('rfl_pm')?.value||'',note:document.getElementById('rfl_note')?.value||'',rating:currentRating,share:document.getElementById('rfl_share')?.value||'',saved:new Date().toISOString()};saveReflStore();toast('Reflections saved!','ok');}
+function deleteReport(){const m=currentReportMonth;if(!m)return;if(!confirm('Delete this report?'))return;delete reflections[m];saveReflStore();currentReport=null;currentReportMonth=null;currentRating=0;document.getElementById('reportOut').innerHTML='';['saveReflBtn','exportRptPdfBtn','deleteRptBtn'].forEach(id=>document.getElementById(id).style.display='none');toast('Deleted','ok');}
 
-// Update sync label periodically
-setInterval(updateLastSyncLabel, 30000);
+setInterval(updateLastSyncLabel,30000);
 </script>
 </body>
 </html>
