@@ -1,4 +1,4 @@
-# Footprint — Growth Portal
+# Footprint - Growth Portal
 
 A single-file, browser-based work journal for developers and product managers. Log daily tasks, sync them to Google Sheets, and generate AI-powered monthly report cards with grades, deep analysis, and career insights. No server required. No installation needed. Open the HTML file and start logging.
 
